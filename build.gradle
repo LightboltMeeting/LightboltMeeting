@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = 17
+targetCompatibility = 17
+
+group 'de.lightbolt'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://m2.dv8tion.net/releases' }
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+    implementation 'net.dv8tion:JDA:5.0.0-alpha.4'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'org.yaml:snakeyaml:1.29'
+
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
+
+    // H2 Database
+    implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+    implementation 'com.zaxxer:HikariCP:5.0.0'
+
+    // Quartz scheduler
+    implementation 'org.quartz-scheduler:quartz:2.3.2'
+
+    // Lombok Annotations
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+}
+
+jar{
+    manifest{ attributes("Manifest-Version": "1.0", "Main-Class": "de.lightbolt.meeting.Bot") }
+}
+
+java{
+    toolchain{
+        sourceCompatibility(sourceCompatibility as JavaVersion)
+        targetCompatibility(targetCompatibility as JavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile){ options.encoding = 'UTF-8'}
+tasks.withType( JavaCompile ).configureEach {
+    options.forkOptions.jvmArgs.addAll( ['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED'] )
+}
+test { useJUnitPlatform() }
