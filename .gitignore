@@ -1,4 +1,17 @@
-# Project exclude paths
-/.gradle/
-/build/
-/build/classes/java/main/
+.gradle/
+.idea/
+build/
+/bot.props
+/config.json
+/config
+
+# Eclipse settings
+.classpath
+.project
+.settings/
+bin/
+
+# H2 Database
+/*.mv.db
+/*.trace.db
+/*.lock.db/main/
