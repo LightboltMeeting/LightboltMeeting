@@ -10,6 +10,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.TimeUnit;
 
 public class UptimeCommand implements ISlashCommand {
 
@@ -18,19 +19,25 @@ public class UptimeCommand implements ISlashCommand {
 	 *
 	 * @return The current Uptime as a String.
 	 */
-	public String getUptime() {
+	public static String getUptime() {
 		RuntimeMXBean rb = ManagementFactory.getRuntimeMXBean();
-		var startDate = Instant.now().minus(rb.getUptime(), ChronoUnit.MILLIS);
-		return String.format("<t:%s:R>", startDate);
+		long uptimeMs = rb.getUptime();
+		long uptimeDays = TimeUnit.MILLISECONDS.toDays(uptimeMs);
+		uptimeMs -= TimeUnit.DAYS.toMillis(uptimeDays);
+		long uptimeHours = TimeUnit.MILLISECONDS.toHours(uptimeMs);
+		uptimeMs -= TimeUnit.HOURS.toMillis(uptimeHours);
+		long uptimeMin = TimeUnit.MILLISECONDS.toMinutes(uptimeMs);
+		uptimeMs -= TimeUnit.MINUTES.toMillis(uptimeMin);
+		long uptimeSec = TimeUnit.MILLISECONDS.toSeconds(uptimeMs);
+		return String.format("%sd %sh %smin %ss",
+				uptimeDays, uptimeHours, uptimeMin, uptimeSec);
 	}
 
 	@Override
 	public ReplyCallbackAction handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
-		String botImage = event.getJDA().getSelfUser().getAvatarUrl();
 		var e = new EmbedBuilder()
 				.setColor(Bot.config.get(event.getGuild()).getSlashCommand().getDefaultColor())
-				.setAuthor(getUptime(), null, botImage);
-
+				.setAuthor(getUptime(), null, event.getJDA().getSelfUser().getEffectiveAvatarUrl());
 		return event.replyEmbeds(e.build());
 	}
 }
