@@ -4,16 +4,16 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The language.
+ * Enum class, that represents all available and supported languages.
  */
 @Getter
 public enum Language {
-    DE("de-DE.json"),
-    EN("en-EN.json");
+	DE("de-DE.json"),
+	EN("en-EN.json");
 
-    private final String path;
+	private final String path;
 
-    Language(@NotNull String path) {
-        this.path = path;
-    }
+	Language(@NotNull String path) {
+		this.path = path;
+	}
 }

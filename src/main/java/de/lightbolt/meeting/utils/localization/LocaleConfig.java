@@ -2,11 +2,12 @@ package de.lightbolt.meeting.utils.localization;
 
 import lombok.Getter;
 
+/**
+ * Simple Data class, that represents the bot's localization config.
+ */
 @Getter
-//TODO add java docs
 public class LocaleConfig {
-
-    private String threeDays;
-    private String oneDay;
-    private String oneHour;
+	private String threeDays;
+	private String oneDay;
+	private String oneHour;
 }
