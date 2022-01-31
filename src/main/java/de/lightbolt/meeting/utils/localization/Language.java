@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public enum Language {
 	DE("localization/de-DE.json"),
-	EN("localization/en-EN.json");
+	EN("localization/en-US.json");
 
 	private final String path;
 
