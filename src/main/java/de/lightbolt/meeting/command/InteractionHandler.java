@@ -126,16 +126,10 @@ public class InteractionHandler extends ListenerAdapter {
 	 * @param guild The guild to update commands for.
 	 */
 	public void registerCommands(Guild guild) {
-		SlashCommandConfig[] slashCommandConfigs = CommandDataLoader.loadSlashCommandConfig(
-				"commands/slash/help.yaml",
-				"commands/slash/jam.yaml",
-				"commands/slash/qotw.yaml",
-				"commands/slash/staff.yaml",
-				"commands/slash/user.yaml"
-		);
+		SlashCommandConfig[] slashCommandConfigs = CommandDataLoader.loadSlashCommandConfig("commands/commands.yaml");
 		var contextConfigs = CommandDataLoader.loadContextCommandConfig(
-				"commands/context/message.yaml",
-				"commands/context/user.yaml"
+				"commands/message.yaml",
+				"commands/user.yaml"
 		);
 		var commandUpdateAction = this.updateCommands(slashCommandConfigs, contextConfigs, guild);
 

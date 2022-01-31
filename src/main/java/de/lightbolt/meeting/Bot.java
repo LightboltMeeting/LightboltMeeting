@@ -4,6 +4,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import de.lightbolt.meeting.command.InteractionHandler;
 import de.lightbolt.meeting.data.config.BotConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
+import de.lightbolt.meeting.listener.StartupListener;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -56,5 +58,12 @@ public class Bot {
 				.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
 				.addEventListeners(interactionHandler)
 				.build();
+		addEventListener(jda);
+	}
+
+	private static void addEventListener(JDA jda) {
+		jda.addEventListener(
+				new StartupListener()
+		);
 	}
 }

@@ -1,0 +1,7 @@
+- name: ping
+  description: Checks the Bot's Gateway Ping.
+  handler: de.lightbolt.meeting.systems.commands.PingCommand
+
+- name: uptime
+  description: Checks the Bot's Uptime.
+  handler: de.lightbolt.meeting.systems.commands.UptimeCommand
