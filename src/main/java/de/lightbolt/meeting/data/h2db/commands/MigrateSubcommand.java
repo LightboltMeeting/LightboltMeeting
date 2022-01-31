@@ -1,11 +1,11 @@
 package de.lightbolt.meeting.data.h2db.commands;
 
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.command.Responses;
-import de.lightbolt.meeting.command.SlashCommandHandler;
+import de.lightbolt.meeting.command.interfaces.ISlashCommand;
 import de.lightbolt.meeting.data.h2db.MigrationUtils;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -24,9 +24,9 @@ import java.util.Objects;
  * character, and then proceed to execute each statement.
  * </p>
  */
-public class MigrateSubcommand implements SlashCommandHandler {
+public class MigrateSubcommand implements ISlashCommand {
 	@Override
-	public ReplyAction handle(SlashCommandEvent event) {
+	public ReplyCallbackAction handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
 		String migrationName = Objects.requireNonNull(event.getOption("name")).getAsString();
 		if (!migrationName.endsWith(".sql")) {
 			migrationName = migrationName + ".sql";

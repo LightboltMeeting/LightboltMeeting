@@ -1,9 +1,9 @@
 package de.lightbolt.meeting.data.h2db.commands;
 
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 import de.lightbolt.meeting.Bot;
-import de.lightbolt.meeting.command.SlashCommandHandler;
+import de.lightbolt.meeting.command.interfaces.ISlashCommand;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,11 +14,11 @@ import java.sql.SQLException;
  * This subcommand exports the database schema to a file, and uploads that file
  * to the channel in which the command was received.
  */
-public class ExportSchemaSubcommand implements SlashCommandHandler {
+public class ExportSchemaSubcommand implements ISlashCommand {
 	private static final Path SCHEMA_FILE = Path.of("___schema.sql");
 
 	@Override
-	public ReplyAction handle(SlashCommandEvent event) {
+	public ReplyCallbackAction handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
 		var includeDataOption = event.getOption("include-data");
 		boolean includeData = includeDataOption != null && includeDataOption.getAsBoolean();
 		Bot.asyncPool.submit(() -> {
