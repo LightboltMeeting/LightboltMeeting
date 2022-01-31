@@ -4,4 +4,4 @@
 
 - name: uptime
   description: Checks the Bot's Uptime.
-  handler: de.lightbolt.meeting.systems.commands.UptimeCommmand
+  handler: de.lightbolt.meeting.systems.commands.UptimeCommand
