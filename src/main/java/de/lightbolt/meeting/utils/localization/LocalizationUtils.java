@@ -1,6 +1,7 @@
 package de.lightbolt.meeting.utils.localization;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -8,6 +9,7 @@ import java.nio.file.Paths;
 /**
  * Utility class regarding the bot's localization.
  */
+@Slf4j
 public class LocalizationUtils {
 
 	/**
@@ -23,7 +25,7 @@ public class LocalizationUtils {
 			var reader = Files.newBufferedReader(languageFile);
 			localeConfig = new Gson().fromJson(reader, LocaleConfig.class);
 		} catch (Exception exception) {
-			exception.printStackTrace();
+			log.error("Could not load file from resources folder: " + language.getPath(), exception);
 		}
 		return localeConfig;
 	}
