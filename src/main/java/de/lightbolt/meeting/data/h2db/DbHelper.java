@@ -2,9 +2,9 @@ package de.lightbolt.meeting.data.h2db;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.extern.slf4j.Slf4j;
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.data.config.BotConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.Server;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class DbHelper {
 		// Now that we have remembered whether we need to initialize the schema, start up the server.
 		Server server;
 		try {
-			server = Server.createTcpServer("-tcpPort", "9123", "-ifNotExists").start();
+			server = Server.createTcpServer("-tcpPort", "9125", "-ifNotExists").start();
 		} catch (SQLException e) {
 			throw new IllegalStateException("Cannot start database server.", e);
 		}

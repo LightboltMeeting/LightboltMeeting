@@ -3,10 +3,11 @@ package de.lightbolt.meeting.data.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import de.lightbolt.meeting.data.config.guild.ModerationConfig;
+import de.lightbolt.meeting.data.config.guild.SlashCommandConfig;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
-import de.lightbolt.meeting.data.config.guild.*;
 
 import javax.annotation.Nullable;
 import java.io.IOException;

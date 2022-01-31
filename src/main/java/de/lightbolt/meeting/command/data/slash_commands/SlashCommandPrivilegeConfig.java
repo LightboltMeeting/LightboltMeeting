@@ -1,4 +1,4 @@
-package de.lightbolt.meeting.command.data;
+package de.lightbolt.meeting.command.data.slash_commands;
 
 import de.lightbolt.meeting.data.config.BotConfig;
 import de.lightbolt.meeting.data.config.UnknownPropertyException;
@@ -14,13 +14,13 @@ import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
  */
 @Data
 @Slf4j
-public class CommandPrivilegeConfig {
+public class SlashCommandPrivilegeConfig {
 	private String type;
 	private boolean enabled = true;
 	private String id;
 
 	/**
-	 * Converts the current {@link CommandPrivilegeConfig} into a {@link CommandPrivilege} object.
+	 * Converts the current {@link SlashCommandPrivilegeConfig} into a {@link CommandPrivilege} object.
 	 *
 	 * @param guild     The current guild.
 	 * @param botConfig The bot's config.

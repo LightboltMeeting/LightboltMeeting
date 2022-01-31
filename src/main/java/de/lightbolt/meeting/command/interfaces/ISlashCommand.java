@@ -1,7 +1,8 @@
-package de.lightbolt.meeting.command;
+package de.lightbolt.meeting.command.interfaces;
 
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
+import de.lightbolt.meeting.command.ResponseException;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 /**
  * Implement this interface to declare that your class handles certain slash
@@ -18,6 +19,6 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
  *     </code></pre>
  * </p>
  */
-public interface SlashCommandHandler {
-	ReplyAction handle(SlashCommandEvent event) throws ResponseException;
+public interface ISlashCommand {
+	ReplyCallbackAction handleSlashCommandInteraction(SlashCommandInteractionEvent event) throws ResponseException;
 }

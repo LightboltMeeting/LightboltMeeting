@@ -1,11 +1,11 @@
 package de.lightbolt.meeting.data.h2db.commands;
 
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 import de.lightbolt.meeting.command.Responses;
-import de.lightbolt.meeting.command.SlashCommandHandler;
+import de.lightbolt.meeting.command.interfaces.ISlashCommand;
 import de.lightbolt.meeting.data.h2db.MigrationUtils;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -15,9 +15,9 @@ import java.nio.file.Files;
  * This subcommand shows a list of all available migrations, and a short preview
  * of their source code.
  */
-public class MigrationsListSubcommand implements SlashCommandHandler {
+public class MigrationsListSubcommand implements ISlashCommand {
 	@Override
-	public ReplyAction handle(SlashCommandEvent event) {
+	public ReplyCallbackAction handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
 		try (var s = Files.list(MigrationUtils.getMigrationsDirectory())) {
 			EmbedBuilder embedBuilder = new EmbedBuilder()
 					.setTitle("List of Runnable Migrations");

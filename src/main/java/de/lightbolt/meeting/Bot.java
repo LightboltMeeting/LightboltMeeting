@@ -1,7 +1,7 @@
 package de.lightbolt.meeting;
 
 import com.zaxxer.hikari.HikariDataSource;
-import de.lightbolt.meeting.command.SlashCommands;
+import de.lightbolt.meeting.command.InteractionHandler;
 import de.lightbolt.meeting.data.config.BotConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import net.dv8tion.jda.api.JDABuilder;
@@ -29,7 +29,7 @@ public class Bot {
 	 * reference so that {@link SlashCommands#registerSlashCommands} can
 	 * be called wherever it's needed.
 	 */
-	public static SlashCommands slashCommands;
+	public static InteractionHandler interactionHandler;
 	/**
 	 * A reference to the data source that provides access to the relational
 	 * database that this bot users for certain parts of the application. Use
@@ -46,7 +46,7 @@ public class Bot {
 		TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
 		config = new BotConfig(Path.of("config"));
 		dataSource = DbHelper.initDataSource(config);
-		slashCommands = new SlashCommands();
+		interactionHandler = new InteractionHandler();
 		asyncPool = Executors.newScheduledThreadPool(config.getSystems().getAsyncPoolSize());
 		var jda = JDABuilder.createDefault(config.getSystems().getJdaBotToken())
 				.setStatus(OnlineStatus.DO_NOT_DISTURB)
@@ -54,7 +54,7 @@ public class Bot {
 				.setMemberCachePolicy(MemberCachePolicy.ALL)
 				.enableCache(CacheFlag.ACTIVITY)
 				.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
-				.addEventListeners(slashCommands)
+				.addEventListeners(interactionHandler)
 				.build();
 	}
 }
