@@ -3,26 +3,33 @@
     "CREATION_START_RESPONSE_TITLE": "Erstelle ein Meeting",
     "CREATION_START_RESPONSE_DESCRIPTION": "Ich habe dir eine Direktnachricht gesendet! Schau in deinen DMs vorbei um ein neues Meeting zu erstellen!",
     "CREATION_START_OPEN_PRIVATE_FAILED": "Ich konnte dir keine Direktnachricht senden. Bitte ändere deine Privatssphäre Einstellungen, damit ich dir eine Direktnachricht zur Meeting Erstellung senden kann!",
+
     "CREATION_DM_DEFAULT_EMBED_TITLE": "Erstelle ein Meeting (Schritt %s/%s)",
     "CREATION_DM_DEFAULT_EMBED_FOOTER": "Dieser Vorgang wird nach %s %s abgebrochen.",
     "CREATION_DM_TIMED_OUT_TITLE": "Zeitüberschreitung bei der Meeting-Erstellung",
     "CREATION_DM_TIMED_OUT_DESCRIPTION": "Der aktuelle Vorgang wurde durch Inaktivität abgebrochen.",
     "CREATION_DM_NO_TRIES_LEFT_TITLE": "Keine Versuche übrig",
     "CREATION_DM_NO_TRIES_LEFT_DESCRIPTION": "Du hast alle deine Versuche aufgebraucht. Der aktuelle Vorgang wurde abgebrochen. Bitte versuche es erneut.",
+
     "CREATION_DM_STEP_1_DESCRIPTION": "Hey %s,\nBitte wähle den **Server** aus, in dem das Meeting stattfinden soll.",
     "CREATION_DM_STEP_1_SELECTION_MENU_PLACEHOLDER": "Bitte wähle einen Server aus",
     "CREATION_DM_STEP_1_SELECTION_MENU_DESCRIPTION": "%s Nutzer",
     "CREATION_DM_STEP_1_SUCCESS_EPHEMERAL": "`%s` wurde als Server ausgewählt.",
+
     "CREATION_DM_STEP_2_DESCRIPTION": "Okay, also planen wir ein Meeting für `%s`.\nBitte wähle nun die **Sprache** des Meetings aus.",
     "CREATION_DM_STEP_2_SELECTION_MENU_PLACEHOLDER": "Bitte wähle eine Sprache aus",
     "CREATION_DM_STEP_2_SELECTION_MENU_DESCRIPTION": "Dies setzt die Sprache des Meetings auf: %s",
     "CREATION_DM_STEP_2_SUCCESS_EPHEMERAL": "`%s` wurde als Sprache ausgewählt.",
-    "CREATION_DM_STEP_3_DESCRIPTION": "`%s` wurde als Sprache ausgewählt!\nBitte nenne nun den **Zeitpunkt** an dem das Meeting starten soll.\nBitte formatiere das Datum so: `dd/MM/YYYY HH:mm` (Beispiel: 13/09/2019 13:05)",
-    "CREATION_DM_STEP_3_INVALID_DATE": "Dies ist ein invalides Datum! Bitte versuche es nocheinmal. (%s Versuche übrig)\nBitte formatiere das Datum so: `dd/MM/YYYY HH:mm` (Beispiel: 13/09/2019 13:05)",
-    "CREATION_DM_STEP_4_DESCRIPTION": "Das Meeting findet als am <t:%s:F> statt!\nBitte nenne nun den **Titel** des Meetings. (Maximal 64 Zeichen)",
+
+    "CREATION_DM_STEP_3_DESCRIPTION": "`%s` wurde als Sprache ausgewählt!\nBitte nenne nun den **Zeitpunkt** an dem das Meeting starten soll.\nBitte formatiere das Datum so: `dd/MM/YYYY HH:mm` (UTC) (Beispiel: 13/09/2019 13:05)",
+    "CREATION_DM_STEP_3_INVALID_DATE": "Dies ist ein invalides Datum! Bitte versuche es nocheinmal. (%s Versuche übrig)\nBitte formatiere das Datum so: `dd/MM/YYYY HH:mm` (UTC) (Beispiel: 13/09/2019 13:05)",
+
+    "CREATION_DM_STEP_4_DESCRIPTION": "Das Meeting findet also am <t:%s:F> statt!\nBitte nenne nun den **Titel** des Meetings. (Maximal 64 Zeichen)",
     "CREATION_DM_STEP_4_INVALID_TITLE": "Der Titel ist länger als 64 Zeichen. Bitte versuche es nocheinmal. (%s Versuche übrig)",
+
     "CREATION_DM_STEP_5_DESCRIPTION": "Der Titel ist also `%s`.\nBitte formuliere nun eine kurze **Beschreibung** des Meetings. (Maximal 256 Zeichen)",
     "CREATION_DM_STEP_5_INVALID_TITLE": "Die Beschreibung ist länger als **256** Zeichen. Bitte versuche es nocheinmal. (%s Versuche übrig)",
+
     "CREATION_DM_STEP_6_DESCRIPTION": "Okay, das wärs! Dies ist dein Meeting:",
     "CREATION_DM_STEP_6_FOOTER": "Dieses Meeting startet am: ",
     "CREATION_DM_STEP_6_BUTTON_SAVE_MEETING": "Speichern",

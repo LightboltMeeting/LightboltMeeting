@@ -38,7 +38,7 @@ public class MeetingRepository {
 			meeting.setId(rs.getInt(1));
 		}
 		s.close();
-		log.info("Inserted new Meeting-Object: {}", meeting);
+		log.info("Inserted new Meeting: {}", meeting);
 		return meeting;
 	}
 

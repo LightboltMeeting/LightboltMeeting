@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.PrivateChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -183,14 +180,7 @@ public class MeetingCreationManager {
 
 	private void consumeMeetingCheck(Meeting meeting) {
 		channel.sendMessage(locale.getCREATION_DM_STEP_6_DESCRIPTION())
-				.setEmbeds(
-						new EmbedBuilder()
-								.setAuthor(this.user.getAsTag(), null, this.user.getEffectiveAvatarUrl())
-								.setTitle(meeting.getTitle())
-								.setDescription(meeting.getDescription())
-								.setFooter(locale.getCREATION_DM_STEP_6_FOOTER())
-								.setTimestamp(meeting.getDueAt().toLocalDateTime())
-								.build())
+				.setEmbeds(buildMeetingEmbed(meeting))
 				.setActionRow(
 						Button.success("meeting-dm-button:save", locale.getCREATION_DM_STEP_6_BUTTON_SAVE_MEETING()),
 						Button.danger("meeting-dm-button:discard", locale.getCREATION_DM_STEP_6_BUTTON_CANCEL_MEETING()))
@@ -209,6 +199,7 @@ public class MeetingCreationManager {
 									text.getManager().putRolePermissionOverride(guild.getIdLong(), 0, Permission.ALL_PERMISSIONS)
 											.putMemberPermissionOverride(user.getIdLong(), Permission.ALL_PERMISSIONS, 0)
 											.queue();
+									text.sendMessageEmbeds(buildMeetingEmbed(meeting)).queue();
 									category.createVoiceChannel(String.format("%s", meeting.getTitle())).queue(
 											voice -> {
 												voice.getManager().putRolePermissionOverride(guild.getIdLong(), 0, Permission.ALL_PERMISSIONS).queue();
@@ -237,6 +228,16 @@ public class MeetingCreationManager {
 				.map(ActionRow::asDisabled)
 				.collect(Collectors.toList())
 		).queue();
+	}
+
+	private MessageEmbed buildMeetingEmbed(Meeting meeting) {
+		return new EmbedBuilder()
+				.setAuthor(this.user.getAsTag(), null, this.user.getEffectiveAvatarUrl())
+				.setTitle(meeting.getTitle())
+				.setDescription(meeting.getDescription())
+				.setFooter(locale.getCREATION_DM_STEP_6_FOOTER())
+				.setTimestamp(meeting.getDueAt().toLocalDateTime())
+				.build();
 	}
 
 	private MessageAction sendTimeoutMessage(PrivateChannel channel) {
