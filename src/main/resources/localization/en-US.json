@@ -1,3 +1,11 @@
 {
+ "meeting": {
+   "CREATION_START_RESPONSE_TITLE": "Create a new Meeting",
+   "CREATION_START_RESPONSE_DESCRIPTION": "I've sent you a Direct Message! Head over to your DMs to create a new Meeting!",
+   "CREATION_START_OPEN_PRIVATE_FAILED": "I could not send you a direct message. Please change your privacy settings to allow DMs from server members.",
 
+   "CREATION_DM_DEFAULT_EMBED_TITLE": "Meeting Creation (Step %s/%s)",
+   "CREATION_DM_STEP_0_DESCRIPTION": "Hey %s,\nLooks like we are in `%s` mutual servers. Please choose a server the Meeting should happen in.",
+   "CREATION_DM_STEP_1_DESCRIPTION": "Alright, we're planning a new Meeting for `%s`.\nPlease choose the Meeting's language in the Selection Menu down below."
+ }
 }

@@ -1,3 +1,11 @@
 {
+  "meeting": {
+    "CREATION_START_RESPONSE_TITLE": "Erstelle ein neues Meeting",
+    "CREATION_START_RESPONSE_DESCRIPTION": "Ich habe dir eine Direktnachricht gesendet! Schau in deinen DMs vorbei um ein neues Meeting zu erstellen!",
+    "CREATION_START_OPEN_PRIVATE_FAILED": "Ich konnte dir keine Direktnachricht senden. Bitte ändere deine Privatssphäre Einstellungen, damit ich dir eine Direktnachricht zur Meeting Erstellung senden kann!",
+    "CREATION_DM_DEFAULT_EMBED_TITLE": "Meeting Erstellung (Schritt %s/%s)",
 
+    "CREATION_DM_STEP_0_DESCRIPTION": "Hey %s,\nScheinbar sind wir in `%s` gemeinsamen Servern. Bitte wähle den Server aus, in dem das Meeting stattfinden soll.",
+    "CREATION_DM_STEP_1_DESCRIPTION": "Okay, also planen wir ein Meeting für `%s`:\nBitte wähle nun die Sprache des Meetings aus."
+  }
 }

@@ -4,6 +4,9 @@ import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.command.ResponseException;
 import de.lightbolt.meeting.command.interfaces.ISlashCommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
+import de.lightbolt.meeting.utils.localization.Language;
+import de.lightbolt.meeting.utils.localization.LocaleConfig;
+import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
@@ -17,7 +20,11 @@ public abstract class MeetingSubcommand implements ISlashCommand {
 	public ReplyCallbackAction handleSlashCommandInteraction(SlashCommandInteractionEvent event) throws ResponseException {
 		try (var con = Bot.dataSource.getConnection()) {
 			con.setAutoCommit(true);
-			var reply = this.handleMeetingCommand(event, new MeetingRepository(con));
+			var reply = this.handleMeetingCommand(
+					event,
+					LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale())).getMeeting(),
+					new MeetingRepository(con)
+			);
 			con.commit();
 			return reply;
 		} catch (SQLException e) {
@@ -25,5 +32,5 @@ public abstract class MeetingSubcommand implements ISlashCommand {
 		}
 	}
 
-	protected abstract ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, MeetingRepository repo) throws SQLException;
+	protected abstract ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig.MeetingConfig config, MeetingRepository repo) throws SQLException;
 }

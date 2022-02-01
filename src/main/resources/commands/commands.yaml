@@ -20,3 +20,4 @@
           type: INTEGER
     - name: list
       description: List all your Meetings.
+  handler: de.lightbolt.meeting.systems.meeting.MeetingCommandHandler
