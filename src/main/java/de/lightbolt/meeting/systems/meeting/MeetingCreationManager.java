@@ -38,11 +38,13 @@ public class MeetingCreationManager {
 	private final JDA jda;
 	private final User user;
 	private final PrivateChannel channel;
-	private final LocaleConfig.MeetingCreationConfig locale;
+	private final LocaleConfig locale;
+	private LocaleConfig.MeetingConfig.MeetingCreationConfig meetingLocale;
 
 	private int tries = 5;
 
 	public void startMeetingFlow() {
+		meetingLocale = locale.getMeeting().getMeetingCreation();
 		log.info("{} started the Meeting Creation Flow", user.getAsTag());
 		Meeting meeting = new Meeting();
 		meeting.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
@@ -53,11 +55,11 @@ public class MeetingCreationManager {
 	private void consumeGuild(List<Guild> mutualGuilds, Meeting meeting) {
 		var selectMenu = SelectMenu.create("meeting-dm-guild")
 				.setRequiredRange(1, 1)
-				.setPlaceholder(locale.getCREATION_DM_STEP_1_SELECTION_MENU_PLACEHOLDER());
+				.setPlaceholder(meetingLocale.getCREATION_DM_STEP_1_SELECTION_MENU_PLACEHOLDER());
 		user.getMutualGuilds().forEach(g -> selectMenu.addOption(
-				g.getName(), g.getId(), String.format(locale.getCREATION_DM_STEP_1_SELECTION_MENU_DESCRIPTION(), g.getMemberCount())));
-		channel.sendMessageEmbeds(MeetingManager.buildMeetingEmbed(1, locale,
-						String.format(locale.getCREATION_DM_STEP_1_DESCRIPTION(), channel.getUser().getAsMention(), mutualGuilds.size())))
+				g.getName(), g.getId(), String.format(meetingLocale.getCREATION_DM_STEP_1_SELECTION_MENU_DESCRIPTION(), g.getMemberCount())));
+		channel.sendMessageEmbeds(MeetingManager.buildMeetingCreationEmbed(1, meetingLocale,
+						String.format(meetingLocale.getCREATION_DM_STEP_1_DESCRIPTION(), channel.getUser().getAsMention(), mutualGuilds.size())))
 				.setActionRow(selectMenu.build())
 				.queue();
 
@@ -66,7 +68,7 @@ public class MeetingCreationManager {
 				p -> p.getUser().equals(this.user) && p.getComponentId().equals("meeting-dm-guild"),
 				c -> {
 					var guild = jda.getGuildById(c.getValues().get(0));
-					c.reply(String.format(locale.getCREATION_DM_STEP_1_SUCCESS_EPHEMERAL(), guild.getName())).setEphemeral(true).queue();
+					c.reply(String.format(meetingLocale.getCREATION_DM_STEP_1_SUCCESS_EPHEMERAL(), guild.getName())).setEphemeral(true).queue();
 					log.info("{} set {} as the Meeting's Guild", user.getAsTag(), guild.getName());
 					disableInteractions(c.getMessage());
 					meeting.setGuildId(guild.getIdLong());
@@ -78,16 +80,16 @@ public class MeetingCreationManager {
 	private void consumeLanguage(Guild guild, Meeting meeting) {
 		var selectMenu = SelectMenu.create("meeting-dm-language")
 				.setRequiredRange(1, 1)
-				.setPlaceholder(locale.getCREATION_DM_STEP_2_SELECTION_MENU_PLACEHOLDER());
+				.setPlaceholder(meetingLocale.getCREATION_DM_STEP_2_SELECTION_MENU_PLACEHOLDER());
 		for (var language : Language.values()) {
 			selectMenu.addOption(
 					language.getName(),
 					language.name(),
-					String.format(locale.getCREATION_DM_STEP_2_SELECTION_MENU_DESCRIPTION(), language.getName())
+					String.format(meetingLocale.getCREATION_DM_STEP_2_SELECTION_MENU_DESCRIPTION(), language.getName())
 			);
 		}
-		channel.sendMessageEmbeds(MeetingManager.buildMeetingEmbed(2, locale,
-						String.format(locale.getCREATION_DM_STEP_2_DESCRIPTION(), guild.getName())))
+		channel.sendMessageEmbeds(MeetingManager.buildMeetingCreationEmbed(2, meetingLocale,
+						String.format(meetingLocale.getCREATION_DM_STEP_2_DESCRIPTION(), guild.getName())))
 				.setActionRow(selectMenu.build())
 				.queue();
 		Bot.waiter.waitForEvent(
@@ -95,7 +97,7 @@ public class MeetingCreationManager {
 				p -> p.getUser().equals(this.user) && p.getComponentId().equals("meeting-dm-language"),
 				c -> {
 					var language = Language.valueOf(c.getValues().get(0));
-					c.reply(String.format(locale.getCREATION_DM_STEP_2_SUCCESS_EPHEMERAL(), language.getName())).setEphemeral(true).queue();
+					c.reply(String.format(meetingLocale.getCREATION_DM_STEP_2_SUCCESS_EPHEMERAL(), language.getName())).setEphemeral(true).queue();
 					log.info("{} set {} as the Meeting's Primary Language", user.getAsTag(), language.name());
 					disableInteractions(c.getMessage());
 					meeting.setLanguage(language.name());
@@ -105,8 +107,8 @@ public class MeetingCreationManager {
 	}
 
 	private void consumeDate(Language language, Meeting meeting) {
-		channel.sendMessageEmbeds(MeetingManager.buildMeetingEmbed(3, locale,
-				String.format(locale.getCREATION_DM_STEP_3_DESCRIPTION(), language.getName()))).queue();
+		channel.sendMessageEmbeds(MeetingManager.buildMeetingCreationEmbed(3, meetingLocale,
+				String.format(meetingLocale.getCREATION_DM_STEP_3_DESCRIPTION(), language.getName()))).queue();
 		Bot.waiter.waitForEvent(
 				MessageReceivedEvent.class,
 				p -> p.getAuthor().equals(this.user),
@@ -116,7 +118,7 @@ public class MeetingCreationManager {
 						dueAt = LocalDateTime.parse(c.getMessage().getContentDisplay(), DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
 					} catch (DateTimeParseException e) {
 						tries--;
-						this.channel.sendMessage(String.format(locale.getCREATION_DM_STEP_3_INVALID_DATE(), tries)).queue();
+						this.channel.sendMessage(String.format(meetingLocale.getCREATION_DM_STEP_3_INVALID_DATE(), tries)).queue();
 						if (tries < 1) {
 							sendTriesExceededMessage(this.channel).queue();
 						} else {
@@ -131,8 +133,8 @@ public class MeetingCreationManager {
 	}
 
 	private void consumeTitle(LocalDateTime time, Meeting meeting) {
-		channel.sendMessageEmbeds(MeetingManager.buildMeetingEmbed(4, locale,
-				String.format(locale.getCREATION_DM_STEP_4_DESCRIPTION(), time.toEpochSecond(ZoneOffset.UTC)))).queue();
+		channel.sendMessageEmbeds(MeetingManager.buildMeetingCreationEmbed(4, meetingLocale,
+				String.format(meetingLocale.getCREATION_DM_STEP_4_DESCRIPTION(), time.toEpochSecond(ZoneOffset.UTC)))).queue();
 		Bot.waiter.waitForEvent(
 				MessageReceivedEvent.class,
 				p -> p.getAuthor().equals(this.user),
@@ -140,7 +142,7 @@ public class MeetingCreationManager {
 					var title = c.getMessage().getContentRaw();
 					if (title.length() > 64) {
 						tries--;
-						this.channel.sendMessage(String.format(locale.getCREATION_DM_STEP_4_INVALID_TITLE(), tries)).queue();
+						this.channel.sendMessage(String.format(meetingLocale.getCREATION_DM_STEP_4_INVALID_TITLE(), tries)).queue();
 						if (tries < 1) {
 							sendTriesExceededMessage(this.channel).queue();
 						} else {
@@ -155,8 +157,8 @@ public class MeetingCreationManager {
 	}
 
 	private void consumeDescription(Meeting meeting) {
-		channel.sendMessageEmbeds(MeetingManager.buildMeetingEmbed(5, locale,
-				String.format(locale.getCREATION_DM_STEP_5_DESCRIPTION(), meeting.getTitle()))).queue();
+		channel.sendMessageEmbeds(MeetingManager.buildMeetingCreationEmbed(5, meetingLocale,
+				String.format(meetingLocale.getCREATION_DM_STEP_5_DESCRIPTION(), meeting.getTitle()))).queue();
 		Bot.waiter.waitForEvent(
 				MessageReceivedEvent.class,
 				p -> p.getAuthor().equals(this.user),
@@ -164,7 +166,7 @@ public class MeetingCreationManager {
 					var description = c.getMessage().getContentRaw();
 					if (description.length() > 256) {
 						tries--;
-						this.channel.sendMessage(String.format(locale.getCREATION_DM_STEP_5_INVALID_DESCRIPTION(), tries)).queue();
+						this.channel.sendMessage(String.format(meetingLocale.getCREATION_DM_STEP_5_INVALID_DESCRIPTION(), tries)).queue();
 						if (tries < 1) {
 							sendTriesExceededMessage(this.channel).queue();
 						} else {
@@ -179,11 +181,11 @@ public class MeetingCreationManager {
 	}
 
 	private void consumeMeetingCheck(Meeting meeting) {
-		channel.sendMessage(locale.getCREATION_DM_STEP_6_DESCRIPTION())
-				.setEmbeds(buildMeetingEmbed(meeting))
+		channel.sendMessage(meetingLocale.getCREATION_DM_STEP_6_DESCRIPTION())
+				.setEmbeds(MeetingManager.buildMeetingEmbed(meeting, user, locale))
 				.setActionRow(
-						Button.success("meeting-dm-button:save", locale.getCREATION_DM_STEP_6_BUTTON_SAVE_MEETING()),
-						Button.danger("meeting-dm-button:discard", locale.getCREATION_DM_STEP_6_BUTTON_CANCEL_MEETING()))
+						Button.success("meeting-dm-button:save", meetingLocale.getCREATION_DM_STEP_6_BUTTON_SAVE_MEETING()),
+						Button.danger("meeting-dm-button:discard", meetingLocale.getCREATION_DM_STEP_6_BUTTON_CANCEL_MEETING()))
 				.queue();
 		Bot.waiter.waitForEvent(
 				ButtonInteractionEvent.class,
@@ -199,7 +201,7 @@ public class MeetingCreationManager {
 									text.getManager().putRolePermissionOverride(guild.getIdLong(), 0, Permission.ALL_PERMISSIONS)
 											.putMemberPermissionOverride(user.getIdLong(), Permission.ALL_PERMISSIONS, 0)
 											.queue();
-									text.sendMessageEmbeds(buildMeetingEmbed(meeting)).queue();
+									text.sendMessageEmbeds(MeetingManager.buildMeetingEmbed(meeting, user, locale)).queue();
 									category.createVoiceChannel(String.format("%s", meeting.getTitle())).queue(
 											voice -> {
 												voice.getManager().putRolePermissionOverride(guild.getIdLong(), 0, Permission.ALL_PERMISSIONS).queue();
@@ -210,13 +212,13 @@ public class MeetingCreationManager {
 												} catch (SQLException e) {
 													e.printStackTrace();
 												}
-												c.reply(String.format(locale.getCREATION_DM_STEP_6_MEETING_SAVED(), text.getAsMention())).queue();
+												c.reply(String.format(meetingLocale.getCREATION_DM_STEP_6_MEETING_SAVED(), text.getAsMention())).queue();
 											}, e -> log.error("Could not create Voice Channel for meeting: " + meeting, e)
 									);
 								}, e -> log.error("Could not create Log Channel for meeting: " + meeting, e)
 						);
 					} else {
-						c.reply(locale.getCREATION_DM_STEP_6_PROCESS_CANCELED()).queue();
+						c.reply(meetingLocale.getCREATION_DM_STEP_6_PROCESS_CANCELED()).queue();
 						log.info("{} canceled the Meeting Creation Flow", user.getAsTag());
 					}
 				}, TIMEOUT_INT, TIMEOUT_UNIT, () -> sendTimeoutMessage(this.channel).queue());
@@ -230,16 +232,6 @@ public class MeetingCreationManager {
 		).queue();
 	}
 
-	private MessageEmbed buildMeetingEmbed(Meeting meeting) {
-		return new EmbedBuilder()
-				.setAuthor(this.user.getAsTag(), null, this.user.getEffectiveAvatarUrl())
-				.setTitle(meeting.getTitle())
-				.setDescription(meeting.getDescription())
-				.setFooter(locale.getCREATION_DM_STEP_6_FOOTER())
-				.setTimestamp(meeting.getDueAt().toLocalDateTime())
-				.build();
-	}
-
 	private MessageAction sendTimeoutMessage(PrivateChannel channel) {
 		var history = channel.getHistory();
 		history.retrievePast(100).queue(
@@ -251,8 +243,8 @@ public class MeetingCreationManager {
 		);
 		return channel.sendMessageEmbeds(
 				new EmbedBuilder()
-						.setTitle(this.locale.getCREATION_DM_TIMED_OUT_TITLE())
-						.setDescription(this.locale.getCREATION_DM_TIMED_OUT_DESCRIPTION())
+						.setTitle(this.meetingLocale.getCREATION_DM_TIMED_OUT_TITLE())
+						.setDescription(this.meetingLocale.getCREATION_DM_TIMED_OUT_DESCRIPTION())
 						.build()
 		);
 	}
@@ -260,8 +252,8 @@ public class MeetingCreationManager {
 	private MessageAction sendTriesExceededMessage(PrivateChannel channel) {
 		return channel.sendMessageEmbeds(
 				new EmbedBuilder()
-						.setTitle(this.locale.getCREATION_DM_NO_TRIES_LEFT_TITLE())
-						.setDescription(this.locale.getCREATION_DM_NO_TRIES_LEFT_DESCRIPTION())
+						.setTitle(this.meetingLocale.getCREATION_DM_NO_TRIES_LEFT_TITLE())
+						.setDescription(this.meetingLocale.getCREATION_DM_NO_TRIES_LEFT_DESCRIPTION())
 						.build()
 		);
 	}

@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.entities.Category;
 @EqualsAndHashCode(callSuper = true)
 public class MeetingConfig extends GuildConfigItem {
 	private long meetingCategoryId;
+	private int maxMeetingsPerUser = 2;
 
 	public Category getMeetingCategory() {
 		return this.getGuild().getCategoryById(this.meetingCategoryId);

@@ -50,9 +50,9 @@ public class MeetingRepository {
 		}
 	}
 
-	private Optional<Meeting> findById(int id) throws SQLException {
+	public Optional<Meeting> findById(int id) throws SQLException {
 		Meeting meeting = null;
-		try (var s = con.prepareStatement("SELECT * FROM meetings WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
+		try (var s = con.prepareStatement("SELECT * FROM meetings WHERE id = ? AND active = TRUE", Statement.RETURN_GENERATED_KEYS)) {
 			s.setInt(1, id);
 			var rs = s.executeQuery();
 			if (rs.next()) {
@@ -63,7 +63,7 @@ public class MeetingRepository {
 		return Optional.ofNullable(meeting);
 	}
 
-	private List<Meeting> getByUserId(long userId) throws SQLException {
+	public List<Meeting> getByUserId(long userId) throws SQLException {
 		List<Meeting> meetings = new ArrayList<>();
 		try (var s = con.prepareStatement("SELECT * FROM meetings WHERE created_by = ?", Statement.RETURN_GENERATED_KEYS)) {
 			s.setLong(1, userId);
