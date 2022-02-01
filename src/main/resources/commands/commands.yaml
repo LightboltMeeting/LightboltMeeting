@@ -5,3 +5,18 @@
 - name: uptime
   description: Checks the Bot's Uptime.
   handler: de.lightbolt.meeting.systems.commands.UptimeCommand
+
+- name: meeting
+  description: Commands that allows users to manage Meetings.
+  subCommands:
+    - name: create
+      description: Create a new Meeting.
+    - name: cancel
+      description: Cancel a single Meeting.
+      options:
+        - name: id
+          description: The Meeting's id.
+          required: true
+          type: INTEGER
+    - name: list
+      description: List all your Meetings.

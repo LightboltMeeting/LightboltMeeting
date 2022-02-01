@@ -7,7 +7,5 @@ import lombok.Getter;
  */
 @Getter
 public class LocaleConfig {
-	private String threeDays;
-	private String oneDay;
-	private String oneHour;
+
 }
