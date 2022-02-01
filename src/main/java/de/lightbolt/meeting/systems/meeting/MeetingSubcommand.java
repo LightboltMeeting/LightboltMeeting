@@ -22,7 +22,7 @@ public abstract class MeetingSubcommand implements ISlashCommand {
 			con.setAutoCommit(true);
 			var reply = this.handleMeetingCommand(
 					event,
-					LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale())).getMeeting(),
+					LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale())).getMeetingCreation(),
 					new MeetingRepository(con)
 			);
 			con.commit();
@@ -32,5 +32,5 @@ public abstract class MeetingSubcommand implements ISlashCommand {
 		}
 	}
 
-	protected abstract ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig.MeetingConfig config, MeetingRepository repo) throws SQLException;
+	protected abstract ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig.MeetingCreationConfig config, MeetingRepository repo) throws SQLException;
 }

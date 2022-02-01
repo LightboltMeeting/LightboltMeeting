@@ -17,15 +17,20 @@ import java.util.Optional;
 public class MeetingRepository {
 	private final Connection con;
 
-	public void insert(Meeting meeting) throws SQLException {
-		var s = con.prepareStatement("INSERT INTO meetings (created_by, participants, created_at, due_at, language) VALUES (?, ?, ?, ?, ?)",
+	public Meeting insert(Meeting meeting) throws SQLException {
+		var s = con.prepareStatement("INSERT INTO meetings (guild_id, created_by, participants, created_at, due_at, title, description, language, log_channel_id, voice_channel_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 				Statement.RETURN_GENERATED_KEYS
 		);
-		s.setLong(1, meeting.getCreatedBy());
-		s.setArray(2, meeting.getParticipants());
-		s.setTimestamp(3, meeting.getCreatedAt());
-		s.setTimestamp(4, meeting.getDueAt());
-		s.setString(5, meeting.getLanguage());
+		s.setLong(1, meeting.getGuildId());
+		s.setLong(2, meeting.getCreatedBy());
+		s.setArray(3, meeting.getParticipants());
+		s.setTimestamp(4, meeting.getCreatedAt());
+		s.setTimestamp(5, meeting.getDueAt());
+		s.setString(6, meeting.getTitle());
+		s.setString(7, meeting.getDescription());
+		s.setString(8, meeting.getLanguage());
+		s.setLong(9, meeting.getLogChannelId());
+		s.setLong(10, meeting.getVoiceChannelId());
 		int rows = s.executeUpdate();
 		if (rows == 0) throw new SQLException("Meeting was not inserted.");
 		ResultSet rs = s.getGeneratedKeys();
@@ -34,6 +39,7 @@ public class MeetingRepository {
 		}
 		s.close();
 		log.info("Inserted new Meeting-Object: {}", meeting);
+		return meeting;
 	}
 
 	public boolean delete(int id) throws SQLException {
@@ -83,11 +89,16 @@ public class MeetingRepository {
 	private Meeting read(ResultSet rs) throws SQLException {
 		Meeting meeting = new Meeting();
 		meeting.setId(rs.getInt("id"));
+		meeting.setGuildId(rs.getLong("guild_id"));
 		meeting.setCreatedBy(rs.getLong("created_by"));
 		meeting.setParticipants(rs.getArray("participants"));
 		meeting.setCreatedAt(rs.getTimestamp("created_at"));
 		meeting.setDueAt(rs.getTimestamp("due_at"));
+		meeting.setTitle(rs.getString("title"));
+		meeting.setDescription(rs.getString("description"));
 		meeting.setLanguage(rs.getString("language"));
+		meeting.setLogChannelId(rs.getLong("log_channel_id"));
+		meeting.setVoiceChannelId(rs.getLong("voice_channel_id"));
 		meeting.setActive(rs.getBoolean("active"));
 		return meeting;
 	}

@@ -9,10 +9,13 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
  */
 public class MeetingManager {
 
-	public static MessageEmbed buildMeetingEmbed(int step, LocaleConfig.MeetingConfig config, String description) {
+	public static MessageEmbed buildMeetingEmbed(int step, LocaleConfig.MeetingCreationConfig config, String description) {
 		return new EmbedBuilder()
 				.setTitle(String.format(config.getCREATION_DM_DEFAULT_EMBED_TITLE(), step, 5))
 				.setDescription(description)
+				.setFooter(String.format(config.getCREATION_DM_DEFAULT_EMBED_FOOTER(),
+						MeetingCreationManager.TIMEOUT_INT,
+						MeetingCreationManager.TIMEOUT_UNIT.name()))
 				.build();
 	}
 }

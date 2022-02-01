@@ -11,10 +11,15 @@ import java.sql.Timestamp;
 @Data
 public class Meeting {
 	private int id;
+	private long guildId;
 	private long createdBy;
 	private Array participants;
 	private Timestamp createdAt;
 	private Timestamp dueAt;
+	private String title;
+	private String description;
 	private String language;
+	private long logChannelId;
+	private long voiceChannelId;
 	private boolean active;
 }
