@@ -1,7 +1,7 @@
 {
   "meeting": {
     "MEETING_EMBED_FOOTER": "Dieses Meeting startet am: ",
-    "meetingCreation": {
+    "creation": {
         "CREATION_START_TOO_MANY_MEETING_DESCRIPTION": "Du kannst kein weiteres Meeting erstellen. Um ein neues Meeting zu erstellen, musst du erst eins löschen.",
         "CREATION_START_NOT_PERMITTED_DESCRIPTION": "Du bist nicht berechtigt ein neues Meeting zu erstellen.",
         "CREATION_START_RESPONSE_TITLE": "Erstelle ein Meeting",
@@ -40,9 +40,13 @@
         "CREATION_DM_STEP_6_PROCESS_CANCELED": "Alle deine Einstellungen wurden verworfen.",
         "CREATION_DM_STEP_6_MEETING_SAVED": "Dein Meeting wurde gespeichert. Ich habe ein Log-Kanal für dein Meeting erstellt: %s"
     },
-    "meetingList": {
+    "commmand": {
       "LIST_REPLY_TEXT": "Du hast %s aktive Meetings:",
-      "LIST_PARTICIPANTS": "Teilnehmer"
+      "LIST_PARTICIPANTS": "Teilnehmer",
+
+      "CANCEL_MEETING_TITLE": "Meeting verworfen",
+      "CANCEL_MEETING_DESCRIPTION": "Das Meeting mit der ID `%s` wurde verworfen.",
+      "CANCEL_MEETING_NOT_FOUND": "Du hast kein Meeting mit der ID `%s`. Die ID eines Meetings siehst du bei `/meeting list`"
     }
   }
 }

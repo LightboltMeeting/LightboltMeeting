@@ -6,8 +6,6 @@ import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -23,10 +21,10 @@ public class ListMeetingsSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
 		var meetings = repo.getByUserId(event.getUser().getIdLong());
-		return event.replyEmbeds(buildMeetingListEmbed(event.getUser(), locale.getMeeting().getMeetingList(), meetings));
+		return event.replyEmbeds(buildMeetingListEmbed(event.getUser(), locale.getMeeting().getCommand(), meetings));
 	}
 
-	private MessageEmbed buildMeetingListEmbed(User user, LocaleConfig.MeetingConfig.MeetingListConfig locale, List<Meeting> meetings) throws SQLException {
+	private MessageEmbed buildMeetingListEmbed(User user, LocaleConfig.MeetingConfig.MeetingCommandConfig locale, List<Meeting> meetings) throws SQLException {
 		var embed = new EmbedBuilder()
 				.setAuthor(user.getAsTag(), null, user.getEffectiveAvatarUrl())
 				.setTitle(String.format(locale.getLIST_REPLY_TEXT(), meetings.size()));

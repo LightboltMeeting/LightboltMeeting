@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class CreateMeetingSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
-		var meetingLocale = locale.getMeeting().getMeetingCreation();
+		var meetingLocale = locale.getMeeting().getCreation();
 		if (repo.getByUserId(event.getUser().getIdLong()).size() > config.getMaxMeetingsPerUser()) {
 			return Responses.error(event, meetingLocale.getCREATION_START_TOO_MANY_MEETING_DESCRIPTION());
 		}

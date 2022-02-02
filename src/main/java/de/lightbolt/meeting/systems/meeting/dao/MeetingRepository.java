@@ -54,6 +54,14 @@ public class MeetingRepository {
 		}
 	}
 
+	public boolean markInactive(int id) throws SQLException {
+		try (var s = con.prepareStatement("UPDATE meetings SET active = FALSE WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
+			s.setInt(1, id);
+			int rows = s.executeUpdate();
+			return rows != 0;
+		}
+	}
+
 	public Optional<Meeting> findById(int id) throws SQLException {
 		Meeting meeting = null;
 		try (var s = con.prepareStatement("SELECT * FROM meetings WHERE id = ? AND active = TRUE", Statement.RETURN_GENERATED_KEYS)) {

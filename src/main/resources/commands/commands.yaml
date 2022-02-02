@@ -14,7 +14,7 @@
     - name: cancel
       description: Cancel a single Meeting.
       options:
-        - name: id
+        - name: meeting-id
           description: The Meeting's id.
           required: true
           type: INTEGER

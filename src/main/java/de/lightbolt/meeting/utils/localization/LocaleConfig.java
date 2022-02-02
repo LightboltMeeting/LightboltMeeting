@@ -14,8 +14,8 @@ public class LocaleConfig {
 	public static class MeetingConfig {
 		private String MEETING_EMBED_FOOTER;
 
-		private MeetingCreationConfig meetingCreation = new MeetingCreationConfig();
-		private MeetingListConfig meetingList = new MeetingListConfig();
+		private MeetingCreationConfig creation = new MeetingCreationConfig();
+		private MeetingCommandConfig command = new MeetingCommandConfig();
 
 		@Data
 		public static class MeetingCreationConfig {
@@ -60,9 +60,13 @@ public class LocaleConfig {
 		}
 
 		@Data
-		public static class MeetingListConfig {
+		public static class MeetingCommandConfig {
 			private String LIST_REPLY_TEXT;
 			private String LIST_PARTICIPANTS;
+
+			private String CANCEL_MEETING_TITLE;
+			private String CANCEL_MEETING_DESCRIPTION;
+			private String CANCEL_MEETING_NOT_FOUND;
 		}
 	}
 }
