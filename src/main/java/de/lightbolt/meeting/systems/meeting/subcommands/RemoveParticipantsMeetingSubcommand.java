@@ -12,7 +12,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-public class AddParticipantsMeetingSubcommand extends MeetingSubcommand {
+public class RemoveParticipantsMeetingSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
 		var idOption = event.getOption("meeting-id");
@@ -28,12 +28,12 @@ public class AddParticipantsMeetingSubcommand extends MeetingSubcommand {
 			var meeting = meetingOptional.get();
 			var participants = meeting.getParticipants();
 			if (Arrays.stream(participants).anyMatch(x -> x == user.getIdLong())) {
-				return Responses.error(event, String.format(com.getMEETING_PARTICIPANT_ALREADY_ADDED(), user.getAsMention()));
+				var newParticipants = ArrayUtils.removeElement(participants, user.getIdLong());
+				repo.updateParticipants(meeting, newParticipants);
+				return Responses.success(event, com.getPARTICIPANTS_REMOVE_SUCCESS_TITLE(),
+						String.format(com.getPARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
 			}
-			var newParticipants = ArrayUtils.add(participants, user.getIdLong());
-			repo.updateParticipants(meeting, newParticipants);
-			return Responses.success(event, com.getPARTICIPANTS_ADD_SUCCESS_TITLE(),
-					String.format(com.getPARTICIPANTS_ADD_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
+			return Responses.error(event, String.format(com.getMEETING_PARTICIPANT_NOT_FOUND(), user.getAsMention()));
 		} else {
 			return Responses.error(event, String.format(com.getMEETING_NOT_FOUND(), id));
 		}

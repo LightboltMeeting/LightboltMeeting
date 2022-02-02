@@ -61,12 +61,21 @@ public class LocaleConfig {
 
 		@Data
 		public static class MeetingCommandConfig {
+			private String MEETING_NOT_FOUND;
+			private String MEETING_PARTICIPANT_ALREADY_ADDED;
+			private String MEETING_PARTICIPANT_NOT_FOUND;
+
 			private String LIST_REPLY_TEXT;
 			private String LIST_PARTICIPANTS;
 
 			private String CANCEL_MEETING_TITLE;
 			private String CANCEL_MEETING_DESCRIPTION;
-			private String CANCEL_MEETING_NOT_FOUND;
+
+			private String PARTICIPANTS_ADD_SUCCESS_TITLE;
+			private String PARTICIPANTS_ADD_SUCCESS_DESCRIPTION;
+
+			private String PARTICIPANTS_REMOVE_SUCCESS_TITLE;
+			private String PARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION;
 		}
 	}
 }

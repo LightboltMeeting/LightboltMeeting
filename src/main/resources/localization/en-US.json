@@ -41,12 +41,21 @@
         "CREATION_DM_STEP_6_MEETING_SAVED": "Your Meeting was saved. I've created a Log Channel for your Meeting: %s"
     },
     "command": {
+      "MEETING_NOT_FOUND": "You don't have a Meeting with ID `%s`. Use `/meeting list` to see your Meeting's IDs.",
+      "MEETING_PARTICIPANT_ALREADY_ADDED": "%s was already added to this meeting.",
+      "MEETING_PARTICIPANT_NOT_FOUND": "%s was not added to the meeting.",
+
       "LIST_REPLY_TEXT": "You have %s active Meetings:",
       "LIST_PARTICIPANTS": "Participants",
 
       "CANCEL_MEETING_TITLE": "Meeting discarded",
       "CANCEL_MEETING_DESCRIPTION": "The Meeting with ID `%s` has been discarded.",
-      "CANCEL_MEETING_NOT_FOUND": "You don't have a Meeting with ID `%s`. Use `/meeting list` to see your Meeting's IDs."
+
+      "PARTICIPANTS_ADD_SUCCESS_TITLE": "Participant added",
+      "PARTICIPANTS_ADD_SUCCESS_DESCRIPTION": "%s was successfully added to Meeting `%s`",
+
+      "PARTICIPANTS_REMOVE_SUCCESS_TITLE": "Participant remove",
+      "PARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION": "%s was successfully removed from Meeting `%s`"
     }
   }
 }

@@ -19,6 +19,32 @@
           required: true
           autocomplete: true
           type: INTEGER
+    - name: add-participants
+      description: Add participants to your Meeting.
+      options:
+        - name: meeting-id
+          description: The Meeting's id.
+          required: true
+          autocomplete: true
+          type: INTEGER
+        - name: user
+          description: The user you want to add.
+          required: true
+          autocomplete: false
+          type: USER
+    - name: remove-participants
+      description: Remove participants.
+      options:
+        - name: meeting-id
+          description: The Meeting's id.
+          required: true
+          autocomplete: true
+          type: INTEGER
+        - name: user
+          description: The user you want to remove.
+          required: true
+          autocomplete: false
+          type: USER
     - name: list
       description: List all your Meetings.
   handler: de.lightbolt.meeting.systems.meeting.MeetingCommandHandler

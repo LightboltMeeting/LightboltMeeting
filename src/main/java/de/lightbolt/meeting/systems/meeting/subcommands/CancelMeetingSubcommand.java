@@ -23,7 +23,7 @@ public class CancelMeetingSubcommand extends MeetingSubcommand {
 			return Responses.success(event, com.getCANCEL_MEETING_TITLE(),
 					String.format(com.getCANCEL_MEETING_DESCRIPTION(), id));
 		} else {
-			return Responses.error(event, String.format(com.getCANCEL_MEETING_NOT_FOUND(), id));
+			return Responses.error(event, String.format(com.getMEETING_NOT_FOUND(), id));
 		}
 	}
 }

@@ -26,6 +26,7 @@ public class AutocompleteListener extends ListenerAdapter {
 		return switch (event.getSubcommandName()) {
 			case "cancel" -> getUserMeetings(event);
 			case "add-participants" -> getUserMeetings(event);
+			case "remove-participants" -> getUserMeetings(event);
 			default -> null;
 		};
 	}
