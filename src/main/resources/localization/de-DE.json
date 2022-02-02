@@ -1,9 +1,7 @@
 {
   "meeting": {
     "MEETING_EMBED_FOOTER": "Dieses Meeting startet am: ",
-
     "meetingCreation": {
-      "meetingCreation": {
         "CREATION_START_TOO_MANY_MEETING_DESCRIPTION": "Du kannst kein weiteres Meeting erstellen. Um ein neues Meeting zu erstellen, musst du erst eins löschen.",
         "CREATION_START_NOT_PERMITTED_DESCRIPTION": "Du bist nicht berechtigt ein neues Meeting zu erstellen.",
         "CREATION_START_RESPONSE_TITLE": "Erstelle ein Meeting",
@@ -41,10 +39,10 @@
         "CREATION_DM_STEP_6_BUTTON_CANCEL_MEETING": "Abbrechen",
         "CREATION_DM_STEP_6_PROCESS_CANCELED": "Alle deine Einstellungen wurden verworfen.",
         "CREATION_DM_STEP_6_MEETING_SAVED": "Dein Meeting wurde gespeichert. Ich habe ein Log-Kanal für dein Meeting erstellt: %s"
-      }
     },
     "meetingList": {
-      "LIST_REPLY_TEXT": "Du hast `%s` aktive Meetings:"
+      "LIST_REPLY_TEXT": "Du hast %s aktive Meetings:",
+      "LIST_PARTICIPANTS": "Teilnehmer"
     }
   }
 }

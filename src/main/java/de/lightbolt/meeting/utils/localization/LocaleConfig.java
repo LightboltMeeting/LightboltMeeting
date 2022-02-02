@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Getter
 public class LocaleConfig {
-	private MeetingConfig meeting = new MeetingConfig();
+	private final MeetingConfig meeting = new MeetingConfig();
 
 	@Data
 	public static class MeetingConfig {
@@ -62,6 +62,7 @@ public class LocaleConfig {
 		@Data
 		public static class MeetingListConfig {
 			private String LIST_REPLY_TEXT;
+			private String LIST_PARTICIPANTS;
 		}
 	}
 }

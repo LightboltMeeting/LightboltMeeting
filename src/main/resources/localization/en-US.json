@@ -1,9 +1,7 @@
 {
   "meeting": {
     "MEETING_EMBED_FOOTER": "This meeting will start at: ",
-
     "meetingCreation": {
-      "meetingCreation": {
         "CREATION_START_TOO_MANY_MEETING_DESCRIPTION": "You cannot create another Meeting. You have to delete a Meeting in order to create a new one.",
         "CREATION_START_NOT_PERMITTED_DESCRIPTION": "You're not permitted to create a new Meeting.",
         "CREATION_START_RESPONSE_TITLE": "Create a new Meeting",
@@ -41,10 +39,10 @@
         "CREATION_DM_STEP_6_BUTTON_CANCEL_MEETING": "Cancel",
         "CREATION_DM_STEP_6_PROCESS_CANCELED": "All your settings have been discarded.",
         "CREATION_DM_STEP_6_MEETING_SAVED": "Your Meeting was saved. I've created a Log Channel for your Meeting: %s"
-      }
     },
     "meetingList": {
-      "LIST_REPLY_TEXT": "You have `%s` active Meetings:"
+      "LIST_REPLY_TEXT": "You have %s active Meetings:",
+      "LIST_PARTICIPANTS": "Participants"
     }
   }
 }

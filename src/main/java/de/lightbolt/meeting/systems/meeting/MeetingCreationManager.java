@@ -19,12 +19,14 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
+import java.sql.Array;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -49,6 +51,7 @@ public class MeetingCreationManager {
 		Meeting meeting = new Meeting();
 		meeting.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 		meeting.setCreatedBy(this.user.getIdLong());
+		meeting.setParticipants(new long[]{user.getIdLong()});
 		consumeGuild(user.getMutualGuilds(), meeting);
 	}
 
