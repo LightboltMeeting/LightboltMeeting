@@ -28,8 +28,8 @@
         "CREATION_DM_STEP_3_DESCRIPTION": "`%s` wurde als Sprache ausgewählt!\nBitte nenne nun den **Zeitpunkt** an dem das Meeting starten soll.\nBitte formatiere das Datum so: `dd/MM/YYYY HH:mm` (UTC) (Beispiel: 13/09/2019 13:05)",
         "CREATION_DM_STEP_3_INVALID_DATE": "Dies ist ein invalides Datum! Bitte versuche es nocheinmal. (%s Versuche übrig)\nBitte formatiere das Datum so: `dd/MM/YYYY HH:mm` (UTC) (Beispiel: 13/09/2019 13:05)",
 
-        "CREATION_DM_STEP_4_DESCRIPTION": "Das Meeting findet also am <t:%s:F> statt!\nBitte nenne nun den **Titel** des Meetings. (Maximal 64 Zeichen)",
-        "CREATION_DM_STEP_4_INVALID_TITLE": "Der Titel ist länger als 64 Zeichen. Bitte versuche es nocheinmal. (%s Versuche übrig)",
+        "CREATION_DM_STEP_4_DESCRIPTION": "Das Meeting findet also am <t:%s:F> statt!\nBitte nenne nun den **Titel** des Meetings. (Maximal 32 Zeichen)",
+        "CREATION_DM_STEP_4_INVALID_TITLE": "Der Titel ist länger als 32 Zeichen. Bitte versuche es nocheinmal. (%s Versuche übrig)",
 
         "CREATION_DM_STEP_5_DESCRIPTION": "Der Titel ist also `%s`.\nBitte formuliere nun eine kurze **Beschreibung** des Meetings. (Maximal 256 Zeichen)",
         "CREATION_DM_STEP_5_INVALID_DESCRIPTION": "Die Beschreibung ist länger als **256** Zeichen. Bitte versuche es nocheinmal. (%s Versuche übrig)",

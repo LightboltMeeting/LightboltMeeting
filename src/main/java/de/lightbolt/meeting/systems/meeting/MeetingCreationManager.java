@@ -141,7 +141,7 @@ public class MeetingCreationManager {
 				p -> p.getAuthor().equals(this.user),
 				c -> {
 					var title = c.getMessage().getContentRaw();
-					if (title.length() > 64) {
+					if (title.length() > 32) {
 						tries--;
 						this.channel.sendMessage(String.format(meetingLocale.getCREATION_DM_STEP_4_INVALID_TITLE(), tries)).queue();
 						if (tries < 1) {

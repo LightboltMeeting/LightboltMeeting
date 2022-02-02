@@ -28,8 +28,8 @@
         "CREATION_DM_STEP_3_DESCRIPTION": "`%s` it is!\nPlease choose the **Date and Time** the Meeting should start.\nPlease format the date like this: `dd/MM/YYYY HH:mm` (UTC) (e.g. 13/09/2019 13:05)",
         "CREATION_DM_STEP_3_INVALID_DATE": "You've provided an invalid date. Please try again. (%s tries left)\nPlease format the date like this: `dd/MM/YYYY HH:mm` (UTC) (e.g. 13/09/2019 13:05)",
 
-        "CREATION_DM_STEP_4_DESCRIPTION": "Alright, the Meeting will start at <t:%s:F>!\nPlease provide a **Title** for this Meeting. (max. 64 characters)",
-        "CREATION_DM_STEP_4_INVALID_TITLE": "The given Title was longer than 64 characters. Please try again. (%s tries left)",
+        "CREATION_DM_STEP_4_DESCRIPTION": "Alright, the Meeting will start at <t:%s:F>!\nPlease provide a **Title** for this Meeting. (max. 32 characters)",
+        "CREATION_DM_STEP_4_INVALID_TITLE": "The given Title was longer than 32 characters. Please try again. (%s tries left)",
 
         "CREATION_DM_STEP_5_DESCRIPTION": "The Meetings Title has been set to `%s`.\nPlease provide a fitting **Description** for this Meeting. (max. 256 characters)",
         "CREATION_DM_STEP_5_INVALID_DESCRIPTION": "The given Description was longer than 256 characters. Please try again. (%s tries left)",

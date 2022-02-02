@@ -215,7 +215,7 @@ public class InteractionHandler extends ListenerAdapter {
 		return privileges;
 	}
 
-	private SlashCommandConfig findCommandConfig(String name, SlashCommandConfig[] configs) {
+	public static SlashCommandConfig findCommandConfig(String name, SlashCommandConfig[] configs) {
 		for (SlashCommandConfig config : configs) {
 			if (name.equals(config.getName())) {
 				return config;

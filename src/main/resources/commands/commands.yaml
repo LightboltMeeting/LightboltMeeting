@@ -17,6 +17,7 @@
         - name: meeting-id
           description: The Meeting's id.
           required: true
+          autocomplete: true
           type: INTEGER
     - name: list
       description: List all your Meetings.
