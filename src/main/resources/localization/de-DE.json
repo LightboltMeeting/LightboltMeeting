@@ -34,7 +34,7 @@
         "CREATION_DM_STEP_4_INVALID_TITLE": "Der Titel ist länger als 64 Zeichen. Bitte versuche es nocheinmal. (%s Versuche übrig)",
 
         "CREATION_DM_STEP_5_DESCRIPTION": "Der Titel ist also `%s`.\nBitte formuliere nun eine kurze **Beschreibung** des Meetings. (Maximal 256 Zeichen)",
-        "CREATION_DM_STEP_5_INVALID_TITLE": "Die Beschreibung ist länger als **256** Zeichen. Bitte versuche es nocheinmal. (%s Versuche übrig)",
+        "CREATION_DM_STEP_5_INVALID_DESCRIPTION": "Die Beschreibung ist länger als **256** Zeichen. Bitte versuche es nocheinmal. (%s Versuche übrig)",
 
         "CREATION_DM_STEP_6_DESCRIPTION": "Okay, das wärs! Dies ist dein Meeting:",
         "CREATION_DM_STEP_6_BUTTON_SAVE_MEETING": "Speichern",

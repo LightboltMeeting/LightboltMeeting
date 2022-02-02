@@ -34,7 +34,7 @@
         "CREATION_DM_STEP_4_INVALID_TITLE": "The given Title was longer than 64 characters. Please try again. (%s tries left)",
 
         "CREATION_DM_STEP_5_DESCRIPTION": "The Meetings Title has been set to `%s`.\nPlease provide a fitting **Description** for this Meeting. (max. 256 characters)",
-        "CREATION_DM_STEP_5_INVALID_TITLE": "The given Description was longer than 256 characters. Please try again. (%s tries left)",
+        "CREATION_DM_STEP_5_INVALID_DESCRIPTION": "The given Description was longer than 256 characters. Please try again. (%s tries left)",
 
         "CREATION_DM_STEP_6_DESCRIPTION": "Alright, all set! Your Meeting will look like this:",
         "CREATION_DM_STEP_6_BUTTON_SAVE_MEETING": "Save Meeting",
