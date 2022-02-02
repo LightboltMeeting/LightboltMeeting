@@ -77,7 +77,7 @@ public class MeetingRepository {
 
 	public List<Meeting> getByUserId(long userId) throws SQLException {
 		List<Meeting> meetings = new ArrayList<>();
-		try (var s = con.prepareStatement("SELECT * FROM meetings WHERE created_by = ?", Statement.RETURN_GENERATED_KEYS)) {
+		try (var s = con.prepareStatement("SELECT * FROM meetings WHERE created_by = ? AND active = true", Statement.RETURN_GENERATED_KEYS)) {
 			s.setLong(1, userId);
 			var rs = s.executeQuery();
 			while (rs.next()) {
