@@ -2,7 +2,6 @@ package de.lightbolt.meeting.listener;
 
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
-import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -13,21 +12,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 @Slf4j
-public class AutocompleteListener extends ListenerAdapter {
+public class AutoCompleteListener extends ListenerAdapter {
 	@Override
 	public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
 		switch (event.getName()) {
 			case "meeting" -> handleMeetingCommand(event).queue();
-			default -> log.warn("Unknown Command Name");
+			default -> throw new IllegalStateException("Unknown Command: " + event.getName());
 		}
 	}
 
 	private AutoCompleteCallbackAction handleMeetingCommand(CommandAutoCompleteInteractionEvent event) {
+		System.out.println(event.getSubcommandName());
 		return switch (event.getSubcommandName()) {
-			case "cancel" -> getUserMeetings(event);
-			case "add-participants" -> getUserMeetings(event);
-			case "remove-participants" -> getUserMeetings(event);
-			default -> null;
+			case "discard" -> getUserMeetings(event);
+			case "add-participant" -> getUserMeetings(event);
+			case "remove-participant" -> getUserMeetings(event);
+			default -> throw new IllegalStateException("Unknown Subcommand: " + event.getSubcommandName());
 		};
 	}
 

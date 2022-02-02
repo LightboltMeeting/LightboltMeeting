@@ -45,6 +45,7 @@ public class LocaleConfig {
 
 			private String CREATION_DM_STEP_3_DESCRIPTION;
 			private String CREATION_DM_STEP_3_INVALID_DATE;
+			private String CREATION_DM_STEP_3_DATE_OUT_OF_RANGE;
 
 			private String CREATION_DM_STEP_4_DESCRIPTION;
 			private String CREATION_DM_STEP_4_INVALID_TITLE;

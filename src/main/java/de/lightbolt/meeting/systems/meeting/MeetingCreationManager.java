@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -59,7 +60,7 @@ public class MeetingCreationManager {
 				.setPlaceholder(meetingLocale.getCREATION_DM_STEP_1_SELECTION_MENU_PLACEHOLDER());
 		user.getMutualGuilds().forEach(g -> selectMenu.addOption(
 				g.getName(), g.getId(), String.format(meetingLocale.getCREATION_DM_STEP_1_SELECTION_MENU_DESCRIPTION(), g.getMemberCount())));
-		channel.sendMessageEmbeds(MeetingManager.buildMeetingCreationEmbed(1, meetingLocale,
+		channel.sendMessageEmbeds(buildMeetingCreationEmbed(1, meetingLocale,
 						String.format(meetingLocale.getCREATION_DM_STEP_1_DESCRIPTION(), channel.getUser().getAsMention(), mutualGuilds.size())))
 				.setActionRow(selectMenu.build())
 				.queue();
@@ -89,7 +90,7 @@ public class MeetingCreationManager {
 					String.format(meetingLocale.getCREATION_DM_STEP_2_SELECTION_MENU_DESCRIPTION(), language.getName())
 			);
 		}
-		channel.sendMessageEmbeds(MeetingManager.buildMeetingCreationEmbed(2, meetingLocale,
+		channel.sendMessageEmbeds(buildMeetingCreationEmbed(2, meetingLocale,
 						String.format(meetingLocale.getCREATION_DM_STEP_2_DESCRIPTION(), guild.getName())))
 				.setActionRow(selectMenu.build())
 				.queue();
@@ -108,7 +109,7 @@ public class MeetingCreationManager {
 	}
 
 	private void consumeDate(Language language, Meeting meeting) {
-		channel.sendMessageEmbeds(MeetingManager.buildMeetingCreationEmbed(3, meetingLocale,
+		channel.sendMessageEmbeds(buildMeetingCreationEmbed(3, meetingLocale,
 				String.format(meetingLocale.getCREATION_DM_STEP_3_DESCRIPTION(), language.getName()))).queue();
 		Bot.waiter.waitForEvent(
 				MessageReceivedEvent.class,
@@ -117,6 +118,11 @@ public class MeetingCreationManager {
 					LocalDateTime dueAt;
 					try {
 						dueAt = LocalDateTime.parse(c.getMessage().getContentDisplay(), DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+					if (dueAt.isBefore(LocalDateTime.now()) || dueAt.isAfter(LocalDateTime.now().plusYears(2))) {
+						this.channel.sendMessage(meetingLocale.getCREATION_DM_STEP_3_DATE_OUT_OF_RANGE()).queue();
+						consumeDate(language, meeting);
+						return;
+					}
 					} catch (DateTimeParseException e) {
 						tries--;
 						this.channel.sendMessage(String.format(meetingLocale.getCREATION_DM_STEP_3_INVALID_DATE(), tries)).queue();
@@ -134,7 +140,7 @@ public class MeetingCreationManager {
 	}
 
 	private void consumeTitle(LocalDateTime time, Meeting meeting) {
-		channel.sendMessageEmbeds(MeetingManager.buildMeetingCreationEmbed(4, meetingLocale,
+		channel.sendMessageEmbeds(buildMeetingCreationEmbed(4, meetingLocale,
 				String.format(meetingLocale.getCREATION_DM_STEP_4_DESCRIPTION(), time.toEpochSecond(ZoneOffset.UTC)))).queue();
 		Bot.waiter.waitForEvent(
 				MessageReceivedEvent.class,
@@ -158,7 +164,7 @@ public class MeetingCreationManager {
 	}
 
 	private void consumeDescription(Meeting meeting) {
-		channel.sendMessageEmbeds(MeetingManager.buildMeetingCreationEmbed(5, meetingLocale,
+		channel.sendMessageEmbeds(buildMeetingCreationEmbed(5, meetingLocale,
 				String.format(meetingLocale.getCREATION_DM_STEP_5_DESCRIPTION(), meeting.getTitle()))).queue();
 		Bot.waiter.waitForEvent(
 				MessageReceivedEvent.class,
@@ -181,6 +187,7 @@ public class MeetingCreationManager {
 				}, TIMEOUT_INT, TIMEOUT_UNIT, () -> sendTimeoutMessage(this.channel).queue());
 	}
 
+	// TODO: Cleanup
 	private void consumeMeetingCheck(Meeting meeting) {
 		channel.sendMessage(meetingLocale.getCREATION_DM_STEP_6_DESCRIPTION())
 				.setEmbeds(MeetingManager.buildMeetingEmbed(meeting, user, locale))
@@ -197,27 +204,37 @@ public class MeetingCreationManager {
 					if (id[1].equals("save")) {
 						var guild = jda.getGuildById(meeting.getGuildId());
 						var category = Bot.config.get(guild).getMeeting().getMeetingCategory();
-						category.createTextChannel(String.format("%s-log", meeting.getTitle())).queue(
-								text -> {
-									text.getManager().putRolePermissionOverride(guild.getIdLong(), 0, Permission.ALL_PERMISSIONS)
-											.putMemberPermissionOverride(user.getIdLong(), Permission.ALL_PERMISSIONS, 0)
-											.queue();
-									text.sendMessage(user.getAsMention()).setEmbeds(MeetingManager.buildMeetingEmbed(meeting, user, locale)).queue();
-									category.createVoiceChannel(String.format("%s", meeting.getTitle())).queue(
-											voice -> {
-												voice.getManager().putRolePermissionOverride(guild.getIdLong(), 0, Permission.ALL_PERMISSIONS).queue();
-												meeting.setLogChannelId(text.getIdLong());
-												meeting.setVoiceChannelId(voice.getIdLong());
-												try (var con = Bot.dataSource.getConnection()) {
-													new MeetingRepository(con).insert(meeting);
-												} catch (SQLException e) {
-													e.printStackTrace();
-												}
-												c.reply(String.format(meetingLocale.getCREATION_DM_STEP_6_MEETING_SAVED(), text.getAsMention())).queue();
-											}, e -> log.error("Could not create Voice Channel for meeting: " + meeting, e)
-									);
-								}, e -> log.error("Could not create Log Channel for meeting: " + meeting, e)
-						);
+						try (var con = Bot.dataSource.getConnection()) {
+							Meeting inserted = new MeetingRepository(con).insert(meeting);
+							category.createTextChannel(String.format("meeting-%s-log", inserted.getId())).queue(
+									channel -> {
+										channel.getManager().putMemberPermissionOverride(user.getIdLong(),
+												Permission.getRaw(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND), 0).queue();
+										channel.sendMessageEmbeds(MeetingManager.buildMeetingEmbed(inserted, user ,locale)).queue();
+										try (var newCon = Bot.dataSource.getConnection()) {
+											var repo = new MeetingRepository(newCon);
+											repo.updateLogChannel(inserted, channel.getIdLong());
+										} catch (SQLException e) {
+											e.printStackTrace();
+										}
+									}, e -> log.error("Could not create Log Channel for Meeting: " + meeting, e));
+							category.createVoiceChannel(String.format("%s — %s", inserted.getId(), inserted.getTitle())).queue(
+									channel -> {
+										channel.getManager().putMemberPermissionOverride(user.getIdLong(),
+												Collections.singleton(Permission.VIEW_CHANNEL),
+												Collections.singleton(Permission.VOICE_CONNECT)
+										).queue();
+										try (var newCon = Bot.dataSource.getConnection()) {
+											var repo = new MeetingRepository(newCon);
+											repo.updateVoiceChannel(inserted, channel.getIdLong());
+										} catch (SQLException e) {
+											e.printStackTrace();
+										}
+									}, e -> log.error("Could not create Voice Channel for Meeting: " + meeting, e));
+							c.reply(String.format(meetingLocale.getCREATION_DM_STEP_6_MEETING_SAVED(), inserted.getId())).queue();
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
 					} else {
 						c.reply(meetingLocale.getCREATION_DM_STEP_6_PROCESS_CANCELED()).queue();
 						log.info("{} canceled the Meeting Creation Flow", user.getAsTag());
@@ -232,6 +249,17 @@ public class MeetingCreationManager {
 				.collect(Collectors.toList())
 		).queue();
 	}
+
+	private MessageEmbed buildMeetingCreationEmbed(int step, LocaleConfig.MeetingConfig.MeetingCreationConfig config, String description) {
+		return new EmbedBuilder()
+				.setTitle(String.format(config.getCREATION_DM_DEFAULT_EMBED_TITLE(), step, 5))
+				.setDescription(description)
+				.setFooter(String.format(config.getCREATION_DM_DEFAULT_EMBED_FOOTER(),
+						MeetingCreationManager.TIMEOUT_INT,
+						MeetingCreationManager.TIMEOUT_UNIT.name()))
+				.build();
+	}
+
 
 	private MessageAction sendTimeoutMessage(PrivateChannel channel) {
 		var history = channel.getHistory();

@@ -27,6 +27,7 @@
 
         "CREATION_DM_STEP_3_DESCRIPTION": "`%s` wurde als Sprache ausgewählt!\nBitte nenne nun den **Zeitpunkt** an dem das Meeting starten soll.\nBitte formatiere das Datum so: `dd/MM/YYYY HH:mm` (UTC) (Beispiel: 13/09/2019 13:05)",
         "CREATION_DM_STEP_3_INVALID_DATE": "Dies ist ein invalides Datum! Bitte versuche es nocheinmal. (%s Versuche übrig)\nBitte formatiere das Datum so: `dd/MM/YYYY HH:mm` (UTC) (Beispiel: 13/09/2019 13:05)",
+        "CREATION_DM_STEP_3_DATE_OUT_OF_RANGE": "Das Datum muss zwischen Jetzt und 2 Jahren in der Zukunft liegen. Bitte versuche es erneut.",
 
         "CREATION_DM_STEP_4_DESCRIPTION": "Das Meeting findet also am <t:%s:F> statt!\nBitte nenne nun den **Titel** des Meetings. (Maximal 32 Zeichen)",
         "CREATION_DM_STEP_4_INVALID_TITLE": "Der Titel ist länger als 32 Zeichen. Bitte versuche es nocheinmal. (%s Versuche übrig)",
@@ -38,7 +39,7 @@
         "CREATION_DM_STEP_6_BUTTON_SAVE_MEETING": "Speichern",
         "CREATION_DM_STEP_6_BUTTON_CANCEL_MEETING": "Abbrechen",
         "CREATION_DM_STEP_6_PROCESS_CANCELED": "Alle deine Einstellungen wurden verworfen.",
-        "CREATION_DM_STEP_6_MEETING_SAVED": "Dein Meeting wurde gespeichert. Ich habe ein Log-Kanal für dein Meeting erstellt: %s"
+        "CREATION_DM_STEP_6_MEETING_SAVED": "Alles gespeichert! Die ID deines Meetings lautet `%s`.\nIch habe einen Log- und einen Sprachkanal für dein Meeting erstellt. Sobald das Meeting beginnt können alle Teilnehmer dem Sprachkanal beitreten. (Teilnehmer können mit dem `/meeting manage add-participants` Befehl hinzugefügt werden!)"
     },
     "commmand": {
       "MEETING_NOT_FOUND": "Du hast kein Meeting mit der ID `%s`. Die ID eines Meetings siehst du bei `/meeting list`",

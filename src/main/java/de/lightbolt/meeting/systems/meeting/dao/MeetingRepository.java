@@ -41,7 +41,6 @@ public class MeetingRepository {
 		if (rs.next()) {
 			meeting.setId(rs.getInt(1));
 		}
-		s.close();
 		log.info("Inserted new Meeting: {}", meeting);
 		return meeting;
 	}
@@ -93,9 +92,31 @@ public class MeetingRepository {
 		s.setArray(1, con.createArrayOf("BIGINT", Arrays.stream(participants).mapToObj(o -> (Object) o).toArray()));
 		s.setInt(2, old.getId());
 		int rows = s.executeUpdate();
-		if (rows == 0) throw new SQLException("Meeting Participants was not updated. Meeting: " + old);
+		if (rows == 0) throw new SQLException("Could not update Meeting participants. Meeting: " + old);
 		old.setParticipants(participants);
 		return old;
+	}
+
+	public void updateLogChannel(Meeting old, long logChannelId) {
+		try (var s = con.prepareStatement("UPDATE meetings SET log_channel_id = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
+			s.setLong(1, logChannelId);
+			s.setInt(2, old.getId());
+			int rows = s.executeUpdate();
+			if (rows == 0) throw new SQLException("Could not update Meeting Log Channel. Meeting: " + old);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateVoiceChannel(Meeting old, long voiceChannelId) {
+		try (var s = con.prepareStatement("UPDATE meetings SET voice_channel_id = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
+			s.setLong(1, voiceChannelId);
+			s.setInt(2, old.getId());
+			int rows = s.executeUpdate();
+			if (rows == 0) throw new SQLException("Could not update Meeting Voice Channel. Meeting: " + old);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private Meeting read(ResultSet rs) throws SQLException {

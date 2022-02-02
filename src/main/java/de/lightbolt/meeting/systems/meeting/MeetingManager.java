@@ -19,16 +19,6 @@ public class MeetingManager {
 	private final Guild guild;
 	private final Meeting meeting;
 
-	public static MessageEmbed buildMeetingCreationEmbed(int step, LocaleConfig.MeetingConfig.MeetingCreationConfig config, String description) {
-		return new EmbedBuilder()
-				.setTitle(String.format(config.getCREATION_DM_DEFAULT_EMBED_TITLE(), step, 5))
-				.setDescription(description)
-				.setFooter(String.format(config.getCREATION_DM_DEFAULT_EMBED_FOOTER(),
-						MeetingCreationManager.TIMEOUT_INT,
-						MeetingCreationManager.TIMEOUT_UNIT.name()))
-				.build();
-	}
-
 	public static MessageEmbed buildMeetingEmbed(Meeting meeting, User createdBy, LocaleConfig locale) {
 		return new EmbedBuilder()
 				.setAuthor(createdBy.getAsTag(), null, createdBy.getEffectiveAvatarUrl())
