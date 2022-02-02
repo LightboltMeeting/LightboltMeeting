@@ -49,7 +49,11 @@
       "LIST_PARTICIPANTS": "Teilnehmer",
 
       "CANCEL_MEETING_TITLE": "Meeting verworfen",
-      "CANCEL_MEETING_DESCRIPTION": "Das Meeting mit der ID `%s` wurde verworfen.",
+      "CANCEL_MEETING_DESCRIPTION": "Das Meeting mit der ID `%s` wurde verworfen."
+    },
+    "log": {
+      "LOG_PARTICIPANT_ADDED": "%s wurde zu dem Meeting hinzugefügt.",
+      "LOG_PARTICIPANT_REMOVED": "%s wurde von dem Meeting entfernt."
     }
   }
 }

@@ -2,9 +2,12 @@ package de.lightbolt.meeting.systems.meeting.subcommands;
 
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
+import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.MeetingSubcommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
+import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
+import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.apache.commons.lang3.ArrayUtils;
@@ -32,6 +35,7 @@ public class AddParticipantsMeetingSubcommand extends MeetingSubcommand {
 			}
 			var newParticipants = ArrayUtils.add(participants, user.getIdLong());
 			repo.updateParticipants(meeting, newParticipants);
+			new MeetingManager(event.getGuild(), meeting).addParticipant(user);
 			return Responses.success(event, com.getPARTICIPANTS_ADD_SUCCESS_TITLE(),
 					String.format(com.getPARTICIPANTS_ADD_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
 		} else {

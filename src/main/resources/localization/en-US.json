@@ -56,6 +56,10 @@
 
       "PARTICIPANTS_REMOVE_SUCCESS_TITLE": "Participant remove",
       "PARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION": "%s was successfully removed from Meeting `%s`"
+    },
+    "log": {
+      "LOG_PARTICIPANT_ADDED": "%s has been added to this Meeting.",
+      "LOG_PARTICIPANT_REMOVED": "%s has been removed from this Meeting."
     }
   }
 }

@@ -202,7 +202,7 @@ public class MeetingCreationManager {
 									text.getManager().putRolePermissionOverride(guild.getIdLong(), 0, Permission.ALL_PERMISSIONS)
 											.putMemberPermissionOverride(user.getIdLong(), Permission.ALL_PERMISSIONS, 0)
 											.queue();
-									text.sendMessageEmbeds(MeetingManager.buildMeetingEmbed(meeting, user, locale)).queue();
+									text.sendMessage(user.getAsMention()).setEmbeds(MeetingManager.buildMeetingEmbed(meeting, user, locale)).queue();
 									category.createVoiceChannel(String.format("%s", meeting.getTitle())).queue(
 											voice -> {
 												voice.getManager().putRolePermissionOverride(guild.getIdLong(), 0, Permission.ALL_PERMISSIONS).queue();

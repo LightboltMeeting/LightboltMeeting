@@ -16,6 +16,7 @@ public class LocaleConfig {
 
 		private MeetingCreationConfig creation = new MeetingCreationConfig();
 		private MeetingCommandConfig command = new MeetingCommandConfig();
+		private MeetingLogConfig log = new MeetingLogConfig();
 
 		@Data
 		public static class MeetingCreationConfig {
@@ -76,6 +77,12 @@ public class LocaleConfig {
 
 			private String PARTICIPANTS_REMOVE_SUCCESS_TITLE;
 			private String PARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION;
+		}
+
+		@Data
+		public static class MeetingLogConfig {
+			private String LOG_PARTICIPANT_ADDED;
+			private String LOG_PARTICIPANT_REMOVED;
 		}
 	}
 }
