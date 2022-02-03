@@ -83,7 +83,7 @@ public class MeetingCreationManager {
 		var selectMenu = SelectMenu.create("meeting-dm-language")
 				.setRequiredRange(1, 1)
 				.setPlaceholder(meetingLocale.getCREATION_DM_STEP_2_SELECTION_MENU_PLACEHOLDER());
-		for (var language : Language.values()) {
+		for (Language language : Language.values()) {
 			selectMenu.addOption(
 					language.getName(),
 					language.name(),

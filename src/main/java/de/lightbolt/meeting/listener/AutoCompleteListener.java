@@ -2,6 +2,7 @@ package de.lightbolt.meeting.listener;
 
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
+import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -36,7 +37,7 @@ public class AutoCompleteListener extends ListenerAdapter {
 			var repo = new MeetingRepository(con);
 			var meetings = repo.getByUserId(event.getUser().getIdLong());
 			ArrayList<Command.Choice> choices = new ArrayList<>();
-			for (var meeting : meetings) {
+			for (Meeting meeting : meetings) {
 				choices.add(new Command.Choice(String.format("%s — Meeting: \"%s\"", meeting.getId(), meeting.getTitle()), meeting.getId()));
 			}
 			return event.replyChoices(choices);

@@ -28,7 +28,7 @@ public class ListMeetingsSubcommand extends MeetingSubcommand {
 		var embed = new EmbedBuilder()
 				.setAuthor(user.getAsTag(), null, user.getEffectiveAvatarUrl())
 				.setTitle(String.format(locale.getLIST_REPLY_TEXT(), meetings.size()));
-		for (var m : meetings) {
+		for (Meeting m : meetings) {
 			embed.addField(String.format("#%s — %s", m.getId(), m.getTitle()),
 					String.format("\"%s\"\n\n%s: %s", m.getDescription(), locale.getLIST_PARTICIPANTS(),
 							Arrays.stream(m.getParticipants())

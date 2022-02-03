@@ -85,7 +85,7 @@ public class ReflectionUtils {
 	 */
 	public static Map<String, Class<?>> getFields(String parentPropertyName, Class<?> parentClass) throws IllegalAccessException {
 		Map<String, Class<?>> fieldsMap = new HashMap<>();
-		for (var field : parentClass.getDeclaredFields()) {
+		for (Field field : parentClass.getDeclaredFields()) {
 			// Skip transient fields.
 			if (Modifier.isTransient(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) continue;
 			field.setAccessible(true);

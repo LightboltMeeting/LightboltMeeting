@@ -28,7 +28,7 @@ public final class CommandDataLoader {
 	public static SlashCommandConfig[] loadSlashCommandConfig(String... resources) {
 		Yaml yaml = new Yaml();
 		Set<SlashCommandConfig> commands = new HashSet<>();
-		for (var resource : resources) {
+		for (String resource : resources) {
 			InputStream is = CommandDataLoader.class.getClassLoader().getResourceAsStream(resource);
 			if (is == null) {
 				System.err.println("Could not load commands from resource: " + resource);
@@ -36,7 +36,7 @@ public final class CommandDataLoader {
 			}
 			SlashCommandConfig[] cs = yaml.loadAs(is, SlashCommandConfig[].class);
 			if (cs != null) {
-				for (var newCommand : cs) {
+				for (SlashCommandConfig newCommand : cs) {
 					if (commands.contains(newCommand)) {
 						log.warn("Found duplicate command {} in file {}. Already loaded a command with this name; this one will be ignored.", newCommand.getName(), resource);
 					}
@@ -57,7 +57,7 @@ public final class CommandDataLoader {
 	public static ContextCommandConfig[] loadContextCommandConfig(String... resources) {
 		Yaml yaml = new Yaml();
 		Set<ContextCommandConfig> commands = new HashSet<>();
-		for (var resource : resources) {
+		for (String resource : resources) {
 			InputStream is = CommandDataLoader.class.getClassLoader().getResourceAsStream(resource);
 			if (is == null) {
 				System.err.println("Could not load commands from resource: " + resource);
@@ -65,7 +65,7 @@ public final class CommandDataLoader {
 			}
 			ContextCommandConfig[] cs = yaml.loadAs(is, ContextCommandConfig[].class);
 			if (cs != null) {
-				for (var newCommand : cs) {
+				for (ContextCommandConfig newCommand : cs) {
 					if (commands.contains(newCommand)) {
 						log.warn("Found duplicate command {} in file {}. Already loaded a command with this name; this one will be ignored.", newCommand.getName(), resource);
 					}
