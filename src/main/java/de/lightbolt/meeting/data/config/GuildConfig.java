@@ -3,6 +3,7 @@ package de.lightbolt.meeting.data.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import de.lightbolt.meeting.data.config.guild.MeetingConfig;
 import de.lightbolt.meeting.data.config.guild.ModerationConfig;
 import de.lightbolt.meeting.data.config.guild.SlashCommandConfig;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class GuildConfig {
 
 	private ModerationConfig moderation;
 	private SlashCommandConfig slashCommand;
+	private MeetingConfig meeting;
 
 	/**
 	 * Constructor that initializes all Config classes.
@@ -39,6 +41,7 @@ public class GuildConfig {
 		// Initialize all config items.
 		this.moderation = new ModerationConfig();
 		this.slashCommand = new SlashCommandConfig();
+		this.meeting = new MeetingConfig();
 		this.setGuild(guild);
 	}
 
@@ -82,6 +85,8 @@ public class GuildConfig {
 		this.moderation.setGuildConfig(this);
 		if (this.slashCommand == null) this.slashCommand = new SlashCommandConfig();
 		this.slashCommand.setGuildConfig(this);
+		if (this.meeting == null) this.meeting = new MeetingConfig();
+		this.meeting.setGuildConfig(this);
 	}
 
 	/**

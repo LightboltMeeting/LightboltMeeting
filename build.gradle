@@ -36,6 +36,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
     testCompileOnly 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    // Apache Commons
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 }
 
 jar{

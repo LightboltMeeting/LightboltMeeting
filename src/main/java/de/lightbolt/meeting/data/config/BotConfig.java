@@ -134,7 +134,7 @@ public class BotConfig {
 		} catch (IOException e) {
 			log.error("Could not save systems config.", e);
 		}
-		for (var config : this.guilds.values()) {
+		for (GuildConfig config : this.guilds.values()) {
 			config.flush();
 		}
 	}

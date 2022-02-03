@@ -5,3 +5,50 @@
 - name: uptime
   description: Checks the Bot's Uptime.
   handler: de.lightbolt.meeting.systems.commands.UptimeCommand
+
+- name: meeting
+  description: Commands that allows users create and list Meetings.
+  subCommands:
+    - name: create
+      description: Create a new Meeting.
+    - name: list
+      description: List all your Meetings.
+  subCommandGroups:
+    - name: manage
+      description: Command that allows users to manage Meetings.
+      subCommands:
+        - name: discard
+          description: Discards a single Meeting.
+          options:
+            - name: meeting-id
+              description: The Meeting's id.
+              required: true
+              autocomplete: true
+              type: INTEGER
+        - name: add-participant
+          description: Add participants to your Meeting.
+          options:
+            - name: meeting-id
+              description: The Meeting's id.
+              required: true
+              autocomplete: true
+              type: INTEGER
+            - name: user
+              description: The user you want to add.
+              required: true
+              autocomplete: false
+              type: USER
+        - name: remove-participant
+          description: Remove participants.
+          options:
+            - name: meeting-id
+              description: The Meeting's id.
+              required: true
+              autocomplete: true
+              type: INTEGER
+            - name: user
+              description: The user you want to remove.
+              required: true
+              autocomplete: false
+              type: USER
+  handler: de.lightbolt.meeting.systems.meeting.MeetingCommandHandler

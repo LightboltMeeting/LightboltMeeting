@@ -2,8 +2,10 @@ package de.lightbolt.meeting;
 
 import com.zaxxer.hikari.HikariDataSource;
 import de.lightbolt.meeting.command.InteractionHandler;
+import de.lightbolt.meeting.command.eventwaiter.EventWaiter;
 import de.lightbolt.meeting.data.config.BotConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
+import de.lightbolt.meeting.listener.AutoCompleteListener;
 import de.lightbolt.meeting.listener.StartupListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -28,7 +30,7 @@ public class Bot {
 	/**
 	 * A reference to the slash command listener that's the main point of
 	 * interaction for users with this bot. It's marked as a publicly accessible
-	 * reference so that {@link SlashCommands#registerSlashCommands} can
+	 * reference so that {@link InteractionHandler#registerCommands} can
 	 * be called wherever it's needed.
 	 */
 	public static InteractionHandler interactionHandler;
@@ -43,6 +45,10 @@ public class Bot {
 	 * tasks outside the main event processing thread.
 	 */
 	public static ScheduledExecutorService asyncPool;
+	/**
+	 * A reference to the bot's {@link EventWaiter}.
+	 */
+	public static EventWaiter waiter;
 
 	public static void main(String[] args) throws LoginException {
 		TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
@@ -50,20 +56,22 @@ public class Bot {
 		dataSource = DbHelper.initDataSource(config);
 		interactionHandler = new InteractionHandler();
 		asyncPool = Executors.newScheduledThreadPool(config.getSystems().getAsyncPoolSize());
+		waiter = new EventWaiter();
 		var jda = JDABuilder.createDefault(config.getSystems().getJdaBotToken())
 				.setStatus(OnlineStatus.DO_NOT_DISTURB)
 				.setChunkingFilter(ChunkingFilter.ALL)
 				.setMemberCachePolicy(MemberCachePolicy.ALL)
 				.enableCache(CacheFlag.ACTIVITY)
 				.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
-				.addEventListeners(interactionHandler)
+				.addEventListeners(interactionHandler, waiter)
 				.build();
 		addEventListener(jda);
 	}
 
 	private static void addEventListener(JDA jda) {
 		jda.addEventListener(
-				new StartupListener()
+				new StartupListener(),
+				new AutoCompleteListener()
 		);
 	}
 }

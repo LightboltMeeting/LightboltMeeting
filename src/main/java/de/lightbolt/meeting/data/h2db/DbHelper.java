@@ -123,7 +123,7 @@ public class DbHelper {
 		var queries = Arrays.stream(new String(is.readAllBytes()).split(";"))
 				.filter(s -> !s.isBlank()).toList();
 		try (var c = dataSource.getConnection()) {
-			for (var query : queries) {
+			for (String query : queries) {
 				var stmt = c.createStatement();
 				stmt.executeUpdate(query);
 				stmt.close();

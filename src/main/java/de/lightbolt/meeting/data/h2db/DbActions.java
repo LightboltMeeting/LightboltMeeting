@@ -112,7 +112,7 @@ public class DbActions {
 	public static int update(String query, Object... params) throws SQLException {
 		try (var c = Bot.dataSource.getConnection(); var stmt = c.prepareStatement(query)) {
 			int i = 1;
-			for (var param : params) {
+			for (Object param : params) {
 				stmt.setObject(i++, param);
 			}
 			return stmt.executeUpdate();

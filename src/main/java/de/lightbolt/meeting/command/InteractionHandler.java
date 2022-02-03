@@ -4,6 +4,7 @@ import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.command.data.CommandDataLoader;
 import de.lightbolt.meeting.command.data.context_commands.ContextCommandConfig;
 import de.lightbolt.meeting.command.data.slash_commands.SlashCommandConfig;
+import de.lightbolt.meeting.command.data.slash_commands.SlashCommandPrivilegeConfig;
 import de.lightbolt.meeting.command.interfaces.IMessageContextCommand;
 import de.lightbolt.meeting.command.interfaces.ISlashCommand;
 import de.lightbolt.meeting.command.interfaces.IUserContextCommand;
@@ -152,7 +153,7 @@ public class InteractionHandler extends ListenerAdapter {
 			throw new IllegalArgumentException(String.format("Cannot add more than %s Message Context Commands", Commands.MAX_MESSAGE_COMMANDS));
 		}
 		CommandListUpdateAction commandUpdateAction = guild.updateCommands();
-		for (var config : slashCommandConfigs) {
+		for (SlashCommandConfig config : slashCommandConfigs) {
 			if (config.getHandler() != null && !config.getHandler().isEmpty()) {
 				try {
 					Class<?> handlerClass = Class.forName(config.getHandler());
@@ -165,7 +166,7 @@ public class InteractionHandler extends ListenerAdapter {
 			}
 			commandUpdateAction.addCommands(config.toData());
 		}
-		for (var config : contextConfigs) {
+		for (ContextCommandConfig config : contextConfigs) {
 			if (config.getHandler() != null && !config.getHandler().isEmpty()) {
 				try {
 					Class<?> handlerClass = Class.forName(config.getHandler());
@@ -207,7 +208,7 @@ public class InteractionHandler extends ListenerAdapter {
 	private List<CommandPrivilege> getCommandPrivileges(Guild guild, SlashCommandConfig config) {
 		if (config == null || config.getPrivileges() == null) return Collections.emptyList();
 		List<CommandPrivilege> privileges = new ArrayList<>();
-		for (var privilegeConfig : config.getPrivileges()) {
+		for (SlashCommandPrivilegeConfig privilegeConfig : config.getPrivileges()) {
 			privileges.add(privilegeConfig.toData(guild, Bot.config));
 			log.info("\t{}[{}]{} Registering privilege: {}",
 					Constants.TEXT_WHITE, config.getName(), Constants.TEXT_RESET, privilegeConfig);

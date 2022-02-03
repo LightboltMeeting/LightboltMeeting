@@ -39,10 +39,11 @@ public class EventWaiter implements EventListener {
 
 	/**
 	 * Waits for a specific event and executes the given Consumer.
+	 *
 	 * @param classType The event's class.
 	 * @param condition The condition that should be fulfilled.
-	 * @param action The Consumer that is executed once the given event is received.
-	 * @param <T> The generic type.
+	 * @param action    The Consumer that is executed once the given event is received.
+	 * @param <T>       The generic type.
 	 */
 	public <T extends Event> void waitForEvent(Class<T> classType, Predicate<T> condition, Consumer<T> action) {
 		waitForEvent(classType, condition, action, -1, null, null);
@@ -50,13 +51,14 @@ public class EventWaiter implements EventListener {
 
 	/**
 	 * Same as {@link EventWaiter#waitForEvent(Class, Predicate, Consumer)}, but adds a Timeout.
-	 * @param classType The event's class.
-	 * @param condition The condition that should be fulfilled.
-	 * @param action The Consumer that is executed once the given event is received.
-	 * @param timeout The timeout as a single number.
-	 * @param unit The timeout's {@link TimeUnit}.
+	 *
+	 * @param classType     The event's class.
+	 * @param condition     The condition that should be fulfilled.
+	 * @param action        The Consumer that is executed once the given event is received.
+	 * @param timeout       The timeout as a single number.
+	 * @param unit          The timeout's {@link TimeUnit}.
 	 * @param timeoutAction A runnable that is executed when the event waiter timed out.
-	 * @param <T> The generic type.
+	 * @param <T>           The generic type.
 	 */
 	public <T extends Event> void waitForEvent(Class<T> classType, Predicate<T> condition, Consumer<T> action,
 	                                           long timeout, TimeUnit unit, Runnable timeoutAction) {
@@ -68,8 +70,9 @@ public class EventWaiter implements EventListener {
 		if (timeout > 0 && unit != null) {
 			threadpool.schedule(() -> {
 				try {
-					if (set.remove(we) && timeoutAction != null)
+					if (set.remove(we) && timeoutAction != null) {
 						timeoutAction.run();
+					}
 				} catch (Exception ex) {
 					log.error("Failed to run timeoutAction", ex);
 				}
