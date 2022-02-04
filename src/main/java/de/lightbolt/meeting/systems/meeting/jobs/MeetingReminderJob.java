@@ -29,7 +29,7 @@ public class MeetingReminderJob implements Job {
 			StringBuilder participants = new StringBuilder();
 			TextChannel logChannel = Bot.jda.getTextChannelById(meeting.getLogChannelId());
 
-			for (long participantId: meeting.getParticipants()) {
+			for (long participantId : meeting.getParticipants()) {
 				participants.append(Bot.jda.getUserById(participantId).getAsMention());
 			}
 
@@ -46,12 +46,11 @@ public class MeetingReminderJob implements Job {
 		if (Integer.parseInt(reminder) > 60) {
 			reminderTimeUnit = "Hours";
 			reminder = String.valueOf((Integer.parseInt(reminder) / 60));
-		}
-		else reminderTimeUnit = "Minutes";
+		} else reminderTimeUnit = "Minutes";
 
-		 return new EmbedBuilder()
-				 .setTitle(logLocale.getLOG_REMINDER_TITLE())
-				 .setDescription(String.format(logLocale.getLOG_REMINDER_DESCRIPTION(), reminder, reminderTimeUnit))
-				 .build();
+		return new EmbedBuilder()
+				.setTitle(logLocale.getLOG_REMINDER_TITLE())
+				.setDescription(String.format(logLocale.getLOG_REMINDER_DESCRIPTION(), reminder, reminderTimeUnit))
+				.build();
 	}
 }

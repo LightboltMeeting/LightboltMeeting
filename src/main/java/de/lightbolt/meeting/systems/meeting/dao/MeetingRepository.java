@@ -3,8 +3,6 @@ package de.lightbolt.meeting.systems.meeting.dao;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -90,7 +88,7 @@ public class MeetingRepository {
 		List<Meeting> meetings = new ArrayList<>();
 		try (PreparedStatement s = con.prepareStatement("SELECT * FROM meetings WHERE active = true", Statement.RETURN_GENERATED_KEYS)) {
 			ResultSet rs = s.executeQuery();
-			while (rs.next()){
+			while (rs.next()) {
 				meetings.add(this.read(rs));
 			}
 			rs.close();

@@ -61,7 +61,7 @@ public class EventWaiter implements EventListener {
 	 * @param <T>           The generic type.
 	 */
 	public <T extends Event> void waitForEvent(Class<T> classType, Predicate<T> condition, Consumer<T> action,
-	                                           long timeout, TimeUnit unit, Runnable timeoutAction) {
+											   long timeout, TimeUnit unit, Runnable timeoutAction) {
 
 		WaitingEvent we = new WaitingEvent<>(condition, action);
 		Set<WaitingEvent> set = waitingEvents.computeIfAbsent(classType, c -> new HashSet<>());

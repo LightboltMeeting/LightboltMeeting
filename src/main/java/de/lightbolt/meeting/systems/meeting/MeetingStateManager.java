@@ -3,11 +3,14 @@ package de.lightbolt.meeting.systems.meeting;
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
-import de.lightbolt.meeting.systems.meeting.jobs.MeetingStartJob;
 import de.lightbolt.meeting.systems.meeting.jobs.MeetingReminderJob;
+import de.lightbolt.meeting.systems.meeting.jobs.MeetingStartJob;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.*;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.Date;
@@ -28,7 +31,7 @@ public class MeetingStateManager {
 			scheduler.start();
 			this.activeMeetings = new MeetingRepository(Bot.dataSource.getConnection()).getActive();
 
-			for (Meeting meeting:activeMeetings) {
+			for (Meeting meeting : activeMeetings) {
 				scheduleMeeting(meeting);
 			}
 			log.info("Scheduled {} Meetings", activeMeetings.size());
@@ -53,7 +56,7 @@ public class MeetingStateManager {
 			scheduler.scheduleJob(job, trigger);
 
 			//Schedule Jobs for Meeting Reminders
-			for (Integer reminder:meetingConfig.getMeetingReminders()) {
+			for (Integer reminder : meetingConfig.getMeetingReminders()) {
 				if (new Date().after(new Date(meeting.getDueAt().getTime() - (reminder * 60000)))) return;
 				JobDetail reminderJob = newJob(MeetingReminderJob.class)
 						.withIdentity(meeting.getId() + "-reminder-" + reminder)

@@ -29,7 +29,7 @@ public class MeetingStartJob implements Job {
 			StringBuilder participants = new StringBuilder();
 			TextChannel logChannel = Bot.jda.getTextChannelById(meeting.getLogChannelId());
 
-			for (long participantId: meeting.getParticipants()) {
+			for (long participantId : meeting.getParticipants()) {
 				participants.append(Bot.jda.getUserById(participantId).getAsMention());
 			}
 

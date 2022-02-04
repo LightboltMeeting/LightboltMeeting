@@ -2,7 +2,6 @@ package de.lightbolt.meeting.systems.meeting.model;
 
 import lombok.Data;
 
-import java.sql.Array;
 import java.sql.Timestamp;
 
 /**
