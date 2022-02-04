@@ -27,7 +27,10 @@ public class MeetingReminderJob implements Job {
 		try {
 			String[] jobDetail = context.getJobDetail().getKey().getName().split("-");
 			Optional<Meeting> meetingOptional = new MeetingRepository(Bot.dataSource.getConnection()).findById(Integer.parseInt(jobDetail[0]));
-			if (!meetingOptional.isPresent()) log.warn("Meeting doesn't exist, cannot execute reminder job.");
+			if (!meetingOptional.isPresent()) {
+				log.warn("Meeting doesn't exist, cannot execute reminder job.");
+				return;
+			}
 			Meeting meeting = meetingOptional.get();
 			locale = LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage()));
 			logLocale = locale.getMeeting().getLog();
