@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.dv8tion.jda.api.entities.Category;
 
+import java.util.List;
+
 /**
  * Configuration for the guild's moderation system.
  */
@@ -13,6 +15,7 @@ import net.dv8tion.jda.api.entities.Category;
 public class MeetingConfig extends GuildConfigItem {
 	private long meetingCategoryId;
 	private int maxMeetingsPerUser = 2;
+	private List<Integer> meetingReminders = List.of(10, 60, 360, 1440);
 
 	public Category getMeetingCategory() {
 		return this.getGuild().getCategoryById(this.meetingCategoryId);

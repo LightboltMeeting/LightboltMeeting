@@ -84,6 +84,12 @@ public class LocaleConfig {
 		public static class MeetingLogConfig {
 			private String LOG_PARTICIPANT_ADDED;
 			private String LOG_PARTICIPANT_REMOVED;
+
+			private String LOG_REMINDER_TITLE;
+			private String LOG_REMINDER_DESCRIPTION;
+
+			private String LOG_START_TITLE;
+			private String LOG_START_DESCRIPTION;
 		}
 	}
 }

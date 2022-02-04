@@ -3,11 +3,10 @@ package de.lightbolt.meeting.systems.meeting.dao;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -80,6 +79,18 @@ public class MeetingRepository {
 			s.setLong(1, userId);
 			var rs = s.executeQuery();
 			while (rs.next()) {
+				meetings.add(this.read(rs));
+			}
+			rs.close();
+			return meetings;
+		}
+	}
+
+	public List<Meeting> getActive() throws SQLException {
+		List<Meeting> meetings = new ArrayList<>();
+		try (PreparedStatement s = con.prepareStatement("SELECT * FROM meetings WHERE active = true", Statement.RETURN_GENERATED_KEYS)) {
+			ResultSet rs = s.executeQuery();
+			while (rs.next()){
 				meetings.add(this.read(rs));
 			}
 			rs.close();
