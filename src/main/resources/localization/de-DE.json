@@ -45,16 +45,31 @@
       "MEETING_NOT_FOUND": "Du hast kein Meeting mit der ID `%s`. Die ID eines Meetings siehst du bei `/meeting list`",
       "MEETING_PARTICIPANT_ALREADY_ADDED": "%s wurde schon zu diesem Meeting hinzugefügt.",
       "MEETING_PARTICIPANT_NOT_FOUND": "%s ist kein Teilnehmer des Meetings.",
+      "MEETING_ADMIN_ALREADY_ADDED": "%s ist bereits ein Admin.",
+      "MEETING_ADMIN_NOT_FOUND": "%s ist kein Admin.",
+      "MEETING_ADMIN_NOT_A_PARTICIPANT": "%s ist kein Teilnehmer des Meetings.",
 
       "LIST_REPLY_TEXT": "Du hast %s aktive Meetings:",
       "LIST_PARTICIPANTS": "Teilnehmer",
 
       "CANCEL_MEETING_TITLE": "Meeting verworfen",
-      "CANCEL_MEETING_DESCRIPTION": "Das Meeting mit der ID `%s` wurde verworfen."
+      "CANCEL_MEETING_DESCRIPTION": "Das Meeting mit der ID `%s` wurde verworfen.",
+
+      "PARTICIPANTS_ADD_SUCCESS_TITLE": "Teilnehmer hinzugefügt",
+      "PARTICIPANTS_ADD_SUCCESS_DESCRIPTION": "%s wurde erfolgreich zu `%s` hinzugefügt.",
+      "PARTICIPANTS_REMOVE_SUCCESS_TITLE": "Teilnehmer entfernt",
+      "PARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION": "%s wurde erfolgreich von `%s` entfernt.",
+
+      "ADMINS_ADD_SUCCESS_TITLE": "Admin hinzugefügt",
+      "ADMINS_ADD_SUCCESS_DESCRIPTION": "%s ist nun ein Administrator von `%s`.",
+      "ADMINS_REMOVE_SUCCESS_TITLE": "Admin entfernt",
+      "ADMINS_REMOVE_SUCCESS_DESCRIPTION": "%s ist kein Administrator von `%s` mehr."
     },
     "log": {
       "LOG_PARTICIPANT_ADDED": "%s wurde zu dem Meeting hinzugefügt.",
-      "LOG_PARTICIPANT_REMOVED": "%s wurde von dem Meeting entfernt."
+      "LOG_PARTICIPANT_REMOVED": "%s wurde von dem Meeting entfernt.",
+      "LOG_ADMIN_ADDED": "%s ist nun ein Admin.",
+      "LOG_ADMIN_REMOVED": "%s ist kein Admin mehr."
     }
   }
 }

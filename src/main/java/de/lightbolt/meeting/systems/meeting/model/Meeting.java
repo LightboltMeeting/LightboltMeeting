@@ -2,7 +2,6 @@ package de.lightbolt.meeting.systems.meeting.model;
 
 import lombok.Data;
 
-import java.sql.Array;
 import java.sql.Timestamp;
 
 /**
@@ -14,6 +13,7 @@ public class Meeting {
 	private long guildId;
 	private long createdBy;
 	private long[] participants;
+	private long[] admins;
 	private Timestamp createdAt;
 	private Timestamp dueAt;
 	private String title;

@@ -51,6 +51,7 @@ public class MeetingCreationManager {
 		meeting.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 		meeting.setCreatedBy(this.user.getIdLong());
 		meeting.setParticipants(new long[]{user.getIdLong()});
+		meeting.setAdmins(new long[]{user.getIdLong()});
 		consumeGuild(user.getMutualGuilds(), meeting);
 	}
 
@@ -118,11 +119,11 @@ public class MeetingCreationManager {
 					LocalDateTime dueAt;
 					try {
 						dueAt = LocalDateTime.parse(c.getMessage().getContentDisplay(), DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-					if (dueAt.isBefore(LocalDateTime.now()) || dueAt.isAfter(LocalDateTime.now().plusYears(2))) {
-						this.channel.sendMessage(meetingLocale.getCREATION_DM_STEP_3_DATE_OUT_OF_RANGE()).queue();
-						consumeDate(language, meeting);
-						return;
-					}
+						if (dueAt.isBefore(LocalDateTime.now()) || dueAt.isAfter(LocalDateTime.now().plusYears(2))) {
+							this.channel.sendMessage(meetingLocale.getCREATION_DM_STEP_3_DATE_OUT_OF_RANGE()).queue();
+							consumeDate(language, meeting);
+							return;
+						}
 					} catch (DateTimeParseException e) {
 						tries--;
 						this.channel.sendMessage(String.format(meetingLocale.getCREATION_DM_STEP_3_INVALID_DATE(), tries)).queue();
@@ -210,7 +211,7 @@ public class MeetingCreationManager {
 									channel -> {
 										channel.getManager().putMemberPermissionOverride(user.getIdLong(),
 												Permission.getRaw(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND), 0).queue();
-										channel.sendMessageEmbeds(MeetingManager.buildMeetingEmbed(inserted, user ,locale)).queue();
+										channel.sendMessageEmbeds(MeetingManager.buildMeetingEmbed(inserted, user, locale)).queue();
 										try (var newCon = Bot.dataSource.getConnection()) {
 											var repo = new MeetingRepository(newCon);
 											repo.updateLogChannel(inserted, channel.getIdLong());

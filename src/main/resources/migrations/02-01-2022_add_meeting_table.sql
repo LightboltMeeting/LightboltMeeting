@@ -4,6 +4,7 @@ CREATE TABLE meetings
 	guild_id         BIGINT       NOT NULL,
 	created_by       BIGINT       NOT NULL,
 	participants     ARRAY                 DEFAULT NULL,
+	admins           ARRAY                 DEFAULT NULL,
 	created_at       TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
 	due_at           TIMESTAMP(0) NOT NULL,
 	title            VARCHAR(64)  NOT NULL,

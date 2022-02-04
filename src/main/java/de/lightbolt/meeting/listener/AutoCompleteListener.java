@@ -23,11 +23,12 @@ public class AutoCompleteListener extends ListenerAdapter {
 	}
 
 	private AutoCompleteCallbackAction handleMeetingCommand(CommandAutoCompleteInteractionEvent event) {
-		System.out.println(event.getSubcommandName());
 		return switch (event.getSubcommandName()) {
 			case "discard" -> getUserMeetings(event);
 			case "add-participant" -> getUserMeetings(event);
 			case "remove-participant" -> getUserMeetings(event);
+			case "add-admin" -> getUserMeetings(event);
+			case "remove-admin" -> getUserMeetings(event);
 			default -> throw new IllegalStateException("Unknown Subcommand: " + event.getSubcommandName());
 		};
 	}

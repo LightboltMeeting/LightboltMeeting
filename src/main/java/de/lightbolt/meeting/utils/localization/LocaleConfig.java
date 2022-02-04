@@ -66,6 +66,9 @@ public class LocaleConfig {
 			private String MEETING_NOT_FOUND;
 			private String MEETING_PARTICIPANT_ALREADY_ADDED;
 			private String MEETING_PARTICIPANT_NOT_FOUND;
+			private String MEETING_ADMIN_ALREADY_ADDED;
+			private String MEETING_ADMIN_NOT_FOUND;
+			private String MEETING_ADMIN_NOT_A_PARTICIPANT;
 
 			private String LIST_REPLY_TEXT;
 			private String LIST_PARTICIPANTS;
@@ -75,15 +78,21 @@ public class LocaleConfig {
 
 			private String PARTICIPANTS_ADD_SUCCESS_TITLE;
 			private String PARTICIPANTS_ADD_SUCCESS_DESCRIPTION;
-
 			private String PARTICIPANTS_REMOVE_SUCCESS_TITLE;
 			private String PARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION;
+
+			private String ADMINS_ADD_SUCCESS_TITLE;
+			private String ADMINS_ADD_SUCCESS_DESCRIPTION;
+			private String ADMINS_REMOVE_SUCCESS_TITLE;
+			private String ADMINS_REMOVE_SUCCESS_DESCRIPTION;
 		}
 
 		@Data
 		public static class MeetingLogConfig {
 			private String LOG_PARTICIPANT_ADDED;
 			private String LOG_PARTICIPANT_REMOVED;
+			private String LOG_ADMIN_ADDED;
+			private String LOG_ADMIN_REMOVED;
 		}
 	}
 }
