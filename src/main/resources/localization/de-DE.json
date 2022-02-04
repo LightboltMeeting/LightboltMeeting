@@ -60,7 +60,10 @@
       "LOG_REMINDER_DESCRIPTION": "Das Meeting beginnt in %s %s.",
 
       "LOG_START_TITLE": "Meeting Beginnt",
-      "LOG_START_DESCRIPTION": "Das Meeting beginnt jetzt."
+      "LOG_START_DESCRIPTION": "Das Meeting beginnt jetzt.",
+
+      "LOG_TIMEUNIT_MINUTES": "Minuten",
+      "LOG_TIMEUNIT_HOURS": "Stunden"
     }
   }
 }

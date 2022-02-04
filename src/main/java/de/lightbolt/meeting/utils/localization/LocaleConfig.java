@@ -90,6 +90,9 @@ public class LocaleConfig {
 
 			private String LOG_START_TITLE;
 			private String LOG_START_DESCRIPTION;
+
+			private String LOG_TIMEUNIT_MINUTES;
+			private String LOG_TIMEUNIT_HOURS;
 		}
 	}
 }
