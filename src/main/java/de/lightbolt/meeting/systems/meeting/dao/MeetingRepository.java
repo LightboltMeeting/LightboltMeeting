@@ -85,6 +85,18 @@ public class MeetingRepository {
 		}
 	}
 
+	public List<Meeting> getActive() throws SQLException {
+		List<Meeting> meetings = new ArrayList<>();
+		try (PreparedStatement s = con.prepareStatement("SELECT * FROM meetings WHERE active = true", Statement.RETURN_GENERATED_KEYS)) {
+			ResultSet rs = s.executeQuery();
+			while (rs.next()) {
+				meetings.add(this.read(rs));
+			}
+			rs.close();
+			return meetings;
+		}
+	}
+
 	public Meeting updateParticipants(Meeting old, long[] participants) throws SQLException {
 		var s = con.prepareStatement("UPDATE meetings SET participants = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS);
 		s.setArray(1, con.createArrayOf("BIGINT", Arrays.stream(participants).mapToObj(o -> (Object) o).toArray()));

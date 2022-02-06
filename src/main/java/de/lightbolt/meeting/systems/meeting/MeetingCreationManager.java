@@ -233,6 +233,7 @@ public class MeetingCreationManager {
 										}
 									}, e -> log.error("Could not create Voice Channel for Meeting: " + meeting, e));
 							c.reply(String.format(meetingLocale.getCREATION_DM_STEP_6_MEETING_SAVED(), inserted.getId())).queue();
+							Bot.meetingStateManager.scheduleMeeting(new MeetingRepository(Bot.dataSource.getConnection()).findById(inserted.getId()).get());
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}
