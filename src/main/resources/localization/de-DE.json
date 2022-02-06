@@ -54,7 +54,16 @@
     },
     "log": {
       "LOG_PARTICIPANT_ADDED": "%s wurde zu dem Meeting hinzugefügt.",
-      "LOG_PARTICIPANT_REMOVED": "%s wurde von dem Meeting entfernt."
+      "LOG_PARTICIPANT_REMOVED": "%s wurde von dem Meeting entfernt.",
+
+      "LOG_REMINDER_TITLE": "Meeting Erinnerung",
+      "LOG_REMINDER_DESCRIPTION": "Das Meeting beginnt in %s %s.",
+
+      "LOG_START_TITLE": "Meeting Beginnt",
+      "LOG_START_DESCRIPTION": "Das Meeting beginnt jetzt in %s.",
+
+      "LOG_TIMEUNIT_MINUTES": "Minuten",
+      "LOG_TIMEUNIT_HOURS": "Stunden"
     }
   }
 }

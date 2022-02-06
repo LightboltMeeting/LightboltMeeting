@@ -7,6 +7,7 @@ import de.lightbolt.meeting.data.config.BotConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.listener.AutoCompleteListener;
 import de.lightbolt.meeting.listener.StartupListener;
+import de.lightbolt.meeting.systems.meeting.MeetingStateManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -27,6 +28,10 @@ public class Bot {
 	 * The set of configuration properties that this bot uses.
 	 */
 	public static BotConfig config;
+	/**
+	 * A reference to the {@link JDA} instance.
+	 */
+	public static JDA jda;
 	/**
 	 * A reference to the slash command listener that's the main point of
 	 * interaction for users with this bot. It's marked as a publicly accessible
@@ -49,6 +54,10 @@ public class Bot {
 	 * A reference to the bot's {@link EventWaiter}.
 	 */
 	public static EventWaiter waiter;
+	/**
+	 * A reference to the bot's {@link MeetingStateManager}.
+	 */
+	public static MeetingStateManager meetingStateManager;
 
 	public static void main(String[] args) throws LoginException {
 		TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
@@ -57,7 +66,7 @@ public class Bot {
 		interactionHandler = new InteractionHandler();
 		asyncPool = Executors.newScheduledThreadPool(config.getSystems().getAsyncPoolSize());
 		waiter = new EventWaiter();
-		var jda = JDABuilder.createDefault(config.getSystems().getJdaBotToken())
+		jda = JDABuilder.createDefault(config.getSystems().getJdaBotToken())
 				.setStatus(OnlineStatus.DO_NOT_DISTURB)
 				.setChunkingFilter(ChunkingFilter.ALL)
 				.setMemberCachePolicy(MemberCachePolicy.ALL)
