@@ -41,7 +41,7 @@
         "CREATION_DM_STEP_6_PROCESS_CANCELED": "Alle deine Einstellungen wurden verworfen.",
         "CREATION_DM_STEP_6_MEETING_SAVED": "Alles gespeichert! Die ID deines Meetings lautet `%s`.\nIch habe einen Log- und einen Sprachkanal für dein Meeting erstellt. Sobald das Meeting beginnt können alle Teilnehmer dem Sprachkanal beitreten. (Teilnehmer können mit dem `/meeting manage add-participants` Befehl hinzugefügt werden!)"
     },
-    "commmand": {
+    "command": {
       "MEETING_NOT_FOUND": "Du hast kein Meeting mit der ID `%s`. Die ID eines Meetings siehst du bei `/meeting list`",
       "MEETING_PARTICIPANT_ALREADY_ADDED": "%s wurde schon zu diesem Meeting hinzugefügt.",
       "MEETING_PARTICIPANT_NOT_FOUND": "%s ist kein Teilnehmer des Meetings.",
