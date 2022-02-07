@@ -18,8 +18,10 @@ public class MeetingCommandHandler extends DelegatingCommandHandler {
 		this.addSubcommandGroup(
 				"manage", new DelegatingCommandHandler(Map.of(
 						"discard", new DiscardMeetingSubcommand(),
-						"add-participant", new AddParticipantsMeetingSubcommand(),
-						"remove-participant", new RemoveParticipantsMeetingSubcommand()
+						"add-participant", new AddParticipantSubcommand(),
+						"remove-participant", new RemoveParticipantSubcommand(),
+						"add-admin", new AddAdminSubcommand(),
+						"remove-admin", new RemoveAdminSubcommand()
 				)));
 	}
 }

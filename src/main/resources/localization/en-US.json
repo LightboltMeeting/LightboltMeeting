@@ -45,6 +45,9 @@
       "MEETING_NOT_FOUND": "You don't have a Meeting with ID `%s`. Use `/meeting list` to see your Meeting's IDs.",
       "MEETING_PARTICIPANT_ALREADY_ADDED": "%s was already added to this meeting.",
       "MEETING_PARTICIPANT_NOT_FOUND": "%s was not added to the meeting.",
+      "MEETING_ADMIN_ALREADY_ADDED": "%s is already an admin.",
+      "MEETING_ADMIN_NOT_FOUND": "%s is not an admin.",
+      "MEETING_ADMIN_NOT_A_PARTICIPANT": "%s is not a participant of this meeting.",
 
       "LIST_REPLY_TEXT": "You have %s active Meetings:",
       "LIST_PARTICIPANTS": "Participants",
@@ -54,9 +57,13 @@
 
       "PARTICIPANTS_ADD_SUCCESS_TITLE": "Participant added",
       "PARTICIPANTS_ADD_SUCCESS_DESCRIPTION": "%s was successfully added to Meeting `%s`",
-
       "PARTICIPANTS_REMOVE_SUCCESS_TITLE": "Participant remove",
-      "PARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION": "%s was successfully removed from Meeting `%s`"
+      "PARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION": "%s was successfully removed from Meeting `%s`",
+
+      "ADMINS_ADD_SUCCESS_TITLE": "Admin added",
+      "ADMINS_ADD_SUCCESS_DESCRIPTION": "%s is now an admin of `%s`",
+      "ADMINS_REMOVE_SUCCESS_TITLE": "Admin remove",
+      "ADMINS_REMOVE_SUCCESS_DESCRIPTION": "%s is not an admin of `%s` anymore."
     },
     "log": {
       "LOG_PARTICIPANT_ADDED": "%s has been added to this Meeting.",

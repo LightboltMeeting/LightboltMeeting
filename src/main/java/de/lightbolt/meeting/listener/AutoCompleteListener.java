@@ -27,6 +27,8 @@ public class AutoCompleteListener extends ListenerAdapter {
 			case "discard" -> getUserMeetings(event);
 			case "add-participant" -> getUserMeetings(event);
 			case "remove-participant" -> getUserMeetings(event);
+			case "add-admin" -> getUserMeetings(event);
+			case "remove-admin" -> getUserMeetings(event);
 			default -> throw new IllegalStateException("Unknown Subcommand: " + event.getSubcommandName());
 		};
 	}

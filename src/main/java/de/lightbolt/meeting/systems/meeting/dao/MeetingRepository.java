@@ -19,19 +19,20 @@ public class MeetingRepository {
 	private final Connection con;
 
 	public Meeting insert(Meeting meeting) throws SQLException {
-		var s = con.prepareStatement("INSERT INTO meetings (guild_id, created_by, participants, created_at, due_at, title, description, language, log_channel_id, voice_channel_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		var s = con.prepareStatement("INSERT INTO meetings (guild_id, created_by, participants, admins, created_at, due_at, title, description, language, log_channel_id, voice_channel_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 				Statement.RETURN_GENERATED_KEYS
 		);
 		s.setLong(1, meeting.getGuildId());
 		s.setLong(2, meeting.getCreatedBy());
 		s.setArray(3, con.createArrayOf("BIGINT", Arrays.stream(meeting.getParticipants()).mapToObj(o -> (Object) o).toArray()));
-		s.setTimestamp(4, meeting.getCreatedAt());
-		s.setTimestamp(5, meeting.getDueAt());
-		s.setString(6, meeting.getTitle());
-		s.setString(7, meeting.getDescription());
-		s.setString(8, meeting.getLanguage());
-		s.setLong(9, meeting.getLogChannelId());
-		s.setLong(10, meeting.getVoiceChannelId());
+		s.setArray(4, con.createArrayOf("BIGINT", Arrays.stream(meeting.getAdmins()).mapToObj(o -> (Object) o).toArray()));
+		s.setTimestamp(5, meeting.getCreatedAt());
+		s.setTimestamp(6, meeting.getDueAt());
+		s.setString(7, meeting.getTitle());
+		s.setString(8, meeting.getDescription());
+		s.setString(9, meeting.getLanguage());
+		s.setLong(10, meeting.getLogChannelId());
+		s.setLong(11, meeting.getVoiceChannelId());
 		int rows = s.executeUpdate();
 		if (rows == 0) throw new SQLException("Meeting was not inserted.");
 		ResultSet rs = s.getGeneratedKeys();
@@ -73,7 +74,7 @@ public class MeetingRepository {
 
 	public List<Meeting> getByUserId(long userId) throws SQLException {
 		List<Meeting> meetings = new ArrayList<>();
-		try (var s = con.prepareStatement("SELECT * FROM meetings WHERE created_by = ? AND active = true", Statement.RETURN_GENERATED_KEYS)) {
+		try (var s = con.prepareStatement("SELECT * FROM meetings WHERE created_by = ? AND active = TRUE", Statement.RETURN_GENERATED_KEYS)) {
 			s.setLong(1, userId);
 			var rs = s.executeQuery();
 			while (rs.next()) {
@@ -106,6 +107,16 @@ public class MeetingRepository {
 		return old;
 	}
 
+	public Meeting updateAdmins(Meeting old, long[] admins) throws SQLException {
+		var s = con.prepareStatement("UPDATE meetings SET admins = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS);
+		s.setArray(1, con.createArrayOf("BIGINT", Arrays.stream(admins).mapToObj(o -> (Object) o).toArray()));
+		s.setInt(2, old.getId());
+		int rows = s.executeUpdate();
+		if (rows == 0) throw new SQLException("Could not update Meeting admins. Meeting: " + old);
+		old.setParticipants(admins);
+		return old;
+	}
+
 	public void updateLogChannel(Meeting old, long logChannelId) {
 		try (var s = con.prepareStatement("UPDATE meetings SET log_channel_id = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
 			s.setLong(1, logChannelId);
@@ -129,16 +140,12 @@ public class MeetingRepository {
 	}
 
 	private Meeting read(ResultSet rs) throws SQLException {
-		Object[] tmp = (Object[]) rs.getArray("participants").getArray();
-		long[] array = new long[tmp.length];
-		for (int i = 0; i < tmp.length; i++) {
-			array[i] = (Long) tmp[i];
-		}
 		Meeting meeting = new Meeting();
 		meeting.setId(rs.getInt("id"));
 		meeting.setGuildId(rs.getLong("guild_id"));
 		meeting.setCreatedBy(rs.getLong("created_by"));
-		meeting.setParticipants(array);
+		meeting.setParticipants(this.convertArrayToLongArray(rs.getArray("participants")));
+		meeting.setAdmins(this.convertArrayToLongArray(rs.getArray("admins")));
 		meeting.setCreatedAt(rs.getTimestamp("created_at"));
 		meeting.setDueAt(rs.getTimestamp("due_at"));
 		meeting.setTitle(rs.getString("title"));
@@ -148,5 +155,14 @@ public class MeetingRepository {
 		meeting.setVoiceChannelId(rs.getLong("voice_channel_id"));
 		meeting.setActive(rs.getBoolean("active"));
 		return meeting;
+	}
+
+	private long[] convertArrayToLongArray(Array array) throws SQLException {
+		Object[] tmp = (Object[]) array.getArray();
+		long[] longArray = new long[tmp.length];
+		for (int i = 0; i < tmp.length; i++) {
+			longArray[i] = (Long) tmp[i];
+		}
+		return longArray;
 	}
 }

@@ -13,6 +13,7 @@ public class Meeting {
 	private long guildId;
 	private long createdBy;
 	private long[] participants;
+	private long[] admins;
 	private Timestamp createdAt;
 	private Timestamp dueAt;
 	private String title;

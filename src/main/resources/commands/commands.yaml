@@ -25,6 +25,7 @@
               required: true
               autocomplete: true
               type: INTEGER
+
         - name: add-participant
           description: Add participants to your Meeting.
           options:
@@ -38,8 +39,37 @@
               required: true
               autocomplete: false
               type: USER
+
         - name: remove-participant
           description: Remove participants.
+          options:
+            - name: meeting-id
+              description: The Meeting's id.
+              required: true
+              autocomplete: true
+              type: INTEGER
+            - name: user
+              description: The user you want to remove.
+              required: true
+              autocomplete: false
+              type: USER
+
+        - name: add-admin
+          description: Add admins to your Meeting.
+          options:
+            - name: meeting-id
+              description: The Meeting's id.
+              required: true
+              autocomplete: true
+              type: INTEGER
+            - name: user
+              description: The user you want to add.
+              required: true
+              autocomplete: false
+              type: USER
+
+        - name: remove-admin
+          description: Remove Admins.
           options:
             - name: meeting-id
               description: The Meeting's id.

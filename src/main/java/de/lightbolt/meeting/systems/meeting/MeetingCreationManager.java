@@ -51,6 +51,7 @@ public class MeetingCreationManager {
 		meeting.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 		meeting.setCreatedBy(this.user.getIdLong());
 		meeting.setParticipants(new long[]{user.getIdLong()});
+		meeting.setAdmins(new long[]{user.getIdLong()});
 		consumeGuild(user.getMutualGuilds(), meeting);
 	}
 

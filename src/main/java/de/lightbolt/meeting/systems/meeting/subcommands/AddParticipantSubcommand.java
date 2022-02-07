@@ -9,28 +9,36 @@ import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Optional;
 
-public class DiscardMeetingSubcommand extends MeetingSubcommand {
+public class AddParticipantSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
 		var idOption = event.getOption("meeting-id");
-		if (idOption == null) {
+		var userOption = event.getOption("user");
+		if (userOption == null || idOption == null) {
 			return Responses.error(event, "Missing required arguments");
 		}
 		var id = (int) idOption.getAsLong();
-		var meetings = repo.getByUserId(event.getUser().getIdLong());
+		var user = userOption.getAsUser();
 		var com = locale.getMeeting().getCommand();
-		if (meetings.stream().map(Meeting::getId).anyMatch(p -> p == id) && repo.markInactive(id)) {
-			var optionalMeeting = meetings.stream().filter(p -> p.getId() == id).findFirst();
-			optionalMeeting.ifPresent(m -> {
-				var manager = new MeetingManager(event.getJDA(), m);
-				manager.getLogChannel().delete().queue();
-				manager.getVoiceChannel().delete().queue();
-			});
-			return Responses.success(event, com.getCANCEL_MEETING_TITLE(),
-					String.format(com.getCANCEL_MEETING_DESCRIPTION(), id));
+		var meetings = repo.getByUserId(event.getUser().getIdLong());
+		Optional<Meeting> meetingOptional = meetings.stream().filter(m -> m.getId() == id).findFirst();
+		if (meetingOptional.isPresent()) {
+			var meeting = meetingOptional.get();
+			var participants = meeting.getParticipants();
+			if (Arrays.stream(participants).anyMatch(x -> x == user.getIdLong())) {
+				return Responses.error(event, String.format(com.getMEETING_PARTICIPANT_ALREADY_ADDED(), user.getAsMention()));
+			}
+			var newParticipants = ArrayUtils.add(participants, user.getIdLong());
+			repo.updateParticipants(meeting, newParticipants);
+			new MeetingManager(event.getJDA(), meeting).addParticipant(user);
+			return Responses.success(event, com.getPARTICIPANTS_ADD_SUCCESS_TITLE(),
+					String.format(com.getPARTICIPANTS_ADD_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
 		} else {
 			return Responses.error(event, String.format(com.getMEETING_NOT_FOUND(), id));
 		}
