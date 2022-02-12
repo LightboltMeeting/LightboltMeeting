@@ -14,6 +14,7 @@ public class MeetingCommandHandler extends DelegatingCommandHandler {
 	 */
 	public MeetingCommandHandler() {
 		this.addSubcommand("create", new CreateMeetingSubcommand());
+		this.addSubcommand("edit", new EditMeetingSubcommand());
 		this.addSubcommand("list", new ListMeetingsSubcommand());
 		this.addSubcommandGroup(
 				"manage", new DelegatingCommandHandler(Map.of(

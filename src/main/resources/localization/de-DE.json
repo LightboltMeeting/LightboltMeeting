@@ -69,6 +69,9 @@
       "LOG_PARTICIPANT_ADDED": "%s wurde zu dem Meeting hinzugefügt.",
       "LOG_PARTICIPANT_REMOVED": "%s wurde von dem Meeting entfernt.",
 
+      "LOG_ADMIN_ADDED": "%s ist nun ein Admin.",
+      "LOG_ADMIN_REMOVED": "%s ist kein Admin mehr.",
+
       "LOG_REMINDER_TITLE": "Meeting Erinnerung",
       "LOG_REMINDER_DESCRIPTION": "Das Meeting beginnt in %s %s.",
 
@@ -78,5 +81,9 @@
       "LOG_TIMEUNIT_MINUTES": "Minuten",
       "LOG_TIMEUNIT_HOURS": "Stunden"
     }
+  },
+  "edit": {
+    "EDIT_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Beispiel: 13/09/2019 13:05)",
+    "EDIT_LANGUAGE_PLACEHOLDER": "Entweder \"DE\" für Deutsch oder \"EN\" für Englisch"
   }
 }

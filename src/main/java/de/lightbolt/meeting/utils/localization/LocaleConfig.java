@@ -17,6 +17,7 @@ public class LocaleConfig {
 		private MeetingCreationConfig creation = new MeetingCreationConfig();
 		private MeetingCommandConfig command = new MeetingCommandConfig();
 		private MeetingLogConfig log = new MeetingLogConfig();
+		private MeetingEditConfig edit = new MeetingEditConfig();
 
 		@Data
 		public static class MeetingCreationConfig {
@@ -92,6 +93,9 @@ public class LocaleConfig {
 			private String LOG_PARTICIPANT_ADDED;
 			private String LOG_PARTICIPANT_REMOVED;
 
+			private String LOG_ADMIN_ADDED;
+			private String LOG_ADMIN_REMOVED;
+
 			private String LOG_REMINDER_TITLE;
 			private String LOG_REMINDER_DESCRIPTION;
 
@@ -100,6 +104,12 @@ public class LocaleConfig {
 
 			private String LOG_TIMEUNIT_MINUTES;
 			private String LOG_TIMEUNIT_HOURS;
+		}
+
+		@Data
+		public static class MeetingEditConfig {
+			private String EDIT_DATE_PLACEHOLDER;
+			private String EDIT_LANGUAGE_PLACEHOLDER;
 		}
 	}
 }
