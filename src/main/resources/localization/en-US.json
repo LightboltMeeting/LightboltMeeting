@@ -6,44 +6,22 @@
     "MEETING_EMBED_FOOTER": "This meeting will start at: ",
     "MEETING_NO_PERMISSION": "You're not permitted to edit this meeting.",
     "creation": {
-        "CREATION_START_TOO_MANY_MEETING_DESCRIPTION": "You cannot create another Meeting. You have to delete a Meeting in order to create a new one.",
-        "CREATION_START_NOT_PERMITTED_DESCRIPTION": "You're not permitted to create a new Meeting.",
-        "CREATION_START_RESPONSE_TITLE": "Create a new Meeting",
-        "CREATION_START_RESPONSE_DESCRIPTION": "I've sent you a Direct Message! Head over to your DMs to create a new Meeting!",
-        "CREATION_START_OPEN_PRIVATE_FAILED": "I could not send you a direct message. Please change your privacy settings to allow DMs from server members.",
+      "CREATION_TOO_MANY_MEETINGS_DESCRIPTION": "You cannot create another Meeting. You have to delete a Meeting in order to create a new one.",
+      "CREATION_NOT_PERMITTED_DESCRIPTION": "You're not permitted to create a new Meeting.",
+      "CREATION_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Example: 13/09/2019 13:05)",
+      "CREATION_LANGUAGE_PLACEHOLDER": "\"DE\" for german or \"EN\" for english",
 
-        "CREATION_DM_DEFAULT_EMBED_TITLE": "Meeting Creation (Step %s/%s)",
-        "CREATION_DM_DEFAULT_EMBED_FOOTER": "This action will time-out after %s %s.",
-        "CREATION_DM_TIMED_OUT_TITLE": "Meeting Creation Timed Out",
-        "CREATION_DM_TIMED_OUT_DESCRIPTION": "Due to prolonged inactivity the current Process has been canceled.",
-        "CREATION_DM_NO_TRIES_LEFT_TITLE": "No tries left",
-        "CREATION_DM_NO_TRIES_LEFT_DESCRIPTION": "You've no more tries left. The current action has been discarded. Please try again.",
+      "CREATION_MODAL_HEADER": "Create Meeting",
+      "CREATION_NAME_LABEL": "Meeting Name",
+      "CREATION_DESCRIPTION_LABEL": "Meeting Description",
+      "CREATION_DATE_LABEL": "Meeting Start Date",
+      "CREATION_LANGUAGE_LABEL": "Meeting Language",
 
-        "CREATION_DM_STEP_1_DESCRIPTION": "Hey %s,\nPlease choose the **Server** the Meeting should happen in.",
-        "CREATION_DM_STEP_1_SELECTION_MENU_PLACEHOLDER": "Please choose a server",
-        "CREATION_DM_STEP_1_SELECTION_MENU_DESCRIPTION": "%s Members",
-        "CREATION_DM_STEP_1_SUCCESS_EPHEMERAL": "`%s` has been set as the default server.",
-
-        "CREATION_DM_STEP_2_DESCRIPTION": "Alright, we're planning a new Meeting for `%s`.\nPlease choose the Meeting's **Language** in the Selection Menu down below.",
-        "CREATION_DM_STEP_2_SELECTION_MENU_PLACEHOLDER": "Please choose a language",
-        "CREATION_DM_STEP_2_SELECTION_MENU_DESCRIPTION": "This will set the meeting's language to: %s",
-        "CREATION_DM_STEP_2_SUCCESS_EPHEMERAL": "`%s` has been set as the default language.",
-
-        "CREATION_DM_STEP_3_DESCRIPTION": "`%s` it is!\nPlease choose the **Date and Time** the Meeting should start.\nPlease format the date like this: `dd/MM/YYYY HH:mm` (UTC) (e.g. 13/09/2019 13:05)",
-        "CREATION_DM_STEP_3_INVALID_DATE": "You've provided an invalid Date. Please try again. (%s tries left)\nPlease format the date like this: `dd/MM/YYYY HH:mm` (UTC) (e.g. 13/09/2019 13:05)",
-        "CREATION_DM_STEP_3_DATE_OUT_OF_RANGE": "The Date must be a Timestamp somewhere between now and 2 years in advance. Please try again.",
-
-        "CREATION_DM_STEP_4_DESCRIPTION": "Alright, the Meeting will start at <t:%s:F>!\nPlease provide a **Title** for this Meeting. (max. 32 characters)",
-        "CREATION_DM_STEP_4_INVALID_TITLE": "The given Title was longer than 32 characters. Please try again. (%s tries left)",
-
-        "CREATION_DM_STEP_5_DESCRIPTION": "The Meetings Title has been set to `%s`.\nPlease provide a fitting **Description** for this Meeting. (max. 256 characters)",
-        "CREATION_DM_STEP_5_INVALID_DESCRIPTION": "The given Description was longer than 256 characters. Please try again. (%s tries left)",
-
-        "CREATION_DM_STEP_6_DESCRIPTION": "Alright, all set! Your Meeting will look like this:",
-        "CREATION_DM_STEP_6_BUTTON_SAVE_MEETING": "Save Meeting",
-        "CREATION_DM_STEP_6_BUTTON_CANCEL_MEETING": "Cancel",
-        "CREATION_DM_STEP_6_PROCESS_CANCELED": "All your settings have been discarded.",
-        "CREATION_DM_STEP_6_MEETING_SAVED": "Alright, your Meeting's ID is `%s`! I've created a log and voice channel for your meeting. Once the meeting begins, every participant can join the meeting. (You can add meeting participants via the `/meeting manage add-participants` command!)"
+      "CREATION_INVALID_DATE": "You've provided an invalid date! The date must be a Timestamp somewhere between now and 2 years in advance. Please try again.",
+      "CREATION_INVALID_LANGUAGE": "You've provided an invalid/not supported language: `%s`.\nSupported languages are: `%s`",
+      "CREATION_SUCCESS_TITLE": "Meeting created",
+      "CREATION_SUCCESS_DESCRIPTION": "All set! Your Meeting's ID is `%s`! I've automatically created a log and voice channel for your meeting. Once the meeting begins, every participant can join the meeting.\nYou can alway edit your meeting using `/meeting edit`!",
+      "CREATION_FAILED": "There was an error while creating the Meeting. Please try again."
     },
     "command": {
       "MEETING_NOT_FOUND": "You don't have a Meeting with ID `%s`. Use `/meeting list` to see your Meeting's IDs.",

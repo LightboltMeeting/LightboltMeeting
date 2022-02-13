@@ -3,7 +3,6 @@ package de.lightbolt.meeting.systems.meeting.jobs;
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
-import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +50,9 @@ public class MeetingReminderJob implements Job {
 		if (Integer.parseInt(reminder) > 60) {
 			reminderTimeUnit = logLocale.getLOG_TIMEUNIT_HOURS();
 			reminder = String.valueOf((Integer.parseInt(reminder) / 60));
-		} else reminderTimeUnit = logLocale.getLOG_TIMEUNIT_MINUTES();
+		} else {
+			reminderTimeUnit = logLocale.getLOG_TIMEUNIT_MINUTES();
+		}
 
 		return new EmbedBuilder()
 				.setTitle(logLocale.getLOG_REMINDER_TITLE())

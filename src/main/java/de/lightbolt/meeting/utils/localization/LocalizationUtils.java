@@ -33,6 +33,8 @@ public class LocalizationUtils {
 	public static LocaleConfig getLocale(String language) {
 		if (Language.isValidLanguage(language)) {
 			return getLocale(Language.valueOf(language));
-		} else throw new IllegalArgumentException("Invalid Language!");
+		} else {
+			throw new IllegalArgumentException("Invalid Language!");
+		}
 	}
 }

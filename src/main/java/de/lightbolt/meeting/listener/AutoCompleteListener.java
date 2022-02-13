@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.requests.restaction.interactions.AutoCompleteCallback
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class AutoCompleteListener extends ListenerAdapter {
@@ -58,8 +57,11 @@ public class AutoCompleteListener extends ListenerAdapter {
 			ArrayList<Command.Choice> choices = new ArrayList<>();
 			for (Meeting meeting : meetings) {
 				String format;
-				if (meeting.getCreatedBy() == userId) format = "%s* — Meeting: \"%s\"";
-				else format = "%s — Meeting: \"%s\"";
+				if (meeting.getCreatedBy() == userId) {
+					format = "%s* — Meeting: \"%s\"";
+				} else {
+					format = "%s — Meeting: \"%s\"";
+				}
 				choices.add(new Command.Choice(String.format(format, meeting.getId(), meeting.getTitle()), meeting.getId()));
 			}
 			return event.replyChoices(choices);

@@ -15,6 +15,10 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * <p>/meeting manage add-admin</p>
+ * Command that allows the Meeting Owner to add Administrators to their meeting.
+ */
 public class AddAdminSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {

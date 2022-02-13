@@ -15,6 +15,10 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * <p>/meeting manage add-participant</p>
+ * Command that allows Meeting Administrators to add participants to their meeting.
+ */
 public class AddParticipantSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {

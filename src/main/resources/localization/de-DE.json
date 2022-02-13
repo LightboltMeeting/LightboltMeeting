@@ -6,44 +6,23 @@
     "MEETING_EMBED_FOOTER": "Dieses Meeting startet am: ",
     "MEETING_NO_PERMISSION": "Du hast keine Berechtigung um dieses Meeting zu bearbeiten.",
     "creation": {
-        "CREATION_START_TOO_MANY_MEETING_DESCRIPTION": "Du kannst kein weiteres Meeting erstellen. Um ein neues Meeting zu erstellen, musst du erst eins löschen.",
-        "CREATION_START_NOT_PERMITTED_DESCRIPTION": "Du bist nicht berechtigt ein neues Meeting zu erstellen.",
-        "CREATION_START_RESPONSE_TITLE": "Erstelle ein Meeting",
-        "CREATION_START_RESPONSE_DESCRIPTION": "Ich habe dir eine Direktnachricht gesendet! Schau in deinen DMs vorbei um ein neues Meeting zu erstellen!",
-        "CREATION_START_OPEN_PRIVATE_FAILED": "Ich konnte dir keine Direktnachricht senden. Bitte ändere deine Privatssphäre Einstellungen, damit ich dir eine Direktnachricht zur Meeting Erstellung senden kann!",
+      "CREATION_TOO_MANY_MEETINGS_DESCRIPTION": "Du kannst kein weiteres Meeting erstellen. Um ein neues Meeting zu erstellen musst du zuerst eins löschen.",
+      "CREATION_NOT_PERMITTED_DESCRIPTION": "Du bist nicht berechtigt ein neues Meeting zu erstellen.",
+      "CREATION_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Beispiel: 13/09/2019 13:05)",
+      "CREATION_LANGUAGE_PLACEHOLDER": "Entweder \"DE\" für Deutsch oder \"EN\" für Englisch",
 
-        "CREATION_DM_DEFAULT_EMBED_TITLE": "Erstelle ein Meeting (Schritt %s/%s)",
-        "CREATION_DM_DEFAULT_EMBED_FOOTER": "Dieser Vorgang wird nach %s %s abgebrochen.",
-        "CREATION_DM_TIMED_OUT_TITLE": "Zeitüberschreitung bei der Meeting-Erstellung",
-        "CREATION_DM_TIMED_OUT_DESCRIPTION": "Der aktuelle Vorgang wurde durch Inaktivität abgebrochen.",
-        "CREATION_DM_NO_TRIES_LEFT_TITLE": "Keine Versuche übrig",
-        "CREATION_DM_NO_TRIES_LEFT_DESCRIPTION": "Du hast alle deine Versuche aufgebraucht. Der aktuelle Vorgang wurde abgebrochen. Bitte versuche es erneut.",
+      "CREATION_MODAL_HEADER": "Erstelle ein Meeting",
+      "CREATION_NAME_LABEL": "Name des Meetings",
+      "CREATION_DESCRIPTION_LABEL": "Beschreibung des Meetings",
+      "CREATION_DATE_LABEL": "Startdatum des Meetings",
+      "CREATION_LANGUAGE_LABEL": "Sprache des Meetings",
 
-        "CREATION_DM_STEP_1_DESCRIPTION": "Hey %s,\nBitte wähle den **Server** aus, in dem das Meeting stattfinden soll.",
-        "CREATION_DM_STEP_1_SELECTION_MENU_PLACEHOLDER": "Bitte wähle einen Server aus",
-        "CREATION_DM_STEP_1_SELECTION_MENU_DESCRIPTION": "%s Nutzer",
-        "CREATION_DM_STEP_1_SUCCESS_EPHEMERAL": "`%s` wurde als Server ausgewählt.",
+      "CREATION_INVALID_DATE": "Du hast ein invalided Datum angegeben. Das Datum muss zwischen Jetzt und 2 Jahren in der Zukunft liegen. Bitte versuche es erneut.",
+      "CREATION_INVALID_LANGUAGE": "Du hast eine invalide/nicht unterstütze Sprache angegeben: `%s`\nUnterstütze Sprachen sind: `%s`",
 
-        "CREATION_DM_STEP_2_DESCRIPTION": "Okay, also planen wir ein Meeting für `%s`.\nBitte wähle nun die **Sprache** des Meetings aus.",
-        "CREATION_DM_STEP_2_SELECTION_MENU_PLACEHOLDER": "Bitte wähle eine Sprache aus",
-        "CREATION_DM_STEP_2_SELECTION_MENU_DESCRIPTION": "Dies setzt die Sprache des Meetings auf: %s",
-        "CREATION_DM_STEP_2_SUCCESS_EPHEMERAL": "`%s` wurde als Sprache ausgewählt.",
-
-        "CREATION_DM_STEP_3_DESCRIPTION": "`%s` wurde als Sprache ausgewählt!\nBitte nenne nun den **Zeitpunkt** an dem das Meeting starten soll.\nBitte formatiere das Datum so: `dd/MM/YYYY HH:mm` (UTC) (Beispiel: 13/09/2019 13:05)",
-        "CREATION_DM_STEP_3_INVALID_DATE": "Dies ist ein invalides Datum! Bitte versuche es nocheinmal. (%s Versuche übrig)\nBitte formatiere das Datum so: `dd/MM/YYYY HH:mm` (UTC) (Beispiel: 13/09/2019 13:05)",
-        "CREATION_DM_STEP_3_DATE_OUT_OF_RANGE": "Das Datum muss zwischen Jetzt und 2 Jahren in der Zukunft liegen. Bitte versuche es erneut.",
-
-        "CREATION_DM_STEP_4_DESCRIPTION": "Das Meeting findet also am <t:%s:F> statt!\nBitte nenne nun den **Titel** des Meetings. (Maximal 32 Zeichen)",
-        "CREATION_DM_STEP_4_INVALID_TITLE": "Der Titel ist länger als 32 Zeichen. Bitte versuche es nocheinmal. (%s Versuche übrig)",
-
-        "CREATION_DM_STEP_5_DESCRIPTION": "Der Titel ist also `%s`.\nBitte formuliere nun eine kurze **Beschreibung** des Meetings. (Maximal 256 Zeichen)",
-        "CREATION_DM_STEP_5_INVALID_DESCRIPTION": "Die Beschreibung ist länger als **256** Zeichen. Bitte versuche es nocheinmal. (%s Versuche übrig)",
-
-        "CREATION_DM_STEP_6_DESCRIPTION": "Okay, das wärs! Dies ist dein Meeting:",
-        "CREATION_DM_STEP_6_BUTTON_SAVE_MEETING": "Speichern",
-        "CREATION_DM_STEP_6_BUTTON_CANCEL_MEETING": "Abbrechen",
-        "CREATION_DM_STEP_6_PROCESS_CANCELED": "Alle deine Einstellungen wurden verworfen.",
-        "CREATION_DM_STEP_6_MEETING_SAVED": "Alles gespeichert! Die ID deines Meetings lautet `%s`.\nIch habe einen Log- und einen Sprachkanal für dein Meeting erstellt. Sobald das Meeting beginnt können alle Teilnehmer dem Sprachkanal beitreten. (Teilnehmer können mit dem `/meeting manage add-participants` Befehl hinzugefügt werden!)"
+      "CREATION_SUCCESS_TITLE": "Meeting erstellt",
+      "CREATION_SUCCESS_DESCRIPTION": "Alles gespeichert! Die ID deines Meetings lautet `%s`.\nIch habe einen Log- und einen Sprachkanal für dein Meeting erstellt. Sobald das Meeting beginnt können alle Teilnehmer dem Sprachkanal beitreten.\nDu kannst das Meeting jederzeit mithilfe von `/meeting edit` editieren!",
+      "CREATION_FAILED": "Ein Fehler ist bei der Erstellung eines Meetings ist aufgetreten. Bitte versuche es erneut."
     },
     "command": {
       "MEETING_NOT_FOUND": "Du hast kein Meeting mit der ID `%s`. Die ID eines Meetings siehst du bei `/meeting list`",

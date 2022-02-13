@@ -15,6 +15,10 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * <p>/meeting manage remove-participant</p>
+ * Command that allows Meeting Administrators to remove participants from their meeting.
+ */
 public class RemoveParticipantSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {

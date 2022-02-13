@@ -2,31 +2,70 @@ package de.lightbolt.meeting.systems.meeting.subcommands;
 
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
-import de.lightbolt.meeting.systems.meeting.MeetingCreationManager;
 import de.lightbolt.meeting.systems.meeting.MeetingSubcommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
+import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.text.Modal;
+import net.dv8tion.jda.api.interactions.components.text.TextInput;
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.requests.restaction.interactions.ModalCallbackAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
+/**
+ * <p>/meeting create</p>
+ * Command that allows users to create new Meetings.
+ */
 public class CreateMeetingSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
 		var meetingLocale = locale.getMeeting().getCreation();
-		if (repo.getByUserId(event.getUser().getIdLong()).size() > config.getMaxMeetingsPerUser()) {
-			return Responses.error(event, meetingLocale.getCREATION_START_TOO_MANY_MEETING_DESCRIPTION());
-		}
 		if (!canCreateMeetings(event.getMember())) {
-			return Responses.error(event, meetingLocale.getCREATION_START_NOT_PERMITTED_DESCRIPTION());
+			return Responses.error(event, meetingLocale.getCREATION_NOT_PERMITTED_DESCRIPTION());
 		}
-		event.getUser().openPrivateChannel().queue(channel -> {
-			Responses.info(event.getHook(), meetingLocale.getCREATION_START_RESPONSE_TITLE(), meetingLocale.getCREATION_START_RESPONSE_DESCRIPTION()).queue();
-			new MeetingCreationManager(event.getJDA(), channel.getUser(), channel, locale).startMeetingFlow();
-		}, error -> Responses.error(event.getHook(), meetingLocale.getCREATION_START_OPEN_PRIVATE_FAILED()).queue());
-		return event.deferReply(true);
+		if (repo.getByUserId(event.getUser().getIdLong()).size() > config.getMaxMeetingsPerUser()) {
+			return Responses.error(event, meetingLocale.getCREATION_TOO_MANY_MEETINGS_DESCRIPTION());
+		}
+		this.buildCreateModal(event, locale).queue();
+		return null;
+	}
+
+	private ModalCallbackAction buildCreateModal(SlashCommandInteractionEvent event, LocaleConfig locale) {
+		var createLocale = locale.getMeeting().getCreation();
+		TextInput meetingName = TextInput.create("meeting-name", createLocale.getCREATION_NAME_LABEL(), TextInputStyle.SHORT)
+				.setRequired(true)
+				.setMaxLength(64)
+				.build();
+
+		TextInput meetingDescription = TextInput.create("meeting-description", createLocale.getCREATION_DESCRIPTION_LABEL(), TextInputStyle.PARAGRAPH)
+				.setRequired(true)
+				.setMaxLength(256)
+				.build();
+
+		TextInput meetingDate = TextInput.create("meeting-date", createLocale.getCREATION_DATE_LABEL(), TextInputStyle.SHORT)
+				.setValue(LocalDateTime.now().plusHours(12).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+				.setPlaceholder(locale.getMeeting().getEdit().getEDIT_DATE_PLACEHOLDER())
+				.setRequired(true)
+				.setMaxLength(17)
+				.build();
+
+		TextInput meetingLanguage = TextInput.create("meeting-language", createLocale.getCREATION_LANGUAGE_LABEL(), TextInputStyle.SHORT)
+				.setValue(Language.fromLocale(event.getUserLocale()).toString())
+				.setPlaceholder(locale.getMeeting().getEdit().getEDIT_LANGUAGE_PLACEHOLDER())
+				.setRequired(true)
+				.setMaxLength(2)
+				.build();
+		Modal modal = Modal.create("meeting-create", createLocale.getCREATION_MODAL_HEADER())
+				.addActionRows(ActionRow.of(meetingName), ActionRow.of(meetingDescription), ActionRow.of(meetingDate), ActionRow.of(meetingLanguage))
+				.build();
+		return event.replyModal(modal);
 	}
 
 	private boolean canCreateMeetings(Member member) {

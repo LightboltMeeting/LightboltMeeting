@@ -12,6 +12,10 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 import java.sql.SQLException;
 
+/**
+ * <p>/meeting discard</p>
+ * Command that allows the Meeting Owner to discard their meeting.
+ */
 public class DiscardMeetingSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
