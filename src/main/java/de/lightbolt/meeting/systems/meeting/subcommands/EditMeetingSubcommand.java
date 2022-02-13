@@ -2,6 +2,7 @@ package de.lightbolt.meeting.systems.meeting.subcommands;
 
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
+import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.MeetingSubcommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
@@ -33,6 +34,9 @@ public class EditMeetingSubcommand extends MeetingSubcommand {
 			return Responses.error(event, String.format(locale.getMeeting().getCommand().getMEETING_NOT_FOUND(), id));
 		}
 		Meeting meeting = meetingOptional.get();
+		if (!MeetingManager.canEditMeeting(meeting, event.getUser().getIdLong())) {
+			return Responses.error(event, locale.getMeeting().getMEETING_NO_PERMISSION());
+		}
         buildModal(event, meeting, locale).queue();
 		return null;
 	}

@@ -4,6 +4,7 @@
   },
   "meeting": {
     "MEETING_EMBED_FOOTER": "This meeting will start at: ",
+    "MEETING_NO_PERMISSION": "You're not permitted to edit this meeting.",
     "creation": {
         "CREATION_START_TOO_MANY_MEETING_DESCRIPTION": "You cannot create another Meeting. You have to delete a Meeting in order to create a new one.",
         "CREATION_START_NOT_PERMITTED_DESCRIPTION": "You're not permitted to create a new Meeting.",

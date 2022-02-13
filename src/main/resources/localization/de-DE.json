@@ -4,6 +4,7 @@
   },
   "meeting": {
     "MEETING_EMBED_FOOTER": "Dieses Meeting startet am: ",
+    "MEETING_NO_PERMISSION": "Du hast keine Berechtigung um dieses Meeting zu bearbeiten.",
     "creation": {
         "CREATION_START_TOO_MANY_MEETING_DESCRIPTION": "Du kannst kein weiteres Meeting erstellen. Um ein neues Meeting zu erstellen, musst du erst eins löschen.",
         "CREATION_START_NOT_PERMITTED_DESCRIPTION": "Du bist nicht berechtigt ein neues Meeting zu erstellen.",

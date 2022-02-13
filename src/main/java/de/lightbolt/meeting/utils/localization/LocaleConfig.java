@@ -19,6 +19,7 @@ public class LocaleConfig {
 	@Data
 	public static class MeetingConfig {
 		private String MEETING_EMBED_FOOTER;
+		private String MEETING_NO_PERMISSION;
 
 		private MeetingCreationConfig creation = new MeetingCreationConfig();
 		private MeetingEditConfig edit = new MeetingEditConfig();

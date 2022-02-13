@@ -26,10 +26,12 @@ public class RemoveParticipantSubcommand extends MeetingSubcommand {
 		var id = (int) idOption.getAsLong();
 		var user = userOption.getAsUser();
 		var com = locale.getMeeting().getCommand();
-		var meetings = repo.getByUserId(event.getUser().getIdLong());
-		Optional<Meeting> meetingOptional = meetings.stream().filter(m -> m.getId() == id).findFirst();
+		Optional<Meeting> meetingOptional = repo.findById(id);
 		if (meetingOptional.isPresent()) {
 			var meeting = meetingOptional.get();
+			if (!MeetingManager.canEditMeeting(meeting, event.getUser().getIdLong())) {
+				return Responses.error(event, locale.getMeeting().getMEETING_NO_PERMISSION());
+			}
 			var participants = meeting.getParticipants();
 			var admins = meeting.getAdmins();
 			if (Arrays.stream(participants).anyMatch(x -> x == user.getIdLong())) {
