@@ -69,7 +69,9 @@ public class ModalSubmitListener extends ListenerAdapter {
 			String language = languageOption.getAsString();
 			if (!Language.isValidLanguage(language)) {
 				return Responses.error(event.getHook(), String.format(editLocale.getEDIT_INVALID_LANGUAGE(), language,
-						Arrays.stream(Language.values()).map(Language::toString).collect(Collectors.joining(", "))));
+						Arrays.stream(Language.values()).map(
+								lang -> String.format("%s (%s)", lang.toString(), lang.getName())
+						).collect(Collectors.joining(", "))));
 			}
 			meeting.setLanguage(language);
 
