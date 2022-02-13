@@ -85,7 +85,7 @@
       "LOG_TIMEUNIT_MINUTES": "Minutes",
       "LOG_TIMEUNIT_HOURS": "Hours",
 
-      "LOG_MEETINGS_UPDATED": "The meeting was updated by: %s."
+      "LOG_MEETING_UPDATED": "The meeting was updated by: %s."
     },
     "edit": {
       "EDIT_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Example: 13/09/2019 13:05)",

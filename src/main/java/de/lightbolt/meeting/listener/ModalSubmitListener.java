@@ -78,7 +78,7 @@ public class ModalSubmitListener extends ListenerAdapter {
 			repo.updateDescription(meeting, description);
 			repo.updateDate(meeting, date);
 
-			new MeetingManager(event.getJDA(), meeting).updateMeeting(event.getUser(), locale);
+			new MeetingManager(event.getJDA(), meeting).updateMeeting(event.getUser(), LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage())));
 			return Responses.success(event.getHook(), editLocale.getEDIT_SUCCESS_TITLE(), editLocale.getEDIT_SUCCESS_DESCRIPTION());
 		} catch (SQLException exception) {
 			log.error("Could not retrieve SQL Connection.", exception);

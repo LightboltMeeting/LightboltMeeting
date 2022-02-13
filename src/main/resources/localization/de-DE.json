@@ -85,7 +85,7 @@
       "LOG_TIMEUNIT_MINUTES": "Minuten",
       "LOG_TIMEUNIT_HOURS": "Stunden",
 
-      "LOG_MEETINGS_UPDATED": "Die Einstellungen des Meetings wurden von %s aktualisiert."
+      "LOG_MEETING_UPDATED": "Die Einstellungen des Meetings wurden von %s aktualisiert."
     }
   },
   "edit": {
