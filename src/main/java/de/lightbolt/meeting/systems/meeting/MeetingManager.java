@@ -80,7 +80,7 @@ public class MeetingManager {
 				user -> {
 					this.getLogChannel()
 							.sendMessageFormat(locale.getMeeting().getLog().getLOG_MEETING_UPDATED(), updatedBy.getAsMention())
-							.setEmbeds(buildMeetingEmbed(meeting, user, LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage()))))
+							.setEmbeds(buildMeetingEmbed(meeting, user, LocalizationUtils.getLocale(meeting.getLanguage())))
 							.queue();
 				}
 		);
@@ -91,7 +91,7 @@ public class MeetingManager {
 	 * @param user The user that should be added as a participant.
 	 */
 	public void addParticipant(User user) {
-		var meetingLocale = LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage())).getMeeting().getLog();
+		var meetingLocale = LocalizationUtils.getLocale(meeting.getLanguage()).getMeeting().getLog();
 		var text = this.getLogChannel();
 		text.sendMessageFormat(meetingLocale.getLOG_PARTICIPANT_ADDED(), user.getAsMention()).queue();
 		text.getManager().putMemberPermissionOverride(user.getIdLong(),
@@ -109,7 +109,7 @@ public class MeetingManager {
 	 * @param user The user that should be removed.
 	 */
 	public void removeParticipant(User user) {
-		var meetingLocale = LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage())).getMeeting().getLog();
+		var meetingLocale = LocalizationUtils.getLocale(meeting.getLanguage()).getMeeting().getLog();
 		var text = this.getLogChannel();
 		text.sendMessageFormat(meetingLocale.getLOG_PARTICIPANT_REMOVED(), user.getAsMention()).queue();
 		text.getManager().putMemberPermissionOverride(user.getIdLong(), 0, Permission.ALL_PERMISSIONS).queue();
@@ -122,7 +122,7 @@ public class MeetingManager {
 	 * @param user The user that should be added as an admin.
 	 */
 	public void addAdmin(User user) {
-		var meetingLocale = LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage())).getMeeting().getLog();
+		var meetingLocale = LocalizationUtils.getLocale(meeting.getLanguage()).getMeeting().getLog();
 		var text = this.getLogChannel();
 		text.sendMessageFormat(meetingLocale.getLOG_ADMIN_ADDED(), user.getAsMention()).queue();
 	}
@@ -132,7 +132,7 @@ public class MeetingManager {
 	 * @param user The user that should be removed.
 	 */
 	public void removeAdmin(User user) {
-		var meetingLocale = LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage())).getMeeting().getLog();
+		var meetingLocale = LocalizationUtils.getLocale(meeting.getLanguage()).getMeeting().getLog();
 		var text = this.getLogChannel();
 		text.sendMessageFormat(meetingLocale.getLOG_ADMIN_REMOVED(), user.getAsMention()).queue();
 	}

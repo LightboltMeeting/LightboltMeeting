@@ -31,7 +31,7 @@ public class MeetingReminderJob implements Job {
 				return;
 			}
 			Meeting meeting = meetingOptional.get();
-			locale = LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage()));
+			locale = LocalizationUtils.getLocale(meeting.getLanguage());
 			logLocale = locale.getMeeting().getLog();
 			StringBuilder participants = new StringBuilder();
 			TextChannel logChannel = Bot.jda.getTextChannelById(meeting.getLogChannelId());
@@ -39,10 +39,8 @@ public class MeetingReminderJob implements Job {
 			for (long participantId : meeting.getParticipants()) {
 				participants.append(Bot.jda.getUserById(participantId).getAsMention());
 			}
-
 			logChannel.sendMessage(participants).queue();
 			logChannel.sendMessageEmbeds(buildEmbed(jobDetail[2])).queue();
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

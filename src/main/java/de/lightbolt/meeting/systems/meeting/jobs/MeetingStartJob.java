@@ -34,7 +34,7 @@ public class MeetingStartJob implements Job {
 				return;
 			}
 			Meeting meeting = meetingOptional.get();
-			locale = LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage()));
+			locale = LocalizationUtils.getLocale(meeting.getLanguage());
 			logLocale = locale.getMeeting().getLog();
 			StringBuilder participants = new StringBuilder();
 			TextChannel logChannel = Bot.jda.getTextChannelById(meeting.getLogChannelId());
@@ -54,7 +54,6 @@ public class MeetingStartJob implements Job {
 	}
 
 	private MessageEmbed buildEmbed(Meeting meeting) {
-
 		return new EmbedBuilder()
 				.setTitle(logLocale.getLOG_START_TITLE())
 				.setDescription(String.format(logLocale.getLOG_START_DESCRIPTION(), Bot.jda.getVoiceChannelById(meeting.getVoiceChannelId()).getAsMention()))
