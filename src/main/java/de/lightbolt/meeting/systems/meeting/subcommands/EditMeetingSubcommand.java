@@ -55,7 +55,7 @@ public class EditMeetingSubcommand extends MeetingSubcommand {
                 .setMaxLength(256)
                 .build();
 
-        TextInput meetingDate = TextInput.create("meeting-date", editLocale.getEDIT_DESCRIPTION_LABEL(), TextInputStyle.SHORT)
+        TextInput meetingDate = TextInput.create("meeting-date", editLocale.getEDIT_DATE_LABEL(), TextInputStyle.SHORT)
                 .setValue(meeting.getDueAt().toLocalDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
                 .setPlaceholder(locale.getMeeting().getEdit().getEDIT_DATE_PLACEHOLDER())
                 .setRequired(false)

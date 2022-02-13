@@ -86,23 +86,23 @@
       "LOG_TIMEUNIT_HOURS": "Stunden",
 
       "LOG_MEETING_UPDATED": "Die Einstellungen des Meetings wurden von %s aktualisiert."
+    },
+    "edit": {
+      "EDIT_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Beispiel: 13/09/2019 13:05)",
+      "EDIT_LANGUAGE_PLACEHOLDER": "Entweder \"DE\" für Deutsch oder \"EN\" für Englisch",
+
+      "EDIT_MODAL_HEADER": "Meeting editieren",
+      "EDIT_NAME_LABEL": "Name des Meetings",
+      "EDIT_DESCRIPTION_LABEL": "Beschreibung des Meetings",
+      "EDIT_DATE_LABEL": "Startdatum des Meetings",
+      "EDIT_LANGUAGE_LABEL": "Sprache des Meetings",
+
+      "EDIT_INVALID_DATE": "Du hast ein invalided Datum angegeben. Das Datum muss zwischen Jetzt und 2 Jahren in der Zukunft liegen. Bitte versuche es erneut.",
+      "EDIT_INVALID_LANGUAGE": "Du hast eine invalide/nicht unterstütze Sprache angegeben: `%s`\nUnterstütze Sprachen sind: `%s`",
+
+      "EDIT_SUCCESS_TITLE": "Meeting editieren",
+      "EDIT_SUCCESS_DESCRIPTION": "Das angegebene Meeting wurde erfolgreich editiert!",
+      "EDIT_FAILED": "Ein Fehler ist beim editieren des Meetings aufgetreten. Bitte versuche es erneut."
     }
-  },
-  "edit": {
-    "EDIT_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Beispiel: 13/09/2019 13:05)",
-    "EDIT_LANGUAGE_PLACEHOLDER": "Entweder \"DE\" für Deutsch oder \"EN\" für Englisch",
-
-    "EDIT_MODAL_HEADER": "Meeting editieren",
-    "EDIT_NAME_LABEL": "Name des Meetings",
-    "EDIT_DESCRIPTION_LABEL": "Beschreibung des Meetings",
-    "EDIT_DATE_LABEL": "Startdatum des Meetings",
-    "EDIT_LANGUAGE_LABEL": "Sprache des Meetings",
-
-    "EDIT_INVALID_DATE": "Du hast ein invalided Datum angegeben. Das Datum muss zwischen Jetzt und 2 Jahren in der Zukunft liegen. Bitte versuche es erneut.",
-    "EDIT_INVALID_LANGUAGE": "Du hast eine invalide/nicht unterstütze Sprache angegeben: `%s`\nUnterstütze Sprachen sind: `%s`",
-
-    "EDIT_SUCCESS_TITLE": "Meeting editieren",
-    "EDIT_SUCCESS_DESCRIPTION": "Das angegebene Meeting wurde erfolgreich editiert!",
-    "EDIT_FAILED": "Ein Fehler ist beim editieren des Meetings aufgetreten. Bitte versuche es erneut."
   }
 }
