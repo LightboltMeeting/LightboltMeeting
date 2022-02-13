@@ -1,6 +1,5 @@
 package de.lightbolt.meeting.systems.meeting;
 
-import de.lightbolt.meeting.annotations.MissingLocale;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
@@ -44,13 +43,12 @@ public class MeetingManager {
 		return jda.getGuildById(meeting.getGuildId()).getVoiceChannelById(meeting.getVoiceChannelId());
 	}
 
-	@MissingLocale
-	public void updateMeeting(User updatedBy) {
+	public void updateMeeting(User updatedBy, LocaleConfig locale) {
 		this.getVoiceChannel().getManager().setName(String.format(MEETING_VOICE_NAME, meeting.getId(), meeting.getTitle())).queue();
 		jda.retrieveUserById(meeting.getCreatedBy()).queue(
 				user -> {
 					this.getLogChannel()
-							.sendMessageFormat("The meeting was updated by %s", updatedBy.getAsMention())
+							.sendMessageFormat(locale.getMeeting().getLog().getLOG_MEETING_UPDATED(), updatedBy.getAsMention())
 							.setEmbeds(buildMeetingEmbed(meeting, user, LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage()))))
 							.queue();
 				}

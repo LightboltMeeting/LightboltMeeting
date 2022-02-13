@@ -3,6 +3,7 @@ package de.lightbolt.meeting.utils.localization;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -27,5 +28,9 @@ public enum Language {
 			case "en" -> Language.EN;
 			default -> Language.DE;
 		};
+	}
+
+	public static boolean isValidLanguage(String s) {
+		return Arrays.stream(Language.values()).anyMatch(l -> l.toString().equals(s));
 	}
 }

@@ -21,7 +21,7 @@ public class AddParticipantSubcommand extends MeetingSubcommand {
 		var idOption = event.getOption("meeting-id");
 		var userOption = event.getOption("user");
 		if (userOption == null || idOption == null) {
-			return Responses.error(event, "Missing required arguments");
+			return Responses.error(event, locale.getCommand().getMISSING_ARGUMENTS());
 		}
 		var id = (int) idOption.getAsLong();
 		var user = userOption.getAsUser();

@@ -16,7 +16,8 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Optional;
 
 @Slf4j
 public class MeetingStartJob implements Job {

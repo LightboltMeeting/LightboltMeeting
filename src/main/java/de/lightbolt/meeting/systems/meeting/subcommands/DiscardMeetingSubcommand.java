@@ -17,7 +17,7 @@ public class DiscardMeetingSubcommand extends MeetingSubcommand {
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
 		var idOption = event.getOption("meeting-id");
 		if (idOption == null) {
-			return Responses.error(event, "Missing required arguments");
+			return Responses.error(event, locale.getCommand().getMISSING_ARGUMENTS());
 		}
 		var id = (int) idOption.getAsLong();
 		var meetings = repo.getByUserId(event.getUser().getIdLong());

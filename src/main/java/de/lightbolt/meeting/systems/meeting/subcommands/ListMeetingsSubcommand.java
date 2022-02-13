@@ -6,7 +6,6 @@ import de.lightbolt.meeting.systems.meeting.MeetingSubcommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -26,9 +25,7 @@ public class ListMeetingsSubcommand extends MeetingSubcommand {
 
 	private List<MessageEmbed> buildMeetingListEmbed(User user, LocaleConfig locale, List<Meeting> meetings) {
 		List<MessageEmbed> embeds = new ArrayList<>();
-		for (Meeting m : meetings) {
-			embeds.add(MeetingManager.buildMeetingEmbed(m, user, locale));
-		}
+		meetings.forEach(m -> embeds.add(MeetingManager.buildMeetingEmbed(m, user, locale)));
 		return embeds;
 	}
 }

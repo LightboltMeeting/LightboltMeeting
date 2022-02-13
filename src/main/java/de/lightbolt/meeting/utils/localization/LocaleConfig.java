@@ -9,15 +9,21 @@ import lombok.Getter;
 @Getter
 public class LocaleConfig {
 	private final MeetingConfig meeting = new MeetingConfig();
+	private final CommandConfig command = new CommandConfig();
+
+	@Data
+	public static class CommandConfig {
+		private String MISSING_ARGUMENTS;
+	}
 
 	@Data
 	public static class MeetingConfig {
 		private String MEETING_EMBED_FOOTER;
 
 		private MeetingCreationConfig creation = new MeetingCreationConfig();
+		private MeetingEditConfig edit = new MeetingEditConfig();
 		private MeetingCommandConfig command = new MeetingCommandConfig();
 		private MeetingLogConfig log = new MeetingLogConfig();
-		private MeetingEditConfig edit = new MeetingEditConfig();
 
 		@Data
 		public static class MeetingCreationConfig {
@@ -104,12 +110,27 @@ public class LocaleConfig {
 
 			private String LOG_TIMEUNIT_MINUTES;
 			private String LOG_TIMEUNIT_HOURS;
+
+			private String LOG_MEETING_UPDATED;
 		}
 
 		@Data
 		public static class MeetingEditConfig {
 			private String EDIT_DATE_PLACEHOLDER;
 			private String EDIT_LANGUAGE_PLACEHOLDER;
+
+			private String EDIT_MODAL_HEADER;
+			private String EDIT_NAME_LABEL;
+			private String EDIT_DESCRIPTION_LABEL;
+			private String EDIT_DATE_LABEL;
+			private String EDIT_LANGUAGE_LABEL;
+
+			private String EDIT_INVALID_DATE;
+			private String EDIT_INVALID_LANGUAGE;
+
+			private String EDIT_SUCCESS_TITLE;
+			private String EDIT_SUCCESS_DESCRIPTION;
+			private String EDIT_FAILED;
 		}
 	}
 }
