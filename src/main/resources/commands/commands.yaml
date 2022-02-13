@@ -19,21 +19,20 @@
           required: true
           autocomplete: true
           type: INTEGER
+    - name: discard
+      description: Discards a single Meeting.
+      options:
+        - name: meeting-id
+          description: The Meeting's id.
+          required: true
+          autocomplete: true
+          type: INTEGER
     - name: list
       description: List all your Meetings.
   subCommandGroups:
     - name: manage
       description: Command that allows users to manage Meetings.
       subCommands:
-        - name: discard
-          description: Discards a single Meeting.
-          options:
-            - name: meeting-id
-              description: The Meeting's id.
-              required: true
-              autocomplete: true
-              type: INTEGER
-
         - name: add-participant
           description: Add participants to your Meeting.
           options:
