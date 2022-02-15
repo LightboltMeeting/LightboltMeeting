@@ -19,7 +19,6 @@ import java.util.Optional;
  * <p>/meeting discard</p>
  * Command that allows the Meeting Owner to discard their meeting.
  */
-@MissingLocale
 public class DiscardMeetingSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
@@ -37,11 +36,11 @@ public class DiscardMeetingSubcommand extends MeetingSubcommand {
 			return Responses.error(event, locale.getMeeting().getMEETING_NO_PERMISSION());
 		}
 		MeetingManager manager = new MeetingManager(event.getJDA(), meeting);
+		var com = locale.getMeeting().getCommand();
 		if (meeting.isOngoing()) {
-			return Responses.error(event, "Could not discard meeting. Use `/meeting end` instead.");
+			return Responses.error(event, com.getMEETING_DISCARD_FAILED_DESCRIPTION());
 		}
 		manager.discardMeeting();
-		var com = locale.getMeeting().getCommand();
 		return Responses.success(event, com.getCANCEL_MEETING_TITLE(), String.format(com.getCANCEL_MEETING_DESCRIPTION(), id));
 	}
 }

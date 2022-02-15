@@ -16,7 +16,6 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import java.sql.SQLException;
 import java.util.Optional;
 
-@MissingLocale
 public class StartMeetingSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
@@ -35,6 +34,7 @@ public class StartMeetingSubcommand extends MeetingSubcommand {
 		}
 		Bot.meetingStateManager.cancelMeetingSchedule(meeting);
 		new MeetingManager(event.getJDA(), meeting).startMeeting(event.getUser());
-		return Responses.success(event, "Meeting started", String.format("Successfully started Meeting: `%s`", meeting.getTitle()));
+		var com = locale.getMeeting().getCommand();
+		return Responses.success(event, com.getMEETING_START_SUCCESS_TITLE(), String.format(com.getMEETING_START_SUCCESS_DESCRIPTION(), meeting.getTitle()));
 	}
 }

@@ -105,21 +105,20 @@ public class MeetingManager {
 		return Arrays.stream(meeting.getAdmins()).anyMatch(l -> l == userId) || meeting.getCreatedBy() == userId;
 	}
 
-	@MissingLocale
 	public void startMeeting(@NotNull User startedBy) {
-		this.getLogChannel().sendMessageFormat("The meeting was manually started by %s.", startedBy.getAsMention()).queue();
+		var logLocale = meeting.getLocaleConfig().getMeeting().getLog();
+		this.getLogChannel().sendMessageFormat(logLocale.getLOG_MEETING_MANUALLY_STARTED(), startedBy.getAsMention()).queue();
 		this.startMeeting();
 	}
 
-	@MissingLocale
 	public void startMeeting() {
 		var text = this.getLogChannel();
 		var voice = this.getVoiceChannel();
 		Category ongoingMeetingsCategory = Bot.config.get(jda.getGuildById(meeting.getGuildId())).getMeeting().getOngoingMeetingCategory();
 		text.getManager().setParent(ongoingMeetingsCategory).queue();
 		voice.getManager().setParent(ongoingMeetingsCategory).queue();
-		text.sendMessageFormat("The meeting has been started %s\nTo end this meeting, either the owner or an admin have to execute the `/meeting end` command.",
-						Arrays.stream(meeting.getParticipants()).mapToObj(m -> String.format("<@%s>", m)).collect(Collectors.joining(", ")))
+		var logLocale = meeting.getLocaleConfig().getMeeting().getLog();
+		text.sendMessageFormat(logLocale.getLOG_MEETING_STARTED(), Arrays.stream(meeting.getParticipants()).mapToObj(m -> String.format("<@%s>", m)).collect(Collectors.joining(", ")))
 				.queue();
 		this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants());
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.markOngoing(meeting.getId()));

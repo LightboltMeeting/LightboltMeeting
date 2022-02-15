@@ -22,9 +22,6 @@ public class LocaleConfig {
 		private String MEETING_NO_PERMISSION;
 
 		private MeetingCreationConfig creation = new MeetingCreationConfig();
-		private MeetingEditConfig edit = new MeetingEditConfig();
-		private MeetingCommandConfig command = new MeetingCommandConfig();
-		private MeetingLogConfig log = new MeetingLogConfig();
 
 		@Data
 		public static class MeetingCreationConfig {
@@ -48,6 +45,8 @@ public class LocaleConfig {
 			private String CREATION_FAILED;
 		}
 
+		private MeetingCommandConfig command = new MeetingCommandConfig();
+
 		@Data
 		public static class MeetingCommandConfig {
 			private String MEETING_NOT_FOUND;
@@ -63,6 +62,8 @@ public class LocaleConfig {
 			private String CANCEL_MEETING_TITLE;
 			private String CANCEL_MEETING_DESCRIPTION;
 
+			private String MEETING_DISCARD_FAILED_DESCRIPTION;
+
 			private String PARTICIPANTS_ADD_SUCCESS_TITLE;
 			private String PARTICIPANTS_ADD_SUCCESS_DESCRIPTION;
 			private String PARTICIPANTS_REMOVE_SUCCESS_TITLE;
@@ -72,7 +73,16 @@ public class LocaleConfig {
 			private String ADMINS_ADD_SUCCESS_DESCRIPTION;
 			private String ADMINS_REMOVE_SUCCESS_TITLE;
 			private String ADMINS_REMOVE_SUCCESS_DESCRIPTION;
+
+			private String MEETING_START_SUCCESS_TITLE;
+			private String MEETING_START_SUCCESS_DESCRIPTION;
+
+			private String MEETING_END_SUCCESS_TITLE;
+			private String MEETING_END_SUCCESS_DESCRIPTION;
+			private String MEETING_END_FAILED_DESCRIPTION;
 		}
+
+		private MeetingLogConfig log = new MeetingLogConfig();
 
 		@Data
 		public static class MeetingLogConfig {
@@ -92,7 +102,12 @@ public class LocaleConfig {
 			private String LOG_TIMEUNIT_HOURS;
 
 			private String LOG_MEETING_UPDATED;
+
+			private String LOG_MEETING_MANUALLY_STARTED;
+			private String LOG_MEETING_STARTED;
 		}
+
+		private MeetingEditConfig edit = new MeetingEditConfig();
 
 		@Data
 		public static class MeetingEditConfig {

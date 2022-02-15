@@ -37,6 +37,8 @@
       "CANCEL_MEETING_TITLE": "Meeting discarded",
       "CANCEL_MEETING_DESCRIPTION": "The Meeting with ID `%s` has been discarded.",
 
+      "MEETING_DISCARD_FAILED_DESCRIPTION": "An ongoing Meeting cannot be discard. Please use `/meeting end` instead.",
+
       "PARTICIPANTS_ADD_SUCCESS_TITLE": "Participant added",
       "PARTICIPANTS_ADD_SUCCESS_DESCRIPTION": "%s was successfully added to Meeting `%s`",
       "PARTICIPANTS_REMOVE_SUCCESS_TITLE": "Participant remove",
@@ -45,7 +47,14 @@
       "ADMINS_ADD_SUCCESS_TITLE": "Admin added",
       "ADMINS_ADD_SUCCESS_DESCRIPTION": "%s is now an admin of `%s`",
       "ADMINS_REMOVE_SUCCESS_TITLE": "Admin remove",
-      "ADMINS_REMOVE_SUCCESS_DESCRIPTION": "%s is not an admin of `%s` anymore."
+      "ADMINS_REMOVE_SUCCESS_DESCRIPTION": "%s is not an admin of `%s` anymore.",
+
+      "MEETING_START_SUCCESS_TITLE": "Meeting started",
+      "MEETING_START_SUCCESS_DESCRIPTION": "Meeting `%s` has been started successfully.",
+
+      "MEETING_END_SUCCESS_TITLE": "Meeting ended",
+      "MEETING_END_SUCCESS_DESCRIPTION": "The Meeting has been ended successfully.",
+      "MEETING_END_FAILED_DESCRIPTION": "Cannot end Meeting. Please use `/manage-meeting discard` instead."
     },
     "log": {
       "LOG_PARTICIPANT_ADDED": "%s has been added to this Meeting.",
@@ -63,7 +72,10 @@
       "LOG_TIMEUNIT_MINUTES": "Minutes",
       "LOG_TIMEUNIT_HOURS": "Hours",
 
-      "LOG_MEETING_UPDATED": "The meeting was updated by: %s."
+      "LOG_MEETING_UPDATED": "The meeting was updated by: %s.",
+
+      "LOG_MEETING_MANUALLY_STARTED": "%s started this Meeting manually.",
+      "LOG_MEETING_STARTED": "The Meeting has been started! %s\nTo end the Meeting, either the Owner or an Administrator have to execute the `/meeting end` command"
     },
     "edit": {
       "EDIT_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Example: 13/09/2019 13:05)",

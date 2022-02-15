@@ -8,6 +8,7 @@
     "creation": {
       "CREATION_TOO_MANY_MEETINGS_DESCRIPTION": "Du kannst kein weiteres Meeting erstellen. Um ein neues Meeting zu erstellen musst du zuerst eins löschen.",
       "CREATION_NOT_PERMITTED_DESCRIPTION": "Du bist nicht berechtigt ein neues Meeting zu erstellen.",
+
       "CREATION_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Beispiel: 13/09/2019 13:05)",
       "CREATION_LANGUAGE_PLACEHOLDER": "Entweder \"DE\" für Deutsch oder \"EN\" für Englisch",
 
@@ -38,6 +39,8 @@
       "CANCEL_MEETING_TITLE": "Meeting verworfen",
       "CANCEL_MEETING_DESCRIPTION": "Das Meeting mit der ID `%s` wurde verworfen.",
 
+      "MEETING_DISCARD_FAILED_DESCRIPTION": "Ein laufendes Meeting kann nicht verworfen werden. Versuche stattdessen `/meeting end`.",
+
       "PARTICIPANTS_ADD_SUCCESS_TITLE": "Teilnehmer hinzugefügt",
       "PARTICIPANTS_ADD_SUCCESS_DESCRIPTION": "%s wurde erfolgreich zu `%s` hinzugefügt.",
       "PARTICIPANTS_REMOVE_SUCCESS_TITLE": "Teilnehmer entfernt",
@@ -46,7 +49,14 @@
       "ADMINS_ADD_SUCCESS_TITLE": "Admin hinzugefügt",
       "ADMINS_ADD_SUCCESS_DESCRIPTION": "%s ist nun ein Administrator von `%s`.",
       "ADMINS_REMOVE_SUCCESS_TITLE": "Admin entfernt",
-      "ADMINS_REMOVE_SUCCESS_DESCRIPTION": "%s ist kein Administrator von `%s` mehr."
+      "ADMINS_REMOVE_SUCCESS_DESCRIPTION": "%s ist kein Administrator von `%s` mehr.",
+
+      "MEETING_START_SUCCESS_TITLE": "Meeting gestartet",
+      "MEETING_START_SUCCESS_DESCRIPTION": "Das Meeting `%s` wurde erfolgreich manuell gestartet.",
+
+      "MEETING_END_SUCCESS_TITLE": "Meeting beendet",
+      "MEETING_END_SUCCESS_DESCRIPTION": "Das Meeting wurde erfolgreich beendet.",
+      "MEETING_END_FAILED_DESCRIPTION": "Das Meeting kann nicht beendet werden, da es aktuell nicht läuft. Benutze stattdessen `/manage-meeting discard`."
     },
     "log": {
       "LOG_PARTICIPANT_ADDED": "%s wurde zu dem Meeting hinzugefügt.",
@@ -64,7 +74,10 @@
       "LOG_TIMEUNIT_MINUTES": "Minuten",
       "LOG_TIMEUNIT_HOURS": "Stunden",
 
-      "LOG_MEETING_UPDATED": "Die Einstellungen des Meetings wurden von %s aktualisiert."
+      "LOG_MEETING_UPDATED": "Die Einstellungen des Meetings wurden von %s aktualisiert.",
+
+      "LOG_MEETING_MANUALLY_STARTED": "Das Meeting wurde von %s manuell gestartet.",
+      "LOG_MEETING_STARTED": "Das Meeting wurde gestartet! %s\nUm da Meeting zu beenden muss entweder der Ersteller des Meetings oder ein Administrator den `/meeting end` Befehl ausführen."
     },
     "edit": {
       "EDIT_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Beispiel: 13/09/2019 13:05)",
