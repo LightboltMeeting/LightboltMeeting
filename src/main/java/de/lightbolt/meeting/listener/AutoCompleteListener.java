@@ -18,7 +18,7 @@ public class AutoCompleteListener extends ListenerAdapter {
 	@Override
 	public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
 		switch (event.getName()) {
-			case "meeting" -> handleMeetingCommand(event).queue();
+			case "meeting", "manage-meeting" -> handleMeetingCommand(event).queue();
 			default -> throw new IllegalStateException("Unknown Command: " + event.getName());
 		}
 	}
@@ -26,7 +26,7 @@ public class AutoCompleteListener extends ListenerAdapter {
 	private AutoCompleteCallbackAction handleMeetingCommand(CommandAutoCompleteInteractionEvent event) {
 		return switch (event.getSubcommandName()) {
 			case "discard", "remove-admin", "add-admin" -> getUserMeetings(event);
-			case "add-participant", "remove-participant", "edit" -> getUserAndAdminMeetings(event);
+			case "start", "end", "add-participant", "remove-participant", "edit" -> getUserAndAdminMeetings(event);
 			default -> throw new IllegalStateException("Unknown Subcommand: " + event.getSubcommandName());
 		};
 	}

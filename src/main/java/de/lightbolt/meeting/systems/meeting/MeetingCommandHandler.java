@@ -10,19 +10,13 @@ import java.util.Map;
  */
 public class MeetingCommandHandler extends DelegatingCommandHandler {
 	/**
-	 * Adds all subcommands. {@link DelegatingCommandHandler}
+	 * Adds all subcommands.
+	 * @see DelegatingCommandHandler
 	 */
 	public MeetingCommandHandler() {
 		this.addSubcommand("create", new CreateMeetingSubcommand());
-		this.addSubcommand("edit", new EditMeetingSubcommand());
-		this.addSubcommand("discard", new DiscardMeetingSubcommand());
 		this.addSubcommand("list", new ListMeetingsSubcommand());
-		this.addSubcommandGroup(
-				"manage", new DelegatingCommandHandler(Map.of(
-						"add-participant", new AddParticipantSubcommand(),
-						"remove-participant", new RemoveParticipantSubcommand(),
-						"add-admin", new AddAdminSubcommand(),
-						"remove-admin", new RemoveAdminSubcommand()
-				)));
+		this.addSubcommand("start", new CreateMeetingSubcommand());
+		this.addSubcommand("end", new CreateMeetingSubcommand());
 	}
 }
