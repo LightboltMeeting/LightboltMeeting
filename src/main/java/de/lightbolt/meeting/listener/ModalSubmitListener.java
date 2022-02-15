@@ -107,6 +107,7 @@ public class ModalSubmitListener extends ListenerAdapter {
 							e.printStackTrace();
 						}
 					}, e -> log.error("Could not create Voice Channel for Meeting: " + meeting, e));
+			Bot.meetingStateManager.scheduleMeeting(inserted);
 			return Responses.success(event.getHook(),
 					createLocale.getCREATION_SUCCESS_TITLE(), String.format(createLocale.getCREATION_SUCCESS_DESCRIPTION(), inserted.getId()));
 		} catch (SQLException exception) {
@@ -159,6 +160,7 @@ public class ModalSubmitListener extends ListenerAdapter {
 			repo.updateDate(meeting, date);
 
 			new MeetingManager(event.getJDA(), meeting).updateMeeting(event.getUser(), LocalizationUtils.getLocale(meeting.getLanguage()));
+			Bot.meetingStateManager.updateMeetingSchedule(repo.findById(meetingId).get());
 			return Responses.success(event.getHook(), editLocale.getEDIT_SUCCESS_TITLE(), editLocale.getEDIT_SUCCESS_DESCRIPTION());
 		} catch (SQLException exception) {
 			log.error("Could not retrieve SQL Connection.", exception);

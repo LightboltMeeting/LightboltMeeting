@@ -7,10 +7,7 @@ import de.lightbolt.meeting.systems.meeting.jobs.MeetingReminderJob;
 import de.lightbolt.meeting.systems.meeting.jobs.MeetingStartJob;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
+import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.Date;
@@ -25,7 +22,6 @@ public class MeetingStateManager {
 	public Scheduler scheduler;
 
 	public MeetingStateManager() {
-
 		try {
 			scheduler = new StdSchedulerFactory().getScheduler();
 			scheduler.start();
@@ -73,4 +69,49 @@ public class MeetingStateManager {
 		}
 	}
 
+	public void updateMeetingSchedule(Meeting meeting) {
+		MeetingConfig meetingConfig = Bot.config.get(Bot.jda.getGuildById(meeting.getGuildId())).getMeeting();
+
+		try {
+			//Update Start Trigger
+			Date runTime = new Date(meeting.getDueAt().getTime());
+			Trigger oldStartTrigger = scheduler.getTrigger(TriggerKey.triggerKey(meeting.getId() + "-starttrigger"));
+			TriggerBuilder startTriggerBuilder = oldStartTrigger.getTriggerBuilder();
+			Trigger startTrigger = startTriggerBuilder
+					.withIdentity(meeting.getId() + "-starttrigger")
+					.startAt(runTime)
+					.build();
+			scheduler.rescheduleJob(oldStartTrigger.getKey(), startTrigger);
+
+			//Update Triggers for Meeting Reminders
+			for (Integer reminder : meetingConfig.getMeetingReminders()) {
+				if (new Date().after(new Date(meeting.getDueAt().getTime() - (reminder * 60000)))) return;
+				Date reminderRunTime = new Date(meeting.getDueAt().getTime() - (reminder * 60000));
+
+				Trigger oldReminderTrigger = scheduler.getTrigger(TriggerKey.triggerKey(meeting.getId() + "-remindertrigger-" + reminder));
+				TriggerBuilder reminderTriggerBuilder = oldReminderTrigger.getTriggerBuilder();
+				Trigger reminderTrigger = reminderTriggerBuilder
+						.withIdentity(meeting.getId() + "-remindertrigger-" + reminder)
+						.startAt(reminderRunTime)
+						.build();
+				scheduler.rescheduleJob(oldReminderTrigger.getKey(), reminderTrigger);
+			}
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void cancelMeetingSchedule(Meeting meeting) {
+		MeetingConfig meetingConfig = Bot.config.get(Bot.jda.getGuildById(meeting.getGuildId())).getMeeting();
+		try {
+			scheduler.deleteJob(JobKey.jobKey(meeting.getId() + "-start"));
+			for (Integer reminder : meetingConfig.getMeetingReminders()) {
+				if (scheduler.getTrigger(TriggerKey.triggerKey(meeting.getId() + "-remindertrigger-" + reminder)) != null){
+					scheduler.deleteJob(JobKey.jobKey(meeting.getId() + "-reminder-" + reminder));
+				}
+			}
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
+	}
 }

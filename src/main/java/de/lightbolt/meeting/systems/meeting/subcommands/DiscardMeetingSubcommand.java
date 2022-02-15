@@ -1,5 +1,6 @@
 package de.lightbolt.meeting.systems.meeting.subcommands;
 
+import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
@@ -32,6 +33,7 @@ public class DiscardMeetingSubcommand extends MeetingSubcommand {
 				var manager = new MeetingManager(event.getJDA(), m);
 				manager.getLogChannel().delete().queue();
 				manager.getVoiceChannel().delete().queue();
+				Bot.meetingStateManager.cancelMeetingSchedule(m);
 			});
 			return Responses.success(event, com.getCANCEL_MEETING_TITLE(),
 					String.format(com.getCANCEL_MEETING_DESCRIPTION(), id));
