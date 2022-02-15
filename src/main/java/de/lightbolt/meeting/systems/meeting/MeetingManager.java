@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,7 +41,7 @@ public class MeetingManager {
 	 * @param locale    The user's locale.
 	 * @return A {@link MessageEmbed}.
 	 */
-	public static MessageEmbed buildMeetingEmbed(Meeting meeting, User createdBy, LocaleConfig locale) {
+	public static @NotNull MessageEmbed buildMeetingEmbed(@NotNull Meeting meeting, @NotNull User createdBy, @NotNull LocaleConfig locale) {
 		return new EmbedBuilder()
 				.setAuthor(createdBy.getAsTag(), null, createdBy.getEffectiveAvatarUrl())
 				.setTitle(meeting.getTitle())
@@ -50,33 +51,45 @@ public class MeetingManager {
 				.build();
 	}
 
-	// TODO: Fix this to work with the Ongoing Meeting Category
-	public static void checkActiveMeetings(JDA jda) {
+	/**
+	 * Checks for missing or unknown Log & Voice channels and creates/deletes them.
+	 * @param jda The JDA instance
+	 */
+	public static void checkActiveMeetings(@NotNull JDA jda) {
 		for (var guild : jda.getGuilds()) {
+			var config = Bot.config.get(guild).getMeeting();
 			DbHelper.doDaoAction(MeetingRepository::new, dao -> {
 				List<Meeting> activeMeetings = dao.getActive();
-				var activeLogs = activeMeetings.stream().map(Meeting::getLogChannelId).toList();
-				var activeVoices = activeMeetings.stream().map(Meeting::getVoiceChannelId).toList();
-				Category category = Bot.config.get(guild).getMeeting().getMeetingCategory();
-				category.getChannels().forEach(c -> {
-					if (!activeLogs.contains(c.getIdLong()) && !activeVoices.contains(c.getIdLong())) {
-						log.info("Removing Unknown Meeting Channel: " + c.getName());
-						c.delete().queue();
+				List<Long> activeLogs = activeMeetings.stream().map(Meeting::getLogChannelId).toList();
+				List<Long> activeVoices = activeMeetings.stream().map(Meeting::getVoiceChannelId).toList();
+				Category category = config.getMeetingCategory();
+				Category ongoingCategory = config.getOngoingMeetingCategory();
+				List<Long> channels = category.getChannels().stream().map(GuildChannel::getIdLong).toList();
+				ongoingCategory.getChannels().forEach(c -> channels.add(c.getIdLong()));
+				channels.forEach(c -> {
+					if (!activeLogs.contains(c) && !activeVoices.contains(c)) {
+						var channel = guild.getGuildChannelById(c);
+						log.info("Removing Unknown Meeting Channel: " + channel.getName());
+						channel.delete().queue();
 					}
 				});
-				var categoryChannelIds = category.getChannels().stream().map(GuildChannel::getIdLong).toList();
-				activeMeetings.forEach(meeting -> jda.retrieveUserById(meeting.getCreatedBy()).queue(owner -> {
-							if (!categoryChannelIds.contains(meeting.getLogChannelId())) {
-								new MeetingManager(jda, meeting).createLogChannel(category, owner,
-										LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage())));
-								log.info("Created missing Log Channel for Meeting: " + meeting);
+				activeMeetings.forEach(meeting -> {
+					Category destination;
+					if (meeting.isOngoing()) destination = config.getOngoingMeetingCategory();
+					else destination = config.getMeetingCategory();
+					jda.retrieveUserById(meeting.getCreatedBy()).queue(owner -> {
+								if (!channels.contains(meeting.getLogChannelId())) {
+									new MeetingManager(jda, meeting).createLogChannel(destination, owner,
+											LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage())));
+									log.info("Created missing Log Channel for Meeting: " + meeting);
+								}
+								if (!channels.contains(meeting.getVoiceChannelId())) {
+									new MeetingManager(jda, meeting).createVoiceChannel(destination);
+									log.info("Created missing Voice Channel for Meeting: " + meeting);
+								}
 							}
-							if (!categoryChannelIds.contains(meeting.getVoiceChannelId())) {
-								new MeetingManager(jda, meeting).createVoiceChannel(category);
-								log.info("Created missing Voice Channel for Meeting: " + meeting);
-							}
-						}
-				));
+					);
+				});
 			});
 		}
 	}
@@ -88,22 +101,12 @@ public class MeetingManager {
 	 * @param userId  The user whose checked.
 	 * @return Whether the user is permitted to edit the meeting.
 	 */
-	public static boolean canEditMeeting(Meeting meeting, long userId) {
+	public static boolean canEditMeeting(@NotNull Meeting meeting, long userId) {
 		return Arrays.stream(meeting.getAdmins()).anyMatch(l -> l == userId) || meeting.getCreatedBy() == userId;
 	}
 
-	public MeetingState getMeetingState() {
-		var category = Bot.config.get(jda.getGuildById(meeting.getGuildId())).getMeeting().getOngoingMeetingCategory();
-		MeetingManager manager = new MeetingManager(jda, meeting);
-		if (manager.getLogChannel().getParentCategory().equals(category) && manager.getVoiceChannel().getParentCategory().equals(category)) {
-			return MeetingState.ONGOING;
-		} else {
-			return MeetingState.SCHEDULED;
-		}
-	}
-
 	@MissingLocale
-	public void startMeeting(User startedBy) {
+	public void startMeeting(@NotNull User startedBy) {
 		this.getLogChannel().sendMessageFormat("The meeting was manually started by %s.", startedBy.getAsMention()).queue();
 		this.startMeeting();
 	}
@@ -119,6 +122,7 @@ public class MeetingManager {
 						Arrays.stream(meeting.getParticipants()).mapToObj(m -> String.format("<@%s>", m)).collect(Collectors.joining(", ")))
 				.queue();
 		this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants());
+		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.markOngoing(meeting.getId()));
 	}
 
 	public void endMeeting() {
@@ -142,7 +146,7 @@ public class MeetingManager {
 	 * @param createdBy The Meeting's owner.
 	 * @param locale    The Meeting's locale.
 	 */
-	public void createLogChannel(Category category, User createdBy, LocaleConfig locale) {
+	public void createLogChannel(@NotNull Category category, User createdBy, LocaleConfig locale) {
 		category.createTextChannel(String.format(MeetingManager.MEETING_LOG_NAME, meeting.getId())).queue(
 				channel -> {
 					this.updateLogChannelPermissions(channel, meeting.getParticipants());
@@ -165,7 +169,7 @@ public class MeetingManager {
 	 *
 	 * @param category  The Meeting Category that's specified in the config file.
 	 */
-	public void createVoiceChannel(Category category) {
+	public void createVoiceChannel(@NotNull Category category) {
 		category.createVoiceChannel(String.format(MeetingManager.MEETING_VOICE_NAME, meeting.getId(), meeting.getTitle())).queue(
 				channel -> {
 					this.updateVoiceChannelPermissions(channel, meeting.getParticipants());
@@ -205,7 +209,7 @@ public class MeetingManager {
 	 *
 	 * @param user The user that should be added as a participant.
 	 */
-	public void addParticipant(User user) {
+	public void addParticipant(@NotNull User user) {
 		TextChannel text = this.getLogChannel();
 		long[] newParticipants = ArrayUtils.add(meeting.getParticipants(), user.getIdLong());
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
@@ -221,7 +225,7 @@ public class MeetingManager {
 	 *
 	 * @param user The user that should be removed.
 	 */
-	public void removeParticipant(User user) {
+	public void removeParticipant(@NotNull User user) {
 		var meetingLocale = meeting.getLocaleConfig().getMeeting().getLog();
 		var text = this.getLogChannel();
 		var voice = this.getVoiceChannel();
@@ -240,7 +244,7 @@ public class MeetingManager {
 	 *
 	 * @param user The user that should be added as an admin.
 	 */
-	public void addAdmin(User user) {
+	public void addAdmin(@NotNull User user) {
 		TextChannel text = this.getLogChannel();
 		long[] newAdmins = ArrayUtils.add(meeting.getAdmins(), user.getIdLong());
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
@@ -256,7 +260,7 @@ public class MeetingManager {
 	 *
 	 * @param user The user that should be removed.
 	 */
-	public void removeAdmin(User user) {
+	public void removeAdmin(@NotNull User user) {
 		var meetingLocale = meeting.getLocaleConfig().getMeeting().getLog();
 		var text = this.getLogChannel();
 		var newAdmins = ArrayUtils.removeElement(meeting.getAdmins(), user.getIdLong());
@@ -268,7 +272,7 @@ public class MeetingManager {
 		});
 	}
 
-	private void updateLogChannelPermissions(TextChannel channel, long[] userId) {
+	private void updateLogChannelPermissions(@NotNull TextChannel channel, long[] userId) {
 		var manager = channel.getManager();
 		manager.putRolePermissionOverride(channel.getGuild().getIdLong(), 0, Permission.ALL_PERMISSIONS);
 		for (long id : userId) {
@@ -278,12 +282,12 @@ public class MeetingManager {
 		manager.queue();
 	}
 
-	private void updateVoiceChannelPermissions(VoiceChannel channel, long[] userId) {
+	private void updateVoiceChannelPermissions(@NotNull VoiceChannel channel, long[] userId) {
 		var manager = channel.getManager();
 		manager.putRolePermissionOverride(channel.getGuild().getIdLong(), 0, Permission.ALL_PERMISSIONS);
 		for (long id : userId) {
-			if (this.getMeetingState() == MeetingState.SCHEDULED) manager.putMemberPermissionOverride(id, Collections.singleton(Permission.VIEW_CHANNEL), Collections.singleton(Permission.VOICE_CONNECT));
-			else if (this.getMeetingState() == MeetingState.ONGOING) manager.putMemberPermissionOverride(id, Permission.getPermissions(Permission.ALL_VOICE_PERMISSIONS + Permission.getRaw(Permission.VIEW_CHANNEL)), Collections.emptySet());
+			if (!meeting.isOngoing()) manager.putMemberPermissionOverride(id, Collections.singleton(Permission.VIEW_CHANNEL), Collections.singleton(Permission.VOICE_CONNECT));
+			else manager.putMemberPermissionOverride(id, Permission.getPermissions(Permission.ALL_VOICE_PERMISSIONS + Permission.getRaw(Permission.VIEW_CHANNEL)), Collections.emptySet());
 		}
 		manager.queue();
 	}

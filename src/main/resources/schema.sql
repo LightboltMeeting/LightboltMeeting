@@ -12,5 +12,6 @@ CREATE TABLE meetings
 	language         VARCHAR(64)  NOT NULL,
 	log_channel_id   BIGINT       NOT NULL,
 	voice_channel_id BIGINT       NOT NULL,
-	active           BOOL         NOT NULL DEFAULT TRUE
+	active           BOOL         NOT NULL DEFAULT TRUE,
+	ongoing          BOOl         NOT NULL DEFAULT FALSE
 )

@@ -25,6 +25,7 @@ public class Meeting {
 	private long logChannelId;
 	private long voiceChannelId;
 	private boolean active;
+	private boolean ongoing;
 
 	public LocaleConfig getLocaleConfig() {
 		return LocalizationUtils.getLocale(Language.valueOf(this.language));
