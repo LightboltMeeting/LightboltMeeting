@@ -89,12 +89,14 @@ public class MeetingStateManager {
 				Date reminderRunTime = new Date(meeting.getDueAt().getTime() - (reminder * 60000));
 
 				Trigger oldReminderTrigger = scheduler.getTrigger(TriggerKey.triggerKey(meeting.getId() + "-remindertrigger-" + reminder));
-				TriggerBuilder reminderTriggerBuilder = oldReminderTrigger.getTriggerBuilder();
-				Trigger reminderTrigger = reminderTriggerBuilder
-						.withIdentity(meeting.getId() + "-remindertrigger-" + reminder)
-						.startAt(reminderRunTime)
-						.build();
-				scheduler.rescheduleJob(oldReminderTrigger.getKey(), reminderTrigger);
+				if(oldReminderTrigger != null){
+					TriggerBuilder reminderTriggerBuilder = oldReminderTrigger.getTriggerBuilder();
+					Trigger reminderTrigger = reminderTriggerBuilder
+							.withIdentity(meeting.getId() + "-remindertrigger-" + reminder)
+							.startAt(reminderRunTime)
+							.build();
+					scheduler.rescheduleJob(oldReminderTrigger.getKey(), reminderTrigger);
+				}
 			}
 		} catch (SchedulerException e) {
 			e.printStackTrace();
