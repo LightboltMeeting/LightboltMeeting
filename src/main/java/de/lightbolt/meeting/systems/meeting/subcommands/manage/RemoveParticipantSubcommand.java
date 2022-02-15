@@ -31,26 +31,25 @@ public class RemoveParticipantSubcommand extends MeetingSubcommand {
 		var user = userOption.getAsUser();
 		var com = locale.getMeeting().getCommand();
 		Optional<Meeting> meetingOptional = repo.findById(id);
-		if (meetingOptional.isPresent()) {
-			var meeting = meetingOptional.get();
-			if (!MeetingManager.canEditMeeting(meeting, event.getUser().getIdLong())) {
-				return Responses.error(event, locale.getMeeting().getMEETING_NO_PERMISSION());
-			}
-			var participants = meeting.getParticipants();
-			var admins = meeting.getAdmins();
-			if (Arrays.stream(participants).anyMatch(x -> x == user.getIdLong())) {
-				if (Arrays.stream(admins).anyMatch(x -> x == user.getIdLong())) {
-					var newAdmins = ArrayUtils.removeElement(admins, user.getIdLong());
-					repo.updateAdmins(meeting, newAdmins);
-				}
-				new MeetingManager(event.getJDA(), meeting).removeParticipant(user);
-				return Responses.success(event, com.getPARTICIPANTS_REMOVE_SUCCESS_TITLE(),
-						String.format(com.getPARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
-			} else {
-				return Responses.error(event, String.format(com.getMEETING_PARTICIPANT_NOT_FOUND(), user.getAsMention()));
-			}
-		} else {
+		if (meetingOptional.isEmpty()) {
 			return Responses.error(event, String.format(com.getMEETING_NOT_FOUND(), id));
+		}
+		var meeting = meetingOptional.get();
+		if (!MeetingManager.canEditMeeting(meeting, event.getUser().getIdLong())) {
+			return Responses.error(event, locale.getMeeting().getMEETING_NO_PERMISSION());
+		}
+		var participants = meeting.getParticipants();
+		var admins = meeting.getAdmins();
+		if (Arrays.stream(participants).anyMatch(x -> x == user.getIdLong())) {
+			if (Arrays.stream(admins).anyMatch(x -> x == user.getIdLong())) {
+				var newAdmins = ArrayUtils.removeElement(admins, user.getIdLong());
+				repo.updateAdmins(meeting, newAdmins);
+			}
+			new MeetingManager(event.getJDA(), meeting).removeParticipant(user);
+			return Responses.success(event, com.getPARTICIPANTS_REMOVE_SUCCESS_TITLE(),
+					String.format(com.getPARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
+		} else {
+			return Responses.error(event, String.format(com.getMEETING_PARTICIPANT_NOT_FOUND(), user.getAsMention()));
 		}
 	}
 }

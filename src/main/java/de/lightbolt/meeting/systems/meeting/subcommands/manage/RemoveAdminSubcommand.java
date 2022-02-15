@@ -9,7 +9,6 @@ import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -32,18 +31,17 @@ public class RemoveAdminSubcommand extends MeetingSubcommand {
 		var com = locale.getMeeting().getCommand();
 		var meetings = repo.getByUserId(event.getUser().getIdLong());
 		Optional<Meeting> meetingOptional = meetings.stream().filter(m -> m.getId() == id).findFirst();
-		if (meetingOptional.isPresent()) {
-			var meeting = meetingOptional.get();
-			var admins = meeting.getAdmins();
-			if (Arrays.stream(admins).anyMatch(x -> x == user.getIdLong())) {
-				new MeetingManager(event.getJDA(), meeting).removeAdmin(user);
-				return Responses.success(event, com.getADMINS_REMOVE_SUCCESS_TITLE(),
-						String.format(com.getADMINS_REMOVE_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
-			} else {
-				return Responses.error(event, String.format(com.getMEETING_ADMIN_NOT_FOUND(), user.getAsMention()));
-			}
-		} else {
+		if (meetingOptional.isEmpty()) {
 			return Responses.error(event, String.format(com.getMEETING_NOT_FOUND(), id));
+		}
+		var meeting = meetingOptional.get();
+		var admins = meeting.getAdmins();
+		if (Arrays.stream(admins).anyMatch(x -> x == user.getIdLong())) {
+			new MeetingManager(event.getJDA(), meeting).removeAdmin(user);
+			return Responses.success(event, com.getADMINS_REMOVE_SUCCESS_TITLE(),
+					String.format(com.getADMINS_REMOVE_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
+		} else {
+			return Responses.error(event, String.format(com.getMEETING_ADMIN_NOT_FOUND(), user.getAsMention()));
 		}
 	}
 }

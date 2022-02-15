@@ -1,6 +1,7 @@
 package de.lightbolt.meeting.systems.meeting;
 
 import de.lightbolt.meeting.Bot;
+import de.lightbolt.meeting.annotations.MissingLocale;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
@@ -14,12 +15,11 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import org.apache.commons.lang3.ArrayUtils;
-import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Schedules and handles {@link de.lightbolt.meeting.systems.meeting.model.Meeting}s.
@@ -50,6 +50,7 @@ public class MeetingManager {
 				.build();
 	}
 
+	// TODO: Fix this to work with the Ongoing Meeting Category
 	public static void checkActiveMeetings(JDA jda) {
 		for (var guild : jda.getGuilds()) {
 			DbHelper.doDaoAction(MeetingRepository::new, dao -> {
@@ -91,6 +92,49 @@ public class MeetingManager {
 		return Arrays.stream(meeting.getAdmins()).anyMatch(l -> l == userId) || meeting.getCreatedBy() == userId;
 	}
 
+	public MeetingState getMeetingState() {
+		var category = Bot.config.get(jda.getGuildById(meeting.getGuildId())).getMeeting().getOngoingMeetingCategory();
+		MeetingManager manager = new MeetingManager(jda, meeting);
+		if (manager.getLogChannel().getParentCategory().equals(category) && manager.getVoiceChannel().getParentCategory().equals(category)) {
+			return MeetingState.ONGOING;
+		} else {
+			return MeetingState.SCHEDULED;
+		}
+	}
+
+	@MissingLocale
+	public void startMeeting(User startedBy) {
+		this.getLogChannel().sendMessageFormat("The meeting was manually started by %s.", startedBy.getAsMention()).queue();
+		this.startMeeting();
+	}
+
+	@MissingLocale
+	public void startMeeting() {
+		var text = this.getLogChannel();
+		var voice = this.getVoiceChannel();
+		Category ongoingMeetingsCategory = Bot.config.get(jda.getGuildById(meeting.getGuildId())).getMeeting().getOngoingMeetingCategory();
+		text.getManager().setParent(ongoingMeetingsCategory).queue();
+		voice.getManager().setParent(ongoingMeetingsCategory).queue();
+		text.sendMessageFormat("The meeting has been started %s\nTo end this meeting, either the owner or an admin have to execute the `/meeting end` command.",
+						Arrays.stream(meeting.getParticipants()).mapToObj(m -> String.format("<@%s>", m)).collect(Collectors.joining(", ")))
+				.queue();
+		this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants());
+	}
+
+	public void endMeeting() {
+		this.getLogChannel().delete().queue();
+		this.getVoiceChannel().delete().queue();
+		Bot.meetingStateManager.cancelMeetingSchedule(meeting);
+		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.markInactive(meeting.getId()));
+	}
+
+	public void discardMeeting() {
+		this.getLogChannel().delete().queue();
+		this.getVoiceChannel().delete().queue();
+		Bot.meetingStateManager.cancelMeetingSchedule(meeting);
+		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.markInactive(meeting.getId()));
+	}
+
 	/**
 	 * Creates a new Log Channel for this Meeting.
 	 *
@@ -101,7 +145,7 @@ public class MeetingManager {
 	public void createLogChannel(Category category, User createdBy, LocaleConfig locale) {
 		category.createTextChannel(String.format(MeetingManager.MEETING_LOG_NAME, meeting.getId())).queue(
 				channel -> {
-					this.setLogChannelPermissions(channel, meeting.getParticipants());
+					this.updateLogChannelPermissions(channel, meeting.getParticipants());
 					channel.sendMessageEmbeds(buildMeetingEmbed(meeting, createdBy, locale)).queue();
 					DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.updateLogChannel(meeting, channel.getIdLong()));
 				}, e -> log.error("Could not create Log Channel for Meeting: " + meeting, e));
@@ -124,7 +168,7 @@ public class MeetingManager {
 	public void createVoiceChannel(Category category) {
 		category.createVoiceChannel(String.format(MeetingManager.MEETING_VOICE_NAME, meeting.getId(), meeting.getTitle())).queue(
 				channel -> {
-					this.setVoiceChannelPermissions(channel, meeting.getParticipants());
+					this.updateVoiceChannelPermissions(channel, meeting.getParticipants());
 					DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.updateVoiceChannel(meeting, channel.getIdLong()));
 				}, e -> log.error("Could not create Voice Channel for Meeting: " + meeting, e));
 	}
@@ -167,8 +211,8 @@ public class MeetingManager {
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
 			var updated = dao.updateParticipants(meeting, newParticipants);
 			text.sendMessageFormat(meeting.getLocaleConfig().getMeeting().getLog().getLOG_PARTICIPANT_ADDED(), user.getAsMention()).queue();
-			this.setLogChannelPermissions(text, updated.getParticipants());
-			this.setVoiceChannelPermissions(this.getVoiceChannel(), updated.getParticipants());
+			this.updateLogChannelPermissions(text, updated.getParticipants());
+			this.updateVoiceChannelPermissions(this.getVoiceChannel(), updated.getParticipants());
 		});
 	}
 
@@ -202,8 +246,8 @@ public class MeetingManager {
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
 			var updated = dao.updateAdmins(meeting, newAdmins);
 			text.sendMessageFormat(meeting.getLocaleConfig().getMeeting().getLog().getLOG_ADMIN_ADDED(), user.getAsMention()).queue();
-			this.setLogChannelPermissions(text, updated.getParticipants());
-			this.setVoiceChannelPermissions(this.getVoiceChannel(), updated.getParticipants());
+			this.updateLogChannelPermissions(text, updated.getParticipants());
+			this.updateVoiceChannelPermissions(this.getVoiceChannel(), updated.getParticipants());
 		});
 	}
 
@@ -219,12 +263,12 @@ public class MeetingManager {
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
 			var updated = dao.updateAdmins(meeting, newAdmins);
 			text.sendMessageFormat(meetingLocale.getLOG_ADMIN_REMOVED(), user.getAsMention()).queue();
-			this.setLogChannelPermissions(text, updated.getParticipants());
-			this.setVoiceChannelPermissions(this.getVoiceChannel(), updated.getParticipants());
+			this.updateLogChannelPermissions(text, updated.getParticipants());
+			this.updateVoiceChannelPermissions(this.getVoiceChannel(), updated.getParticipants());
 		});
 	}
 
-	private void setLogChannelPermissions(TextChannel channel, long[] userId) {
+	private void updateLogChannelPermissions(TextChannel channel, long[] userId) {
 		var manager = channel.getManager();
 		manager.putRolePermissionOverride(channel.getGuild().getIdLong(), 0, Permission.ALL_PERMISSIONS);
 		for (long id : userId) {
@@ -234,11 +278,12 @@ public class MeetingManager {
 		manager.queue();
 	}
 
-	private void setVoiceChannelPermissions(VoiceChannel channel, long[] userId) {
+	private void updateVoiceChannelPermissions(VoiceChannel channel, long[] userId) {
 		var manager = channel.getManager();
 		manager.putRolePermissionOverride(channel.getGuild().getIdLong(), 0, Permission.ALL_PERMISSIONS);
 		for (long id : userId) {
-			manager.putMemberPermissionOverride(id, Collections.singleton(Permission.VIEW_CHANNEL), Collections.singleton(Permission.VOICE_CONNECT));
+			if (this.getMeetingState() == MeetingState.SCHEDULED) manager.putMemberPermissionOverride(id, Collections.singleton(Permission.VIEW_CHANNEL), Collections.singleton(Permission.VOICE_CONNECT));
+			else if (this.getMeetingState() == MeetingState.ONGOING) manager.putMemberPermissionOverride(id, Permission.getPermissions(Permission.ALL_VOICE_PERMISSIONS + Permission.getRaw(Permission.VIEW_CHANNEL)), Collections.emptySet());
 		}
 		manager.queue();
 	}

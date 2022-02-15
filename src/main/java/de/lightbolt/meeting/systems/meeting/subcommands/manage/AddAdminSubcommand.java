@@ -9,7 +9,6 @@ import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -32,21 +31,19 @@ public class AddAdminSubcommand extends MeetingSubcommand {
 		var com = locale.getMeeting().getCommand();
 		var meetings = repo.getByUserId(event.getUser().getIdLong());
 		Optional<Meeting> meetingOptional = meetings.stream().filter(m -> m.getId() == id).findFirst();
-		if (meetingOptional.isPresent()) {
-			var meeting = meetingOptional.get();
-			var participants = meeting.getParticipants();
-			var admins = meeting.getAdmins();
-			if (!Arrays.stream(participants).anyMatch(x -> x == user.getIdLong())) {
-				return Responses.error(event, String.format(com.getMEETING_ADMIN_NOT_A_PARTICIPANT(), user.getAsMention()));
-			}
-			if (Arrays.stream(admins).anyMatch(x -> x == user.getIdLong())) {
-				return Responses.error(event, String.format(com.getMEETING_ADMIN_ALREADY_ADDED(), user.getAsMention()));
-			}
-			new MeetingManager(event.getJDA(), meeting).addAdmin(user);
-			return Responses.success(event, com.getADMINS_ADD_SUCCESS_TITLE(),
-					String.format(com.getADMINS_ADD_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
-		} else {
+		if (meetingOptional.isEmpty()) {
 			return Responses.error(event, String.format(com.getMEETING_NOT_FOUND(), id));
 		}
+		var meeting = meetingOptional.get();
+		var participants = meeting.getParticipants();
+		var admins = meeting.getAdmins();
+		if (!Arrays.stream(participants).anyMatch(x -> x == user.getIdLong())) {
+			return Responses.error(event, String.format(com.getMEETING_ADMIN_NOT_A_PARTICIPANT(), user.getAsMention()));
+		}
+		if (Arrays.stream(admins).anyMatch(x -> x == user.getIdLong())) {
+			return Responses.error(event, String.format(com.getMEETING_ADMIN_ALREADY_ADDED(), user.getAsMention()));
+		}
+		new MeetingManager(event.getJDA(), meeting).addAdmin(user);
+		return Responses.success(event, com.getADMINS_ADD_SUCCESS_TITLE(), String.format(com.getADMINS_ADD_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
 	}
 }
