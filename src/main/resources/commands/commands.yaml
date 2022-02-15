@@ -11,6 +11,30 @@
   subCommands:
     - name: create
       description: Create a new Meeting.
+    - name: list
+      description: List all your Meetings.
+    - name: start
+      description: Start a meeting manually.
+      options:
+        - name: meeting-id
+          description: The meeting's id.
+          required: true
+          autocomplete: true
+          type: INTEGER
+    - name: end
+      description: End a meeting manually.
+      options:
+        - name: meeting-id
+          description: The meeting's id.
+          required: true
+          autocomplete: true
+          type: INTEGER
+  handler: de.lightbolt.meeting.systems.meeting.MeetingCommandHandler
+
+
+- name: manage-meeting
+  description: Command for managing Meetings.
+  subCommands:
     - name: edit
       description: Edit an existing Meeting.
       options:
@@ -19,6 +43,7 @@
           required: true
           autocomplete: true
           type: INTEGER
+
     - name: discard
       description: Discards a single Meeting.
       options:
@@ -27,65 +52,60 @@
           required: true
           autocomplete: true
           type: INTEGER
-    - name: list
-      description: List all your Meetings.
-  subCommandGroups:
-    - name: manage
-      description: Command that allows users to manage Meetings.
-      subCommands:
-        - name: add-participant
-          description: Add participants to your Meeting.
-          options:
-            - name: meeting-id
-              description: The Meeting's id.
-              required: true
-              autocomplete: true
-              type: INTEGER
-            - name: user
-              description: The user you want to add.
-              required: true
-              autocomplete: false
-              type: USER
 
-        - name: remove-participant
-          description: Remove participants.
-          options:
-            - name: meeting-id
-              description: The Meeting's id.
-              required: true
-              autocomplete: true
-              type: INTEGER
-            - name: user
-              description: The user you want to remove.
-              required: true
-              autocomplete: false
-              type: USER
+    - name: add-participant
+      description: Add participants to your Meeting.
+      options:
+        - name: meeting-id
+          description: The Meeting's id.
+          required: true
+          autocomplete: true
+          type: INTEGER
+        - name: user
+          description: The user you want to add.
+          required: true
+          autocomplete: false
+          type: USER
 
-        - name: add-admin
-          description: Add admins to your Meeting.
-          options:
-            - name: meeting-id
-              description: The Meeting's id.
-              required: true
-              autocomplete: true
-              type: INTEGER
-            - name: user
-              description: The user you want to add.
-              required: true
-              autocomplete: false
-              type: USER
+    - name: remove-participant
+      description: Remove participants.
+      options:
+        - name: meeting-id
+          description: The Meeting's id.
+          required: true
+          autocomplete: true
+          type: INTEGER
+        - name: user
+          description: The user you want to remove.
+          required: true
+          autocomplete: false
+          type: USER
 
-        - name: remove-admin
-          description: Remove Admins.
-          options:
-            - name: meeting-id
-              description: The Meeting's id.
-              required: true
-              autocomplete: true
-              type: INTEGER
-            - name: user
-              description: The user you want to remove.
-              required: true
-              autocomplete: false
-              type: USER
-  handler: de.lightbolt.meeting.systems.meeting.MeetingCommandHandler
+    - name: add-admin
+      description: Add admins to your Meeting.
+      options:
+        - name: meeting-id
+          description: The Meeting's id.
+          required: true
+          autocomplete: true
+          type: INTEGER
+        - name: user
+          description: The user you want to add.
+          required: true
+          autocomplete: false
+          type: USER
+
+    - name: remove-admin
+      description: Remove Admins.
+      options:
+        - name: meeting-id
+          description: The Meeting's id.
+          required: true
+          autocomplete: true
+          type: INTEGER
+        - name: user
+          description: The user you want to remove.
+          required: true
+          autocomplete: false
+          type: USER
+  handler: de.lightbolt.meeting.systems.meeting.MeetingManageCommandHandler
