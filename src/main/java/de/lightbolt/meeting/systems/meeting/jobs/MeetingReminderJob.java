@@ -3,7 +3,6 @@ package de.lightbolt.meeting.systems.meeting.jobs;
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
-import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
 import java.sql.SQLException;
-import java.util.Locale;
 import java.util.Optional;
 
 @Slf4j
@@ -32,7 +30,7 @@ public class MeetingReminderJob implements Job {
 				return;
 			}
 			Meeting meeting = meetingOptional.get();
-			locale = LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage()));
+			locale = LocalizationUtils.getLocale(meeting.getLanguage());
 			logLocale = locale.getMeeting().getLog();
 			StringBuilder participants = new StringBuilder();
 			TextChannel logChannel = Bot.jda.getTextChannelById(meeting.getLogChannelId());
@@ -40,10 +38,8 @@ public class MeetingReminderJob implements Job {
 			for (long participantId : meeting.getParticipants()) {
 				participants.append(Bot.jda.getUserById(participantId).getAsMention());
 			}
-
 			logChannel.sendMessage(participants).queue();
 			logChannel.sendMessageEmbeds(buildEmbed(jobDetail[2])).queue();
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -54,7 +50,9 @@ public class MeetingReminderJob implements Job {
 		if (Integer.parseInt(reminder) > 60) {
 			reminderTimeUnit = logLocale.getLOG_TIMEUNIT_HOURS();
 			reminder = String.valueOf((Integer.parseInt(reminder) / 60));
-		} else reminderTimeUnit = logLocale.getLOG_TIMEUNIT_MINUTES();
+		} else {
+			reminderTimeUnit = logLocale.getLOG_TIMEUNIT_MINUTES();
+		}
 
 		return new EmbedBuilder()
 				.setTitle(logLocale.getLOG_REMINDER_TITLE())

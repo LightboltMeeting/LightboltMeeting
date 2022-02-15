@@ -3,7 +3,6 @@ package de.lightbolt.meeting.systems.meeting.jobs;
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
-import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,8 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Optional;
 
 @Slf4j
 public class MeetingStartJob implements Job {
@@ -33,7 +33,7 @@ public class MeetingStartJob implements Job {
 				return;
 			}
 			Meeting meeting = meetingOptional.get();
-			locale = LocalizationUtils.getLocale(Language.valueOf(meeting.getLanguage()));
+			locale = LocalizationUtils.getLocale(meeting.getLanguage());
 			logLocale = locale.getMeeting().getLog();
 			StringBuilder participants = new StringBuilder();
 			TextChannel logChannel = Bot.jda.getTextChannelById(meeting.getLogChannelId());
@@ -53,7 +53,6 @@ public class MeetingStartJob implements Job {
 	}
 
 	private MessageEmbed buildEmbed(Meeting meeting) {
-
 		return new EmbedBuilder()
 				.setTitle(logLocale.getLOG_START_TITLE())
 				.setDescription(String.format(logLocale.getLOG_START_DESCRIPTION(), Bot.jda.getVoiceChannelById(meeting.getVoiceChannelId()).getAsMention()))

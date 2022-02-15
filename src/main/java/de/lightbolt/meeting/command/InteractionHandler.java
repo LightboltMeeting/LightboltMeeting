@@ -63,7 +63,8 @@ public class InteractionHandler extends ListenerAdapter {
 		var command = this.slashCommandIndex.get(event.getName());
 		if (command != null) {
 			try {
-				command.handleSlashCommandInteraction(event).queue();
+				var interaction = command.handleSlashCommandInteraction(event);
+				if (interaction != null) interaction.queue();
 			} catch (ResponseException e) {
 				handleResponseException(e, event);
 			}

@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -134,6 +136,51 @@ public class MeetingRepository {
 			s.setInt(2, old.getId());
 			int rows = s.executeUpdate();
 			if (rows == 0) throw new SQLException("Could not update Meeting Voice Channel. Meeting: " + old);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateName(Meeting old, String name) {
+		try (PreparedStatement s = con.prepareStatement("UPDATE meetings SET title = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
+			s.setString(1, name);
+			s.setInt(2, old.getId());
+			int rows = s.executeUpdate();
+			if (rows == 0) throw new SQLException("Could not update Meeting Title. Meeting: " + old);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateDescription(Meeting old, String description) {
+		try (PreparedStatement s = con.prepareStatement("UPDATE meetings SET description = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
+			s.setString(1, description);
+			s.setInt(2, old.getId());
+			int rows = s.executeUpdate();
+			if (rows == 0) throw new SQLException("Could not update Meeting Description. Meeting: " + old);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateDate(Meeting old, String dueAtString) {
+		Timestamp dueAt = Timestamp.valueOf(LocalDateTime.parse(dueAtString, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+		try (PreparedStatement s = con.prepareStatement("UPDATE meetings SET due_at = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
+			s.setTimestamp(1, dueAt);
+			s.setInt(2, old.getId());
+			int rows = s.executeUpdate();
+			if (rows == 0) throw new SQLException("Could not update Meeting Date. Meeting: " + old);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateLanguage(Meeting old, String language) {
+		try (PreparedStatement s = con.prepareStatement("UPDATE meetings SET language = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
+			s.setString(1, language);
+			s.setInt(2, old.getId());
+			int rows = s.executeUpdate();
+			if (rows == 0) throw new SQLException("Could not update Meeting Language. Meeting: " + old);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

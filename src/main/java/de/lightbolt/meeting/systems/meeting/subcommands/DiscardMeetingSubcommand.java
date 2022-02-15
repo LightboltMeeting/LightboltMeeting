@@ -1,5 +1,6 @@
 package de.lightbolt.meeting.systems.meeting.subcommands;
 
+import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
@@ -12,12 +13,16 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 import java.sql.SQLException;
 
+/**
+ * <p>/meeting discard</p>
+ * Command that allows the Meeting Owner to discard their meeting.
+ */
 public class DiscardMeetingSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
 		var idOption = event.getOption("meeting-id");
 		if (idOption == null) {
-			return Responses.error(event, "Missing required arguments");
+			return Responses.error(event, locale.getCommand().getMISSING_ARGUMENTS());
 		}
 		var id = (int) idOption.getAsLong();
 		var meetings = repo.getByUserId(event.getUser().getIdLong());
@@ -28,6 +33,7 @@ public class DiscardMeetingSubcommand extends MeetingSubcommand {
 				var manager = new MeetingManager(event.getJDA(), m);
 				manager.getLogChannel().delete().queue();
 				manager.getVoiceChannel().delete().queue();
+				Bot.meetingStateManager.cancelMeetingSchedule(m);
 			});
 			return Responses.success(event, com.getCANCEL_MEETING_TITLE(),
 					String.format(com.getCANCEL_MEETING_DESCRIPTION(), id));

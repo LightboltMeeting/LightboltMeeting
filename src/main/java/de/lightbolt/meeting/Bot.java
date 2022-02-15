@@ -6,6 +6,7 @@ import de.lightbolt.meeting.command.eventwaiter.EventWaiter;
 import de.lightbolt.meeting.data.config.BotConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.listener.AutoCompleteListener;
+import de.lightbolt.meeting.listener.ModalSubmitListener;
 import de.lightbolt.meeting.listener.StartupListener;
 import de.lightbolt.meeting.systems.meeting.MeetingStateManager;
 import net.dv8tion.jda.api.JDA;
@@ -80,7 +81,8 @@ public class Bot {
 	private static void addEventListener(JDA jda) {
 		jda.addEventListener(
 				new StartupListener(),
-				new AutoCompleteListener()
+				new AutoCompleteListener(),
+				new ModalSubmitListener()
 		);
 	}
 }

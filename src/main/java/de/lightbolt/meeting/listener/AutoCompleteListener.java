@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.requests.restaction.interactions.AutoCompleteCallback
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @Slf4j
 public class AutoCompleteListener extends ListenerAdapter {
@@ -24,11 +25,8 @@ public class AutoCompleteListener extends ListenerAdapter {
 
 	private AutoCompleteCallbackAction handleMeetingCommand(CommandAutoCompleteInteractionEvent event) {
 		return switch (event.getSubcommandName()) {
-			case "discard" -> getUserMeetings(event);
-			case "add-participant" -> getUserMeetings(event);
-			case "remove-participant" -> getUserMeetings(event);
-			case "add-admin" -> getUserMeetings(event);
-			case "remove-admin" -> getUserMeetings(event);
+			case "discard", "remove-admin", "add-admin" -> getUserMeetings(event);
+			case "add-participant", "remove-participant", "edit" -> getUserAndAdminMeetings(event);
 			default -> throw new IllegalStateException("Unknown Subcommand: " + event.getSubcommandName());
 		};
 	}
@@ -39,7 +37,32 @@ public class AutoCompleteListener extends ListenerAdapter {
 			var meetings = repo.getByUserId(event.getUser().getIdLong());
 			ArrayList<Command.Choice> choices = new ArrayList<>();
 			for (Meeting meeting : meetings) {
-				choices.add(new Command.Choice(String.format("%s — Meeting: \"%s\"", meeting.getId(), meeting.getTitle()), meeting.getId()));
+				choices.add(new Command.Choice(String.format("%s* — Meeting: \"%s\"", meeting.getId(), meeting.getTitle()), meeting.getId()));
+			}
+			return event.replyChoices(choices);
+		} catch (SQLException e) {
+			log.error("Could not retrieve Meetings from User: " + event.getUser().getAsTag(), e);
+			return null;
+		}
+	}
+
+	private AutoCompleteCallbackAction getUserAndAdminMeetings(CommandAutoCompleteInteractionEvent event) {
+		try (var con = Bot.dataSource.getConnection()) {
+			var repo = new MeetingRepository(con);
+			var userId = event.getUser().getIdLong();
+			var meetings = repo.getActive().stream().filter(
+					m -> Arrays.stream(m.getAdmins()).anyMatch(l -> l == userId) ||
+							m.getCreatedBy() == userId
+			).toList();
+			ArrayList<Command.Choice> choices = new ArrayList<>();
+			for (Meeting meeting : meetings) {
+				String format;
+				if (meeting.getCreatedBy() == userId) {
+					format = "%s* — Meeting: \"%s\"";
+				} else {
+					format = "%s — Meeting: \"%s\"";
+				}
+				choices.add(new Command.Choice(String.format(format, meeting.getId(), meeting.getTitle()), meeting.getId()));
 			}
 			return event.replyChoices(choices);
 		} catch (SQLException e) {
