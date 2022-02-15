@@ -1,4 +1,4 @@
-package de.lightbolt.meeting.systems.meeting.subcommands;
+package de.lightbolt.meeting.systems.meeting.subcommands.manage;
 
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
@@ -40,8 +40,6 @@ public class AddParticipantSubcommand extends MeetingSubcommand {
 			if (Arrays.stream(participants).anyMatch(x -> x == user.getIdLong())) {
 				return Responses.error(event, String.format(com.getMEETING_PARTICIPANT_ALREADY_ADDED(), user.getAsMention()));
 			}
-			var newParticipants = ArrayUtils.add(participants, user.getIdLong());
-			repo.updateParticipants(meeting, newParticipants);
 			new MeetingManager(event.getJDA(), meeting).addParticipant(user);
 			return Responses.success(event, com.getPARTICIPANTS_ADD_SUCCESS_TITLE(),
 					String.format(com.getPARTICIPANTS_ADD_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));

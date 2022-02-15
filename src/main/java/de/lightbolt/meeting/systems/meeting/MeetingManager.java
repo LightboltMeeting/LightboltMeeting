@@ -13,6 +13,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import org.apache.commons.lang3.ArrayUtils;
+import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -160,15 +162,14 @@ public class MeetingManager {
 	 * @param user The user that should be added as a participant.
 	 */
 	public void addParticipant(User user) {
-		var meetingLocale = LocalizationUtils.getLocale(meeting.getLanguage()).getMeeting().getLog();
-		var text = this.getLogChannel();
-		text.sendMessageFormat(meetingLocale.getLOG_PARTICIPANT_ADDED(), user.getAsMention()).queue();
-		this.setLogChannelPermissions(text, meeting.getParticipants());
-		var voice = this.getVoiceChannel();
-		voice.getManager().putMemberPermissionOverride(user.getIdLong(),
-				Collections.singleton(Permission.VIEW_CHANNEL),
-				Collections.singleton(Permission.VOICE_CONNECT)
-		).queue();
+		TextChannel text = this.getLogChannel();
+		long[] newParticipants = ArrayUtils.add(meeting.getParticipants(), user.getIdLong());
+		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
+			var updated = dao.updateParticipants(meeting, newParticipants);
+			text.sendMessageFormat(meeting.getLocaleConfig().getMeeting().getLog().getLOG_PARTICIPANT_ADDED(), user.getAsMention()).queue();
+			this.setLogChannelPermissions(text, updated.getParticipants());
+			this.setVoiceChannelPermissions(this.getVoiceChannel(), updated.getParticipants());
+		});
 	}
 
 	/**
@@ -177,12 +178,17 @@ public class MeetingManager {
 	 * @param user The user that should be removed.
 	 */
 	public void removeParticipant(User user) {
-		var meetingLocale = LocalizationUtils.getLocale(meeting.getLanguage()).getMeeting().getLog();
+		var meetingLocale = meeting.getLocaleConfig().getMeeting().getLog();
 		var text = this.getLogChannel();
-		text.sendMessageFormat(meetingLocale.getLOG_PARTICIPANT_REMOVED(), user.getAsMention()).queue();
-		text.getManager().putMemberPermissionOverride(user.getIdLong(), 0, Permission.ALL_PERMISSIONS).queue();
 		var voice = this.getVoiceChannel();
-		voice.getManager().putMemberPermissionOverride(user.getIdLong(), 0, Permission.ALL_PERMISSIONS).queue();
+		text.sendMessageFormat(meetingLocale.getLOG_PARTICIPANT_REMOVED(), user.getAsMention()).queue();
+		var newParticipants = ArrayUtils.removeElement(meeting.getParticipants(), user.getIdLong());
+		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
+			dao.updateParticipants(meeting, newParticipants);
+			text.getManager().putMemberPermissionOverride(user.getIdLong(), 0, Permission.ALL_PERMISSIONS).queue();
+			voice.getManager().putMemberPermissionOverride(user.getIdLong(), 0, Permission.ALL_PERMISSIONS).queue();
+			text.sendMessageFormat(meetingLocale.getLOG_ADMIN_REMOVED(), user.getAsMention()).queue();
+		});
 	}
 
 	/**
@@ -191,9 +197,14 @@ public class MeetingManager {
 	 * @param user The user that should be added as an admin.
 	 */
 	public void addAdmin(User user) {
-		var meetingLocale = LocalizationUtils.getLocale(meeting.getLanguage()).getMeeting().getLog();
-		var text = this.getLogChannel();
-		text.sendMessageFormat(meetingLocale.getLOG_ADMIN_ADDED(), user.getAsMention()).queue();
+		TextChannel text = this.getLogChannel();
+		long[] newAdmins = ArrayUtils.add(meeting.getAdmins(), user.getIdLong());
+		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
+			var updated = dao.updateAdmins(meeting, newAdmins);
+			text.sendMessageFormat(meeting.getLocaleConfig().getMeeting().getLog().getLOG_ADMIN_ADDED(), user.getAsMention()).queue();
+			this.setLogChannelPermissions(text, updated.getParticipants());
+			this.setVoiceChannelPermissions(this.getVoiceChannel(), updated.getParticipants());
+		});
 	}
 
 	/**
@@ -202,9 +213,15 @@ public class MeetingManager {
 	 * @param user The user that should be removed.
 	 */
 	public void removeAdmin(User user) {
-		var meetingLocale = LocalizationUtils.getLocale(meeting.getLanguage()).getMeeting().getLog();
+		var meetingLocale = meeting.getLocaleConfig().getMeeting().getLog();
 		var text = this.getLogChannel();
-		text.sendMessageFormat(meetingLocale.getLOG_ADMIN_REMOVED(), user.getAsMention()).queue();
+		var newAdmins = ArrayUtils.removeElement(meeting.getAdmins(), user.getIdLong());
+		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
+			var updated = dao.updateAdmins(meeting, newAdmins);
+			text.sendMessageFormat(meetingLocale.getLOG_ADMIN_REMOVED(), user.getAsMention()).queue();
+			this.setLogChannelPermissions(text, updated.getParticipants());
+			this.setVoiceChannelPermissions(this.getVoiceChannel(), updated.getParticipants());
+		});
 	}
 
 	private void setLogChannelPermissions(TextChannel channel, long[] userId) {

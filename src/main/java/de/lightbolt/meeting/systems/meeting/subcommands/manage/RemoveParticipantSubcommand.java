@@ -1,4 +1,4 @@
-package de.lightbolt.meeting.systems.meeting.subcommands;
+package de.lightbolt.meeting.systems.meeting.subcommands.manage;
 
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
@@ -43,8 +43,6 @@ public class RemoveParticipantSubcommand extends MeetingSubcommand {
 					var newAdmins = ArrayUtils.removeElement(admins, user.getIdLong());
 					repo.updateAdmins(meeting, newAdmins);
 				}
-				var newParticipants = ArrayUtils.removeElement(participants, user.getIdLong());
-				repo.updateParticipants(meeting, newParticipants);
 				new MeetingManager(event.getJDA(), meeting).removeParticipant(user);
 				return Responses.success(event, com.getPARTICIPANTS_REMOVE_SUCCESS_TITLE(),
 						String.format(com.getPARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));

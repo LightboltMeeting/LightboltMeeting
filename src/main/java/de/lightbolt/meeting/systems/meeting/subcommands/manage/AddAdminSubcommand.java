@@ -1,4 +1,4 @@
-package de.lightbolt.meeting.systems.meeting.subcommands;
+package de.lightbolt.meeting.systems.meeting.subcommands.manage;
 
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
@@ -16,10 +16,10 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * <p>/meeting manage remove-admin</p>
- * Command that allows the Meeting Owner to remove Administrators from their meeting.
+ * <p>/meeting manage add-admin</p>
+ * Command that allows the Meeting Owner to add Administrators to their meeting.
  */
-public class RemoveAdminSubcommand extends MeetingSubcommand {
+public class AddAdminSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
 		var idOption = event.getOption("meeting-id");
@@ -34,16 +34,17 @@ public class RemoveAdminSubcommand extends MeetingSubcommand {
 		Optional<Meeting> meetingOptional = meetings.stream().filter(m -> m.getId() == id).findFirst();
 		if (meetingOptional.isPresent()) {
 			var meeting = meetingOptional.get();
+			var participants = meeting.getParticipants();
 			var admins = meeting.getAdmins();
-			if (Arrays.stream(admins).anyMatch(x -> x == user.getIdLong())) {
-				var newAdmins = ArrayUtils.removeElement(admins, user.getIdLong());
-				repo.updateAdmins(meeting, newAdmins);
-				new MeetingManager(event.getJDA(), meeting).removeAdmin(user);
-				return Responses.success(event, com.getADMINS_REMOVE_SUCCESS_TITLE(),
-						String.format(com.getADMINS_REMOVE_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
-			} else {
-				return Responses.error(event, String.format(com.getMEETING_ADMIN_NOT_FOUND(), user.getAsMention()));
+			if (!Arrays.stream(participants).anyMatch(x -> x == user.getIdLong())) {
+				return Responses.error(event, String.format(com.getMEETING_ADMIN_NOT_A_PARTICIPANT(), user.getAsMention()));
 			}
+			if (Arrays.stream(admins).anyMatch(x -> x == user.getIdLong())) {
+				return Responses.error(event, String.format(com.getMEETING_ADMIN_ALREADY_ADDED(), user.getAsMention()));
+			}
+			new MeetingManager(event.getJDA(), meeting).addAdmin(user);
+			return Responses.success(event, com.getADMINS_ADD_SUCCESS_TITLE(),
+					String.format(com.getADMINS_ADD_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
 		} else {
 			return Responses.error(event, String.format(com.getMEETING_NOT_FOUND(), id));
 		}

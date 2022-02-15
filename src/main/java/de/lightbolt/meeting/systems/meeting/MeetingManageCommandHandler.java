@@ -1,7 +1,7 @@
 package de.lightbolt.meeting.systems.meeting;
 
 import de.lightbolt.meeting.command.DelegatingCommandHandler;
-import de.lightbolt.meeting.systems.meeting.subcommands.*;
+import de.lightbolt.meeting.systems.meeting.subcommands.manage.*;
 
 /**
  * Handler class for all Meeting Management Subcommands.

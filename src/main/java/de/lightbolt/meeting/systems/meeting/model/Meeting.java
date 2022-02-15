@@ -1,5 +1,8 @@
 package de.lightbolt.meeting.systems.meeting.model;
 
+import de.lightbolt.meeting.utils.localization.Language;
+import de.lightbolt.meeting.utils.localization.LocaleConfig;
+import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -22,4 +25,8 @@ public class Meeting {
 	private long logChannelId;
 	private long voiceChannelId;
 	private boolean active;
+
+	public LocaleConfig getLocaleConfig() {
+		return LocalizationUtils.getLocale(Language.valueOf(this.language));
+	}
 }

@@ -1,4 +1,4 @@
-package de.lightbolt.meeting.systems.meeting.subcommands;
+package de.lightbolt.meeting.systems.meeting.subcommands.manage;
 
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.command.Responses;
