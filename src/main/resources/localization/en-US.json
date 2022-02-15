@@ -8,6 +8,7 @@
     "creation": {
       "CREATION_TOO_MANY_MEETINGS_DESCRIPTION": "You cannot create another Meeting. You have to delete a Meeting in order to create a new one.",
       "CREATION_NOT_PERMITTED_DESCRIPTION": "You're not permitted to create a new Meeting.",
+
       "CREATION_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Example: 13/09/2019 13:05)",
       "CREATION_LANGUAGE_PLACEHOLDER": "\"DE\" for german or \"EN\" for english",
 
@@ -19,6 +20,7 @@
 
       "CREATION_INVALID_DATE": "You've provided an invalid date! The date must be a Timestamp somewhere between now and 2 years in advance. Please try again.",
       "CREATION_INVALID_LANGUAGE": "You've provided an invalid/not supported language: `%s`.\nSupported languages are: `%s`",
+
       "CREATION_SUCCESS_TITLE": "Meeting created",
       "CREATION_SUCCESS_DESCRIPTION": "All set! Your Meeting's ID is `%s`! I've automatically created a log and voice channel for your meeting. Once the meeting begins, every participant can join the meeting.\nYou can alway edit your meeting using `/meeting edit`!",
       "CREATION_FAILED": "There was an error while creating the Meeting. Please try again."
