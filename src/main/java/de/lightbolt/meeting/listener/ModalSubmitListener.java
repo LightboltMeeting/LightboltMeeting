@@ -9,6 +9,7 @@ import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -21,6 +22,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -41,54 +43,75 @@ public class ModalSubmitListener extends ListenerAdapter {
 
 	private WebhookMessageAction<Message> handleMeetingCreation(ModalInteractionEvent event, LocaleConfig locale) {
 		var createLocale = locale.getMeeting().getCreation();
-		var nameOption = event.getValue("meeting-name");
-		var descriptionOption = event.getValue("meeting-description");
-		var dateOption = event.getValue("meeting-date");
-		var languageOption = event.getValue("meeting-language");
-		if (nameOption == null || descriptionOption == null || dateOption == null || languageOption == null) {
-			return Responses.error(event.getHook(), locale.getCommand().getMISSING_ARGUMENTS());
-		}
-		Meeting meeting = new Meeting();
-		meeting.setGuildId(event.getGuild().getIdLong());
-		meeting.setCreatedBy(event.getUser().getIdLong());
-		meeting.setParticipants(new long[]{event.getUser().getIdLong()});
-		meeting.setAdmins(new long[]{event.getUser().getIdLong()});
-		meeting.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-		meeting.setActive(true);
-
-		String title = nameOption.getAsString();
-		meeting.setTitle(title);
-
-		String description = descriptionOption.getAsString();
-		meeting.setDescription(description);
-
-		String date = dateOption.getAsString();
-		var dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-		if (dueAt.isBefore(LocalDateTime.now()) || dueAt.isAfter(LocalDateTime.now().plusYears(2))) {
-			return Responses.error(event.getHook(), createLocale.getCREATION_INVALID_DATE());
-		}
-		meeting.setDueAt(Timestamp.valueOf(dueAt));
-
-		String language = languageOption.getAsString();
-		if (!Language.isValidLanguage(language)) {
-			return Responses.error(event.getHook(), String.format(createLocale.getCREATION_INVALID_LANGUAGE(), language,
-					Arrays.stream(Language.values()).map(
-							lang -> String.format("%s (%s)", lang.toString(), lang.getName())
-					).collect(Collectors.joining(", "))));
-		}
-		meeting.setLanguage(language);
 		try (Connection con = Bot.dataSource.getConnection()) {
-			MeetingRepository repo = new MeetingRepository(con);
-			var inserted = repo.insert(meeting);
+			var nameOption = event.getValue("meeting-name");
+			var descriptionOption = event.getValue("meeting-description");
+			var dateOption = event.getValue("meeting-date");
+			var languageOption = event.getValue("meeting-language");
+			if (nameOption == null || descriptionOption == null || dateOption == null || languageOption == null) {
+				return Responses.error(event.getHook(), locale.getCommand().getMISSING_ARGUMENTS());
+			}
+			Meeting meeting = new Meeting();
+			meeting.setGuildId(event.getGuild().getIdLong());
+			meeting.setCreatedBy(event.getUser().getIdLong());
+			meeting.setParticipants(new long[]{event.getUser().getIdLong()});
+			meeting.setAdmins(new long[]{event.getUser().getIdLong()});
+			meeting.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+			meeting.setActive(true);
+
+			String title = nameOption.getAsString();
+			meeting.setTitle(title);
+
+			String description = descriptionOption.getAsString();
+			meeting.setDescription(description);
+
+			String date = dateOption.getAsString();
+			var dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+			if (dueAt.isBefore(LocalDateTime.now()) || dueAt.isAfter(LocalDateTime.now().plusYears(2))) {
+				return Responses.error(event.getHook(), createLocale.getCREATION_INVALID_DATE());
+			}
+			meeting.setDueAt(Timestamp.valueOf(dueAt));
+
+			String language = languageOption.getAsString();
+			if (!Language.isValidLanguage(language)) {
+				return Responses.error(event.getHook(), String.format(createLocale.getCREATION_INVALID_LANGUAGE(), language,
+						Arrays.stream(Language.values()).map(
+								lang -> String.format("%s (%s)", lang.toString(), lang.getName())
+						).collect(Collectors.joining(", "))));
+			}
+			meeting.setLanguage(language);
+			var inserted = new MeetingRepository(con).insert(meeting);
 			var category = Bot.config.get(event.getGuild()).getMeeting().getMeetingCategory();
-			var manager = new MeetingManager(event.getJDA(), inserted);
-			manager.createLogChannel(category, event.getUser(), locale);
-			manager.createVoiceChannel(category);
+			category.createTextChannel(String.format(MeetingManager.MEETING_LOG_NAME, inserted.getId())).queue(
+					channel -> {
+						channel.getManager().putMemberPermissionOverride((event.getUser().getIdLong()),
+								Permission.getRaw(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND), 0).queue();
+						channel.sendMessageEmbeds(MeetingManager.buildMeetingEmbed(inserted, event.getUser(), locale)).queue();
+						try (var newCon = Bot.dataSource.getConnection()) {
+							var repo = new MeetingRepository(newCon);
+							repo.updateLogChannel(inserted, channel.getIdLong());
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+					}, e -> log.error("Could not create Log Channel for Meeting: " + meeting, e));
+			category.createVoiceChannel(String.format(MeetingManager.MEETING_VOICE_NAME, inserted.getId(), inserted.getTitle())).queue(
+					channel -> {
+						channel.getManager().putMemberPermissionOverride(event.getUser().getIdLong(),
+								Collections.singleton(Permission.VIEW_CHANNEL),
+								Collections.singleton(Permission.VOICE_CONNECT)
+						).queue();
+						try (var newCon = Bot.dataSource.getConnection()) {
+							var repo = new MeetingRepository(newCon);
+							repo.updateVoiceChannel(inserted, channel.getIdLong());
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+					}, e -> log.error("Could not create Voice Channel for Meeting: " + meeting, e));
 			Bot.meetingStateManager.scheduleMeeting(inserted);
-			return Responses.success(event.getHook(), createLocale.getCREATION_SUCCESS_TITLE(),
-					String.format(createLocale.getCREATION_SUCCESS_DESCRIPTION(), inserted.getId()));
-		} catch (SQLException e) {
-			log.error("Could not retrieve SQL Connection: ", e);
+			return Responses.success(event.getHook(),
+					createLocale.getCREATION_SUCCESS_TITLE(), String.format(createLocale.getCREATION_SUCCESS_DESCRIPTION(), inserted.getId()));
+		} catch (SQLException exception) {
+			log.error("Could not retrieve SQL Connection.", exception);
 			return Responses.error(event.getHook(), createLocale.getCREATION_FAILED());
 		}
 	}
