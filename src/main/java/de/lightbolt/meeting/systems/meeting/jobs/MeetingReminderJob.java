@@ -22,7 +22,7 @@ public class MeetingReminderJob implements Job {
 	public void execute(JobExecutionContext context) {
 		String[] jobDetail = context.getJobDetail().getKey().getName().split("-");
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
-			Optional<Meeting> meetingOptional = new MeetingRepository(Bot.dataSource.getConnection()).findById(Integer.parseInt(jobDetail[0]));
+			Optional<Meeting> meetingOptional = dao.findById(Integer.parseInt(jobDetail[0]));
 			if (meetingOptional.isEmpty()) {
 				log.warn("Meeting doesn't exist, cannot execute reminder job.");
 				return;

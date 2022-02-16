@@ -120,8 +120,8 @@ public class MeetingManager {
 		var logLocale = meeting.getLocaleConfig().getMeeting().getLog();
 		text.sendMessageFormat(logLocale.getLOG_MEETING_STARTED(), Arrays.stream(meeting.getParticipants()).mapToObj(m -> String.format("<@%s>", m)).collect(Collectors.joining(", ")))
 				.queue();
-		this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants());
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.markOngoing(meeting.getId()));
+		this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants(), true);
 	}
 
 	public void endMeeting() {
@@ -281,13 +281,18 @@ public class MeetingManager {
 		manager.queue();
 	}
 
-	private void updateVoiceChannelPermissions(@NotNull VoiceChannel channel, long[] userId) {
+	private void updateVoiceChannelPermissions(@NotNull VoiceChannel channel, long[] participants) {
+		this.updateVoiceChannelPermissions(channel, participants, meeting.isOngoing());
+	}
+
+	private void updateVoiceChannelPermissions(@NotNull VoiceChannel channel, long[] participants, boolean ongoing) {
 		var manager = channel.getManager();
 		manager.putRolePermissionOverride(channel.getGuild().getIdLong(), 0, Permission.ALL_PERMISSIONS);
-		for (long id : userId) {
-			if (!meeting.isOngoing()) manager.putMemberPermissionOverride(id, Collections.singleton(Permission.VIEW_CHANNEL), Collections.singleton(Permission.VOICE_CONNECT));
-			else manager.putMemberPermissionOverride(id, Permission.getPermissions(Permission.ALL_VOICE_PERMISSIONS + Permission.getRaw(Permission.VIEW_CHANNEL)), Collections.emptySet());
+		for (long id : participants) {
+			if (ongoing) manager.putMemberPermissionOverride(id, Permission.getPermissions(Permission.ALL_VOICE_PERMISSIONS + Permission.getRaw(Permission.VIEW_CHANNEL)), Collections.emptySet());
+			else manager.putMemberPermissionOverride(id, Collections.singleton(Permission.VIEW_CHANNEL), Collections.singleton(Permission.VOICE_CONNECT));
 		}
-		manager.queue();
+		manager.queue(s -> {}, e -> log.error("Could not update Channel Permissions for Channel: " + channel.getName(), e));
 	}
+
 }
