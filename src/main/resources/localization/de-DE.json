@@ -11,14 +11,17 @@
 
       "CREATION_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Beispiel: 13/09/2019 13:05)",
       "CREATION_LANGUAGE_PLACEHOLDER": "Entweder \"DE\" für Deutsch oder \"EN\" für Englisch",
+      "CREATION_TIMEZONE_PLACEHOLDER": "z.B. Europe/Berlin oder CET",
 
       "CREATION_MODAL_HEADER": "Erstelle ein Meeting",
       "CREATION_NAME_LABEL": "Name des Meetings",
       "CREATION_DESCRIPTION_LABEL": "Beschreibung des Meetings",
-      "CREATION_DATE_LABEL": "Startdatum des Meetings (in UTC)",
+      "CREATION_DATE_LABEL": "Startdatum des Meetings",
+      "CREATION_TIMEZONE_LABEL": "Zeitzone des Meetings",
       "CREATION_LANGUAGE_LABEL": "Sprache des Meetings",
 
       "CREATION_INVALID_DATE": "Du hast ein invalided Datum angegeben. Das Datum muss zwischen Jetzt und 2 Jahren in der Zukunft liegen. Bitte versuche es erneut.",
+      "CREATION_INVALID_TIMEZONE": "`%s` ist eine ungültige Zeitzone. Eine Liste mit allen Zeitzonen findest du [hier](%s)",
       "CREATION_INVALID_LANGUAGE": "Du hast eine invalide/nicht unterstütze Sprache angegeben: `%s`\nUnterstütze Sprachen sind: `%s`",
 
       "CREATION_SUCCESS_TITLE": "Meeting erstellt",

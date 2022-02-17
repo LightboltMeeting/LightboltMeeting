@@ -20,6 +20,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import javax.security.auth.login.LoginException;
 import java.nio.file.Path;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -61,6 +62,7 @@ public class Bot {
 	public static MeetingStateManager meetingStateManager;
 
 	public static void main(String[] args) throws LoginException {
+		System.out.println(Arrays.toString(TimeZone.getAvailableIDs()));
 		TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
 		config = new BotConfig(Path.of("config"));
 		dataSource = DbHelper.initDataSource(config);

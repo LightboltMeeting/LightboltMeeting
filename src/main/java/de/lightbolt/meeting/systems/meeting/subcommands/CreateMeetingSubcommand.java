@@ -33,11 +33,11 @@ public class CreateMeetingSubcommand extends MeetingSubcommand {
 		if (repo.getByUserId(event.getUser().getIdLong()).size() > config.getMaxMeetingsPerUser()) {
 			return Responses.error(event, meetingLocale.getCREATION_TOO_MANY_MEETINGS_DESCRIPTION());
 		}
-		this.buildCreateModal(event, locale).queue();
+		this.buildCreateModal(event, locale, Language.fromLocale(event.getUserLocale())).queue();
 		return null;
 	}
 
-	private ModalCallbackAction buildCreateModal(SlashCommandInteractionEvent event, LocaleConfig locale) {
+	private ModalCallbackAction buildCreateModal(SlashCommandInteractionEvent event, LocaleConfig locale, Language language) {
 		var createLocale = locale.getMeeting().getCreation();
 		TextInput meetingName = TextInput.create("meeting-name", createLocale.getCREATION_NAME_LABEL(), TextInputStyle.SHORT)
 				.setRequired(true)
@@ -50,10 +50,16 @@ public class CreateMeetingSubcommand extends MeetingSubcommand {
 				.build();
 
 		TextInput meetingDate = TextInput.create("meeting-date", createLocale.getCREATION_DATE_LABEL(), TextInputStyle.SHORT)
-				.setValue(LocalDateTime.now().plusHours(12).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
-				.setPlaceholder(locale.getMeeting().getEdit().getEDIT_DATE_PLACEHOLDER())
+				.setValue(LocalDateTime.now().plusMinutes(10).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+				.setPlaceholder(createLocale.getCREATION_DATE_PLACEHOLDER())
 				.setRequired(true)
 				.setMaxLength(17)
+				.build();
+
+		TextInput meetingTimezone = TextInput.create("meeting-timezone", createLocale.getCREATION_TIMEZONE_LABEL(), TextInputStyle.SHORT)
+				.setValue(language.getTimezone())
+				.setPlaceholder(createLocale.getCREATION_TIMEZONE_PLACEHOLDER())
+				.setRequired(false)
 				.build();
 
 		TextInput meetingLanguage = TextInput.create("meeting-language", createLocale.getCREATION_LANGUAGE_LABEL(), TextInputStyle.SHORT)
@@ -63,7 +69,8 @@ public class CreateMeetingSubcommand extends MeetingSubcommand {
 				.setMaxLength(2)
 				.build();
 		Modal modal = Modal.create("meeting-create", createLocale.getCREATION_MODAL_HEADER())
-				.addActionRows(ActionRow.of(meetingName), ActionRow.of(meetingDescription), ActionRow.of(meetingDate), ActionRow.of(meetingLanguage))
+				.addActionRows(ActionRow.of(meetingName), ActionRow.of(meetingDescription),
+						ActionRow.of(meetingDate), ActionRow.of(meetingTimezone), ActionRow.of(meetingLanguage))
 				.build();
 		return event.replyModal(modal);
 	}

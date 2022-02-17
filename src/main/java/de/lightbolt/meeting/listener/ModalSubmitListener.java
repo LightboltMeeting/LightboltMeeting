@@ -22,10 +22,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Slf4j
 public class ModalSubmitListener extends ListenerAdapter {
+
+	public static final String TIMEZONE_LIST = "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones";
 
 	@Override
 	public void onModalInteraction(@NotNull ModalInteractionEvent event) {
@@ -45,6 +48,7 @@ public class ModalSubmitListener extends ListenerAdapter {
 		var descriptionOption = event.getValue("meeting-description");
 		var dateOption = event.getValue("meeting-date");
 		var languageOption = event.getValue("meeting-language");
+		var timezoneOption = event.getValue("meeting-timezone");
 		if (nameOption == null || descriptionOption == null || dateOption == null || languageOption == null) {
 			return Responses.error(event.getHook(), locale.getCommand().getMISSING_ARGUMENTS());
 		}
@@ -62,8 +66,14 @@ public class ModalSubmitListener extends ListenerAdapter {
 		String description = descriptionOption.getAsString();
 		meeting.setDescription(description);
 
+		String timezoneString = timezoneOption == null ? "UTC" : timezoneOption.getAsString();
+		if (!Arrays.asList(TimeZone.getAvailableIDs()).contains(timezoneString))  {
+			return Responses.error(event.getHook(), String.format(createLocale.getCREATION_INVALID_TIMEZONE(), timezoneString, TIMEZONE_LIST));
+		}
+		TimeZone timezone = TimeZone.getTimeZone(timezoneString);
+
 		String date = dateOption.getAsString();
-		var dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+		var dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").withZone(timezone.toZoneId()));
 		if (dueAt.isBefore(LocalDateTime.now()) || dueAt.isAfter(LocalDateTime.now().plusYears(2))) {
 			return Responses.error(event.getHook(), createLocale.getCREATION_INVALID_DATE());
 		}

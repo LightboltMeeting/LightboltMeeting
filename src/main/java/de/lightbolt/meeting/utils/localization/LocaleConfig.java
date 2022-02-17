@@ -30,14 +30,17 @@ public class LocaleConfig {
 
 			private String CREATION_DATE_PLACEHOLDER;
 			private String CREATION_LANGUAGE_PLACEHOLDER;
+			private String CREATION_TIMEZONE_PLACEHOLDER;
 
 			private String CREATION_MODAL_HEADER;
 			private String CREATION_NAME_LABEL;
 			private String CREATION_DESCRIPTION_LABEL;
 			private String CREATION_DATE_LABEL;
+			private String CREATION_TIMEZONE_LABEL;
 			private String CREATION_LANGUAGE_LABEL;
 
 			private String CREATION_INVALID_DATE;
+			private String CREATION_INVALID_TIMEZONE;
 			private String CREATION_INVALID_LANGUAGE;
 
 			private String CREATION_SUCCESS_TITLE;
