@@ -26,13 +26,13 @@ public class AutoCompleteListener extends ListenerAdapter {
 	}
 
 	private AutoCompleteCallbackAction handleMeetingCommand(CommandAutoCompleteInteractionEvent event) {
-		return switch (event.getSubcommandName()) {
-			case "edit", "add-participant", "remove-participant" -> this.replyMeetings(event, this.getUserAndAdminMeetings(event));
-			case "start", "discard" -> this.replyMeetings(event, this.getScheduledUserMeetings(event));
-			case "end" -> this.replyMeetings(event, this.getOngoingUserMeetings(event));
-			case "remove-admin", "add-admin" -> this.replyMeetings(event, this.getUserMeetings(event));
+		return this.replyMeetings(event, switch (event.getSubcommandName()) {
+			case "edit", "add-participant", "remove-participant" -> this.getUserAndAdminMeetings(event);
+			case "start", "discard" ->this.getScheduledUserMeetings(event);
+			case "end" -> this.getOngoingUserMeetings(event);
+			case "remove-admin", "add-admin" -> this.getUserMeetings(event);
 			default -> throw new IllegalStateException("Unknown Subcommand: " + event.getSubcommandName());
-		};
+		});
 	}
 
 	private AutoCompleteCallbackAction replyMeetings(CommandAutoCompleteInteractionEvent event, List<Meeting> meetings) {
