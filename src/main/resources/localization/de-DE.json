@@ -15,7 +15,7 @@
       "CREATION_MODAL_HEADER": "Erstelle ein Meeting",
       "CREATION_NAME_LABEL": "Name des Meetings",
       "CREATION_DESCRIPTION_LABEL": "Beschreibung des Meetings",
-      "CREATION_DATE_LABEL": "Startdatum des Meetings",
+      "CREATION_DATE_LABEL": "Startdatum des Meetings (in UTC)",
       "CREATION_LANGUAGE_LABEL": "Sprache des Meetings",
 
       "CREATION_INVALID_DATE": "Du hast ein invalided Datum angegeben. Das Datum muss zwischen Jetzt und 2 Jahren in der Zukunft liegen. Bitte versuche es erneut.",
