@@ -30,7 +30,7 @@ public class CreateMeetingSubcommand extends MeetingSubcommand {
 		if (!canCreateMeetings(event.getMember())) {
 			return Responses.error(event, meetingLocale.getCREATION_NOT_PERMITTED_DESCRIPTION());
 		}
-		if (repo.getByUserId(event.getUser().getIdLong()).size() > config.getMaxMeetingsPerUser()) {
+		if (repo.getByUserId(event.getUser().getIdLong()).size() > config.getMaxMeetingsPerUser() + 1) {
 			return Responses.error(event, meetingLocale.getCREATION_TOO_MANY_MEETINGS_DESCRIPTION());
 		}
 		this.buildCreateModal(event, locale, Language.fromLocale(event.getUserLocale())).queue();
