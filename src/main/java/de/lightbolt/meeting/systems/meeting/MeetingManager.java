@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -149,7 +150,9 @@ public class MeetingManager {
 		category.createTextChannel(String.format(MeetingManager.MEETING_LOG_NAME, meeting.getId())).queue(
 				channel -> {
 					this.updateLogChannelPermissions(channel, meeting.getParticipants());
-					channel.sendMessageEmbeds(buildMeetingEmbed(meeting, createdBy, locale)).queue();
+					channel.sendMessageEmbeds(buildMeetingEmbed(meeting, createdBy, locale))
+							.setActionRow(Button.secondary("meeting-faq", "FAQ"))
+							.queue();
 					DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.updateLogChannel(meeting, channel.getIdLong()));
 				}, e -> log.error("Could not create Log Channel for Meeting: " + meeting, e));
 	}
