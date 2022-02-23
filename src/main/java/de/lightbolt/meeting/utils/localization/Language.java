@@ -11,15 +11,17 @@ import java.util.Locale;
  */
 @Getter
 public enum Language {
-	DE("localization/de-DE.json", "Deutsch"),
-	EN("localization/en-US.json", "English");
+	DE("Deutsch", "localization/de-DE.json", "Europe/Berlin"),
+	EN("English", "localization/en-US.json", "Europe/London");
 
 	private final String path;
 	private final String name;
+	private final String timezone;
 
-	Language(@NotNull String path, @NotNull String name) {
+	Language(@NotNull String name, @NotNull String path, @NotNull String timezone) {
 		this.path = path;
 		this.name = name;
+		this.timezone = timezone;
 	}
 
 	public static Language fromLocale(Locale locale) {

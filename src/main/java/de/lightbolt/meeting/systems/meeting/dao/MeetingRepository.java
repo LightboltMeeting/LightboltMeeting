@@ -61,6 +61,14 @@ public class MeetingRepository {
 		}
 	}
 
+	public boolean markOngoing(int id) throws SQLException {
+		try (var s = con.prepareStatement("UPDATE meetings SET ongoing = TRUE WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
+			s.setInt(1, id);
+			int rows = s.executeUpdate();
+			return rows != 0;
+		}
+	}
+
 	public Optional<Meeting> findById(int id) throws SQLException {
 		Meeting meeting = null;
 		try (var s = con.prepareStatement("SELECT * FROM meetings WHERE id = ? AND active = TRUE", Statement.RETURN_GENERATED_KEYS)) {
@@ -201,6 +209,7 @@ public class MeetingRepository {
 		meeting.setLogChannelId(rs.getLong("log_channel_id"));
 		meeting.setVoiceChannelId(rs.getLong("voice_channel_id"));
 		meeting.setActive(rs.getBoolean("active"));
+		meeting.setOngoing(rs.getBoolean("ongoing"));
 		return meeting;
 	}
 

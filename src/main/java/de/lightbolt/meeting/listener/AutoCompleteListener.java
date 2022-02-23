@@ -12,62 +12,70 @@ import net.dv8tion.jda.api.requests.restaction.interactions.AutoCompleteCallback
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class AutoCompleteListener extends ListenerAdapter {
 	@Override
 	public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
 		switch (event.getName()) {
-			case "meeting" -> handleMeetingCommand(event).queue();
+			case "meeting", "manage-meeting" -> handleMeetingCommand(event).queue();
 			default -> throw new IllegalStateException("Unknown Command: " + event.getName());
 		}
 	}
 
 	private AutoCompleteCallbackAction handleMeetingCommand(CommandAutoCompleteInteractionEvent event) {
-		return switch (event.getSubcommandName()) {
-			case "discard", "remove-admin", "add-admin" -> getUserMeetings(event);
-			case "add-participant", "remove-participant", "edit" -> getUserAndAdminMeetings(event);
+		return this.replyMeetings(event, switch (event.getSubcommandName()) {
+			case "edit", "add-participant", "remove-participant" -> this.getUserAndAdminMeetings(event);
+			case "start", "discard" ->this.getScheduledUserMeetings(event);
+			case "end" -> this.getOngoingUserMeetings(event);
+			case "remove-admin", "add-admin" -> this.getUserMeetings(event);
 			default -> throw new IllegalStateException("Unknown Subcommand: " + event.getSubcommandName());
-		};
+		});
 	}
 
-	private AutoCompleteCallbackAction getUserMeetings(CommandAutoCompleteInteractionEvent event) {
+	private AutoCompleteCallbackAction replyMeetings(CommandAutoCompleteInteractionEvent event, List<Meeting> meetings) {
+		ArrayList<Command.Choice> choices = new ArrayList<>();
+		for (Meeting meeting : meetings) {
+			String format;
+			if (meeting.getCreatedBy() == event.getUser().getIdLong()) {
+				format = "%s* — Meeting: \"%s\"";
+			} else {
+				format = "%s — Meeting: \"%s\"";
+			}
+			choices.add(new Command.Choice(String.format(format, meeting.getId(), meeting.getTitle()), meeting.getId()));
+		}
+		return event.replyChoices(choices);
+	}
+
+	private List<Meeting> getUserMeetings(CommandAutoCompleteInteractionEvent event) {
 		try (var con = Bot.dataSource.getConnection()) {
 			var repo = new MeetingRepository(con);
-			var meetings = repo.getByUserId(event.getUser().getIdLong());
-			ArrayList<Command.Choice> choices = new ArrayList<>();
-			for (Meeting meeting : meetings) {
-				choices.add(new Command.Choice(String.format("%s* — Meeting: \"%s\"", meeting.getId(), meeting.getTitle()), meeting.getId()));
-			}
-			return event.replyChoices(choices);
+			return repo.getByUserId(event.getUser().getIdLong());
 		} catch (SQLException e) {
 			log.error("Could not retrieve Meetings from User: " + event.getUser().getAsTag(), e);
-			return null;
+			return List.of();
 		}
 	}
 
-	private AutoCompleteCallbackAction getUserAndAdminMeetings(CommandAutoCompleteInteractionEvent event) {
+	private List<Meeting> getUserAndAdminMeetings(CommandAutoCompleteInteractionEvent event) {
 		try (var con = Bot.dataSource.getConnection()) {
 			var repo = new MeetingRepository(con);
 			var userId = event.getUser().getIdLong();
-			var meetings = repo.getActive().stream().filter(
-					m -> Arrays.stream(m.getAdmins()).anyMatch(l -> l == userId) ||
-							m.getCreatedBy() == userId
-			).toList();
-			ArrayList<Command.Choice> choices = new ArrayList<>();
-			for (Meeting meeting : meetings) {
-				String format;
-				if (meeting.getCreatedBy() == userId) {
-					format = "%s* — Meeting: \"%s\"";
-				} else {
-					format = "%s — Meeting: \"%s\"";
-				}
-				choices.add(new Command.Choice(String.format(format, meeting.getId(), meeting.getTitle()), meeting.getId()));
-			}
-			return event.replyChoices(choices);
+			return repo.getActive().stream().filter(
+					m -> Arrays.stream(m.getAdmins()).anyMatch(l -> l == userId) || m.getCreatedBy() == userId).toList();
 		} catch (SQLException e) {
 			log.error("Could not retrieve Meetings from User: " + event.getUser().getAsTag(), e);
-			return null;
+			return List.of();
 		}
+	}
+
+	private List<Meeting> getOngoingUserMeetings(CommandAutoCompleteInteractionEvent event) {
+		return getUserAndAdminMeetings(event).stream().filter(Meeting::isOngoing).collect(Collectors.toList());
+	}
+
+	private List<Meeting> getScheduledUserMeetings(CommandAutoCompleteInteractionEvent event) {
+		return getUserAndAdminMeetings(event).stream().filter(m -> !m.isOngoing()).collect(Collectors.toList());
 	}
 }

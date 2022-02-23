@@ -1,6 +1,6 @@
-package de.lightbolt.meeting.systems.meeting.subcommands;
+package de.lightbolt.meeting.systems.meeting.subcommands.manage;
 
-import de.lightbolt.meeting.Bot;
+import de.lightbolt.meeting.annotations.MissingLocale;
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
@@ -9,9 +9,11 @@ import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  * <p>/meeting discard</p>
@@ -20,25 +22,25 @@ import java.sql.SQLException;
 public class DiscardMeetingSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
-		var idOption = event.getOption("meeting-id");
+		OptionMapping idOption = event.getOption("meeting-id");
 		if (idOption == null) {
 			return Responses.error(event, locale.getCommand().getMISSING_ARGUMENTS());
 		}
-		var id = (int) idOption.getAsLong();
-		var meetings = repo.getByUserId(event.getUser().getIdLong());
-		var com = locale.getMeeting().getCommand();
-		if (meetings.stream().map(Meeting::getId).anyMatch(p -> p == id) && repo.markInactive(id)) {
-			var optionalMeeting = meetings.stream().filter(p -> p.getId() == id).findFirst();
-			optionalMeeting.ifPresent(m -> {
-				var manager = new MeetingManager(event.getJDA(), m);
-				manager.getLogChannel().delete().queue();
-				manager.getVoiceChannel().delete().queue();
-				Bot.meetingStateManager.cancelMeetingSchedule(m);
-			});
-			return Responses.success(event, com.getCANCEL_MEETING_TITLE(),
-					String.format(com.getCANCEL_MEETING_DESCRIPTION(), id));
-		} else {
-			return Responses.error(event, String.format(com.getMEETING_NOT_FOUND(), id));
+		int id = (int) idOption.getAsLong();
+		Optional<Meeting> meetingOptional = repo.findById(id);
+		if (meetingOptional.isEmpty()) {
+			return Responses.error(event, String.format(locale.getMeeting().getCommand().getMEETING_NOT_FOUND(), id));
 		}
+		Meeting meeting = meetingOptional.get();
+		if (!MeetingManager.canEditMeeting(meeting, event.getUser().getIdLong())) {
+			return Responses.error(event, locale.getMeeting().getMEETING_NO_PERMISSION());
+		}
+		MeetingManager manager = new MeetingManager(event.getJDA(), meeting);
+		var com = locale.getMeeting().getCommand();
+		if (meeting.isOngoing()) {
+			return Responses.error(event, com.getMEETING_DISCARD_FAILED_DESCRIPTION());
+		}
+		manager.discardMeeting();
+		return Responses.success(event, com.getCANCEL_MEETING_TITLE(), String.format(com.getCANCEL_MEETING_DESCRIPTION(), id));
 	}
 }

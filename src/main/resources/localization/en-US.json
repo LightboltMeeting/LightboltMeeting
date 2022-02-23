@@ -8,17 +8,22 @@
     "creation": {
       "CREATION_TOO_MANY_MEETINGS_DESCRIPTION": "You cannot create another Meeting. You have to delete a Meeting in order to create a new one.",
       "CREATION_NOT_PERMITTED_DESCRIPTION": "You're not permitted to create a new Meeting.",
+
       "CREATION_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Example: 13/09/2019 13:05)",
       "CREATION_LANGUAGE_PLACEHOLDER": "\"DE\" for german or \"EN\" for english",
+      "CREATION_TIMEZONE_PLACEHOLDER": "e.g. Europe/London or UTC",
 
       "CREATION_MODAL_HEADER": "Create Meeting",
       "CREATION_NAME_LABEL": "Meeting Name",
       "CREATION_DESCRIPTION_LABEL": "Meeting Description",
       "CREATION_DATE_LABEL": "Meeting Start Date",
+      "CREATION_TIMEZONE_LABEL": "Meeting Timezone",
       "CREATION_LANGUAGE_LABEL": "Meeting Language",
 
       "CREATION_INVALID_DATE": "You've provided an invalid date! The date must be a Timestamp somewhere between now and 2 years in advance. Please try again.",
+      "CREATION_INVALID_TIMEZONE": "`%s` is an invalid timezone. A list with all timezones can be found [here](%s)",
       "CREATION_INVALID_LANGUAGE": "You've provided an invalid/not supported language: `%s`.\nSupported languages are: `%s`",
+
       "CREATION_SUCCESS_TITLE": "Meeting created",
       "CREATION_SUCCESS_DESCRIPTION": "All set! Your Meeting's ID is `%s`! I've automatically created a log and voice channel for your meeting. Once the meeting begins, every participant can join the meeting.\nYou can alway edit your meeting using `/meeting edit`!",
       "CREATION_FAILED": "There was an error while creating the Meeting. Please try again."
@@ -37,6 +42,8 @@
       "CANCEL_MEETING_TITLE": "Meeting discarded",
       "CANCEL_MEETING_DESCRIPTION": "The Meeting with ID `%s` has been discarded.",
 
+      "MEETING_DISCARD_FAILED_DESCRIPTION": "An ongoing Meeting cannot be discard. Please use `/meeting end` instead.",
+
       "PARTICIPANTS_ADD_SUCCESS_TITLE": "Participant added",
       "PARTICIPANTS_ADD_SUCCESS_DESCRIPTION": "%s was successfully added to Meeting `%s`",
       "PARTICIPANTS_REMOVE_SUCCESS_TITLE": "Participant remove",
@@ -45,7 +52,14 @@
       "ADMINS_ADD_SUCCESS_TITLE": "Admin added",
       "ADMINS_ADD_SUCCESS_DESCRIPTION": "%s is now an admin of `%s`",
       "ADMINS_REMOVE_SUCCESS_TITLE": "Admin remove",
-      "ADMINS_REMOVE_SUCCESS_DESCRIPTION": "%s is not an admin of `%s` anymore."
+      "ADMINS_REMOVE_SUCCESS_DESCRIPTION": "%s is not an admin of `%s` anymore.",
+
+      "MEETING_START_SUCCESS_TITLE": "Meeting started",
+      "MEETING_START_SUCCESS_DESCRIPTION": "Meeting `%s` has been started successfully.",
+
+      "MEETING_END_SUCCESS_TITLE": "Meeting ended",
+      "MEETING_END_SUCCESS_DESCRIPTION": "The Meeting has been ended successfully.",
+      "MEETING_END_FAILED_DESCRIPTION": "Cannot end Meeting. Please use `/manage-meeting discard` instead."
     },
     "log": {
       "LOG_PARTICIPANT_ADDED": "%s has been added to this Meeting.",
@@ -63,7 +77,10 @@
       "LOG_TIMEUNIT_MINUTES": "Minutes",
       "LOG_TIMEUNIT_HOURS": "Hours",
 
-      "LOG_MEETING_UPDATED": "The meeting was updated by: %s."
+      "LOG_MEETING_UPDATED": "The meeting was updated by: %s.",
+
+      "LOG_MEETING_MANUALLY_STARTED": "%s started this Meeting manually.",
+      "LOG_MEETING_STARTED": "The Meeting has been started! %s\nTo end the Meeting, either the Owner or an Administrator have to execute the `/meeting end` command"
     },
     "edit": {
       "EDIT_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Example: 13/09/2019 13:05)",
@@ -81,6 +98,20 @@
       "EDIT_SUCCESS_TITLE": "Edit Meeting",
       "EDIT_SUCCESS_DESCRIPTION": "Successfully edited the given Meeting.",
       "EDIT_FAILED": "There was an error while editing the Meeting. Please try again."
+    },
+    "faq": {
+      "FAQ_BUTTON_LABEL": "Meeting FAQ",
+
+      "FAQ_EMBED_TITLE": "Meeting FAQ (Frequently Asked Questions)",
+
+      "FAQ_MEETING_START_FIELD_HEADER": "When does this Meeting start?",
+      "FAQ_MEETING_START_FIELD_DESCRIPTION": "This Meeting will start at exactly <t:%s:R>.",
+
+      "FAQ_MEETING_EDIT_FIELD_HEADER": "How do I change the Meeting's Title/Description/Language/...?",
+      "FAQ_MEETING_EDIT_FIELD_DESCRIPTION": "The Meeting Owner and all Meeting Administrators are able to always edit the Meeting using `/meeting edit`.",
+
+      "FAQ_MEETING_ADMIN_FIELD_HEADER": "What is a Meeting Administrator?",
+      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administrators can be added via the `/meeting add-admin` command by the Meeting's Owner and are able to manually add or remove participants, edit the Meeting, or just start/end it manually."
     }
   }
 }

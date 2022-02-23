@@ -6,6 +6,7 @@ import de.lightbolt.meeting.command.eventwaiter.EventWaiter;
 import de.lightbolt.meeting.data.config.BotConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.listener.AutoCompleteListener;
+import de.lightbolt.meeting.listener.ButtonListener;
 import de.lightbolt.meeting.listener.ModalSubmitListener;
 import de.lightbolt.meeting.listener.StartupListener;
 import de.lightbolt.meeting.systems.meeting.MeetingStateManager;
@@ -20,6 +21,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import javax.security.auth.login.LoginException;
 import java.nio.file.Path;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -82,7 +84,8 @@ public class Bot {
 		jda.addEventListener(
 				new StartupListener(),
 				new AutoCompleteListener(),
-				new ModalSubmitListener()
+				new ModalSubmitListener(),
+				new ButtonListener()
 		);
 	}
 }

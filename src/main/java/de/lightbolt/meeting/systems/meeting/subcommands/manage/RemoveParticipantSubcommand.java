@@ -1,4 +1,4 @@
-package de.lightbolt.meeting.systems.meeting.subcommands;
+package de.lightbolt.meeting.systems.meeting.subcommands.manage;
 
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
@@ -16,10 +16,10 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * <p>/meeting manage remove-admin</p>
- * Command that allows the Meeting Owner to remove Administrators from their meeting.
+ * <p>/meeting manage remove-participant</p>
+ * Command that allows Meeting Administrators to remove participants from their meeting.
  */
-public class RemoveAdminSubcommand extends MeetingSubcommand {
+public class RemoveParticipantSubcommand extends MeetingSubcommand {
 	@Override
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
 		var idOption = event.getOption("meeting-id");
@@ -30,22 +30,26 @@ public class RemoveAdminSubcommand extends MeetingSubcommand {
 		var id = (int) idOption.getAsLong();
 		var user = userOption.getAsUser();
 		var com = locale.getMeeting().getCommand();
-		var meetings = repo.getByUserId(event.getUser().getIdLong());
-		Optional<Meeting> meetingOptional = meetings.stream().filter(m -> m.getId() == id).findFirst();
-		if (meetingOptional.isPresent()) {
-			var meeting = meetingOptional.get();
-			var admins = meeting.getAdmins();
+		Optional<Meeting> meetingOptional = repo.findById(id);
+		if (meetingOptional.isEmpty()) {
+			return Responses.error(event, String.format(com.getMEETING_NOT_FOUND(), id));
+		}
+		var meeting = meetingOptional.get();
+		if (!MeetingManager.canEditMeeting(meeting, event.getUser().getIdLong())) {
+			return Responses.error(event, locale.getMeeting().getMEETING_NO_PERMISSION());
+		}
+		var participants = meeting.getParticipants();
+		var admins = meeting.getAdmins();
+		if (Arrays.stream(participants).anyMatch(x -> x == user.getIdLong())) {
 			if (Arrays.stream(admins).anyMatch(x -> x == user.getIdLong())) {
 				var newAdmins = ArrayUtils.removeElement(admins, user.getIdLong());
 				repo.updateAdmins(meeting, newAdmins);
-				new MeetingManager(event.getJDA(), meeting).removeAdmin(user);
-				return Responses.success(event, com.getADMINS_REMOVE_SUCCESS_TITLE(),
-						String.format(com.getADMINS_REMOVE_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
-			} else {
-				return Responses.error(event, String.format(com.getMEETING_ADMIN_NOT_FOUND(), user.getAsMention()));
 			}
+			new MeetingManager(event.getJDA(), meeting).removeParticipant(user);
+			return Responses.success(event, com.getPARTICIPANTS_REMOVE_SUCCESS_TITLE(),
+					String.format(com.getPARTICIPANTS_REMOVE_SUCCESS_DESCRIPTION(), user.getAsMention(), meeting.getTitle()));
 		} else {
-			return Responses.error(event, String.format(com.getMEETING_NOT_FOUND(), id));
+			return Responses.error(event, String.format(com.getMEETING_PARTICIPANT_NOT_FOUND(), user.getAsMention()));
 		}
 	}
 }

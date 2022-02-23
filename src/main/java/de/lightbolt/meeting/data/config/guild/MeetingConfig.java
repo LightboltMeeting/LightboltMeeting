@@ -14,10 +14,15 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class MeetingConfig extends GuildConfigItem {
 	private long meetingCategoryId;
+	private long ongoingMeetingCategoryId;
 	private int maxMeetingsPerUser = 2;
 	private List<Integer> meetingReminders = List.of(10, 60, 360, 1440);
 
 	public Category getMeetingCategory() {
 		return this.getGuild().getCategoryById(this.meetingCategoryId);
+	}
+
+	public Category getOngoingMeetingCategory() {
+		return this.getGuild().getCategoryById(this.ongoingMeetingCategoryId);
 	}
 }
