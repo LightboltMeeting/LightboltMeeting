@@ -2,6 +2,7 @@ package de.lightbolt.meeting.listener;
 
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.command.Responses;
+import de.lightbolt.meeting.data.config.guild.MeetingConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
@@ -90,10 +91,9 @@ public class ModalSubmitListener extends ListenerAdapter {
 		try (Connection con = Bot.dataSource.getConnection()) {
 			MeetingRepository repo = new MeetingRepository(con);
 			var inserted = repo.insert(meeting);
-			var category = Bot.config.get(event.getGuild()).getMeeting().getMeetingCategory();
+			var config = Bot.config.get(event.getGuild()).getMeeting();
 			var manager = new MeetingManager(event.getJDA(), inserted);
-			manager.createLogChannel(category, event.getUser(), locale);
-			manager.createVoiceChannel(category);
+			manager.createMeetingChannels(event.getGuild(), event.getUser(), locale, config);
 			Bot.meetingStateManager.scheduleMeeting(inserted);
 			return Responses.success(event.getHook(), createLocale.getCREATION_SUCCESS_TITLE(),
 					String.format(createLocale.getCREATION_SUCCESS_DESCRIPTION(), inserted.getId()));
@@ -146,7 +146,9 @@ public class ModalSubmitListener extends ListenerAdapter {
 			repo.updateDescription(meeting, description);
 			repo.updateDate(meeting, date);
 
-			new MeetingManager(event.getJDA(), meeting).updateMeeting(event.getUser(), LocalizationUtils.getLocale(meeting.getLanguage()));
+			MeetingConfig config = Bot.config.get(event.getGuild()).getMeeting();
+			MeetingManager manager = new MeetingManager(event.getJDA(), meeting);
+			manager.updateMeeting(event.getUser(), LocalizationUtils.getLocale(meeting.getLanguage()), config);
 			Bot.meetingStateManager.updateMeetingSchedule(repo.findById(meetingId).get());
 			return Responses.success(event.getHook(), editLocale.getEDIT_SUCCESS_TITLE(), editLocale.getEDIT_SUCCESS_DESCRIPTION());
 		} catch (SQLException exception) {

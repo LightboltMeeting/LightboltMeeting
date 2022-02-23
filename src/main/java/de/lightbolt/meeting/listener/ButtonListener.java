@@ -21,10 +21,11 @@ public class ButtonListener extends ListenerAdapter {
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
 			var meetingOptional = dao.getActive().stream().filter(m -> m.getLogChannelId() == event.getChannel().getIdLong()).findFirst();
 			if (meetingOptional.isEmpty()) {
+				event.getHook().sendMessage("Could not find corresponding Meeting").queue();
 				return;
 			}
-			event.getHook().sendMessageEmbeds(new MeetingManager(event.getJDA(), meetingOptional.get()).buildMeetingFAQEmbed())
-					.setEphemeral(true)
+			event.getHook()
+					.sendMessageEmbeds(new MeetingManager(event.getJDA(), meetingOptional.get()).buildMeetingFAQEmbed())
 					.queue();
 		});
 	}

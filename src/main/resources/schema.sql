@@ -10,6 +10,7 @@ CREATE TABLE meetings
 	title            VARCHAR(64)  NOT NULL,
 	description      VARCHAR(256) NOT NULL,
 	language         VARCHAR(64)  NOT NULL,
+	category_id	 	 BIGINT 	  NOT NULL,
 	log_channel_id   BIGINT       NOT NULL,
 	voice_channel_id BIGINT       NOT NULL,
 	active           BOOL         NOT NULL DEFAULT TRUE,

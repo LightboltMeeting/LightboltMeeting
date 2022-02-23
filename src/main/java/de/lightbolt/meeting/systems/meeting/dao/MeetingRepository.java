@@ -21,7 +21,7 @@ public class MeetingRepository {
 	private final Connection con;
 
 	public Meeting insert(Meeting meeting) throws SQLException {
-		var s = con.prepareStatement("INSERT INTO meetings (guild_id, created_by, participants, admins, created_at, due_at, title, description, language, log_channel_id, voice_channel_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		var s = con.prepareStatement("INSERT INTO meetings (guild_id, created_by, participants, admins, created_at, due_at, title, description, language, category_id, log_channel_id, voice_channel_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 				Statement.RETURN_GENERATED_KEYS
 		);
 		s.setLong(1, meeting.getGuildId());
@@ -33,8 +33,9 @@ public class MeetingRepository {
 		s.setString(7, meeting.getTitle());
 		s.setString(8, meeting.getDescription());
 		s.setString(9, meeting.getLanguage());
-		s.setLong(10, meeting.getLogChannelId());
-		s.setLong(11, meeting.getVoiceChannelId());
+		s.setLong(10, meeting.getCategoryId());
+		s.setLong(11, meeting.getLogChannelId());
+		s.setLong(12, meeting.getVoiceChannelId());
 		int rows = s.executeUpdate();
 		if (rows == 0) throw new SQLException("Meeting was not inserted.");
 		ResultSet rs = s.getGeneratedKeys();
@@ -127,6 +128,17 @@ public class MeetingRepository {
 		return old;
 	}
 
+	public void updateCategory(Meeting old, long categoryId) {
+		try (var s = con.prepareStatement("UPDATE meetings SET category_id = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
+			s.setLong(1, categoryId);
+			s.setInt(2, old.getId());
+			int rows = s.executeUpdate();
+			if (rows == 0) throw new SQLException("Could not update Meeting Log Channel. Meeting: " + old);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void updateLogChannel(Meeting old, long logChannelId) {
 		try (var s = con.prepareStatement("UPDATE meetings SET log_channel_id = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
 			s.setLong(1, logChannelId);
@@ -206,6 +218,7 @@ public class MeetingRepository {
 		meeting.setTitle(rs.getString("title"));
 		meeting.setDescription(rs.getString("description"));
 		meeting.setLanguage(rs.getString("language"));
+		meeting.setCategoryId(rs.getLong("category_id"));
 		meeting.setLogChannelId(rs.getLong("log_channel_id"));
 		meeting.setVoiceChannelId(rs.getLong("voice_channel_id"));
 		meeting.setActive(rs.getBoolean("active"));

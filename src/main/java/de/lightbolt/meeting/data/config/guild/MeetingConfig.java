@@ -13,16 +13,10 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class MeetingConfig extends GuildConfigItem {
-	private long meetingCategoryId;
-	private long ongoingMeetingCategoryId;
+	private String meetingCategoryTemplate = "%s";
+	private String meetingLogTemplate = "meeting-%s-log";
+	private String meetingVoiceTemplate = "\uD83D\uDCC5 %s";
+
 	private int maxMeetingsPerUser = 2;
 	private List<Integer> meetingReminders = List.of(10, 60, 360, 1440);
-
-	public Category getMeetingCategory() {
-		return this.getGuild().getCategoryById(this.meetingCategoryId);
-	}
-
-	public Category getOngoingMeetingCategory() {
-		return this.getGuild().getCategoryById(this.ongoingMeetingCategoryId);
-	}
 }
