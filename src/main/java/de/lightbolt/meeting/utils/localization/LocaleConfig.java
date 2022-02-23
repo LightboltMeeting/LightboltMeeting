@@ -130,5 +130,23 @@ public class LocaleConfig {
 			private String EDIT_SUCCESS_DESCRIPTION;
 			private String EDIT_FAILED;
 		}
+
+		private MeetingFAQConfig faq = new MeetingFAQConfig();
+
+		@Data
+		public static class MeetingFAQConfig {
+			private String FAQ_BUTTON_LABEL;
+
+			private String FAQ_EMBED_TITLE;
+
+			private String FAQ_MEETING_START_FIELD_HEADER;
+			private String FAQ_MEETING_START_FIELD_DESCRIPTION;
+
+			private String FAQ_MEETING_EDIT_FIELD_HEADER;
+			private String FAQ_MEETING_EDIT_FIELD_DESCRIPTION;
+
+			private String FAQ_MEETING_ADMIN_FIELD_HEADER;
+			private String FAQ_MEETING_ADMIN_FIELD_DESCRIPTION;
+		}
 	}
 }

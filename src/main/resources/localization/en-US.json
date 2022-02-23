@@ -98,6 +98,20 @@
       "EDIT_SUCCESS_TITLE": "Edit Meeting",
       "EDIT_SUCCESS_DESCRIPTION": "Successfully edited the given Meeting.",
       "EDIT_FAILED": "There was an error while editing the Meeting. Please try again."
+    },
+    "faq": {
+      "FAQ_BUTTON_LABEL": "Meeting FAQ",
+
+      "FAQ_EMBED_TITLE": "Meeting FAQ (Frequently Asked Questions)",
+
+      "FAQ_MEETING_START_FIELD_HEADER": "When does this Meeting start?",
+      "FAQ_MEETING_START_FIELD_DESCRIPTION": "This Meeting will start at exactly <t:%s:R>.",
+
+      "FAQ_MEETING_EDIT_FIELD_HEADER": "How do I change the Meeting's Title/Description/Language/...?",
+      "FAQ_MEETING_EDIT_FIELD_DESCRIPTION": "The Meeting Owner and all Meeting Administrators are able to always edit the Meeting using `/meeting edit`.",
+
+      "FAQ_MEETING_ADMIN_FIELD_HEADER": "What is a Meeting Administrator?",
+      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administrators can be added via the `/meeting add-admin` command by the Meeting's Owner and are able to manually add or remove participants, edit the Meeting, or just start/end it manually."
     }
   }
 }

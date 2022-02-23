@@ -80,7 +80,7 @@
       "LOG_MEETING_UPDATED": "Die Einstellungen des Meetings wurden von %s aktualisiert.",
 
       "LOG_MEETING_MANUALLY_STARTED": "Das Meeting wurde von %s manuell gestartet.",
-      "LOG_MEETING_STARTED": "Das Meeting wurde gestartet! %s\nUm da Meeting zu beenden muss entweder der Ersteller des Meetings oder ein Administrator den `/meeting end` Befehl ausführen."
+      "LOG_MEETING_STARTED": "Das Meeting wurde gestartet! %s\nUm das Meeting zu beenden muss entweder der Ersteller des Meetings oder ein Administrator den `/meeting end` Befehl ausführen."
     },
     "edit": {
       "EDIT_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Beispiel: 13/09/2019 13:05)",
@@ -98,6 +98,20 @@
       "EDIT_SUCCESS_TITLE": "Meeting editieren",
       "EDIT_SUCCESS_DESCRIPTION": "Das angegebene Meeting wurde erfolgreich editiert!",
       "EDIT_FAILED": "Ein Fehler ist beim editieren des Meetings aufgetreten. Bitte versuche es erneut."
+    },
+    "faq": {
+      "FAQ_BUTTON_LABEL": "Meeting FAQ",
+
+      "FAQ_EMBED_TITLE": "Meeting FAQ (Frequently Asked Questions)",
+
+      "FAQ_MEETING_START_FIELD_HEADER": "Wann startet das Meeting?",
+      "FAQ_MEETING_START_FIELD_DESCRIPTION": "Das Meeting startet genau um <t:%s:R>.",
+
+      "FAQ_MEETING_EDIT_FIELD_HEADER": "Wie ändere ich den Titel/Beschreibung/Sprache/...?",
+      "FAQ_MEETING_EDIT_FIELD_DESCRIPTION": "Der Ersteller und alle Administratoren des Meetings können das Meeting mit `/meeting edit` bearbeiten.",
+
+      "FAQ_MEETING_ADMIN_FIELD_HEADER": "Was ist ein Meeting Administrator?",
+      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administratoren können mit dem `/meeting add-admin` Befehl von dem Ersteller des Meetings hinzugefügt werden und sind dazu berechtigt Teilnehmer hinzuzufügen/zu entfernen, das Meeting zu editieren, oder es manuell zu starten/zu beenden."
     }
   }
 }

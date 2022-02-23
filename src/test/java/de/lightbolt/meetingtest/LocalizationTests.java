@@ -99,6 +99,17 @@ public class LocalizationTests {
 			sb.append("\nMEETING:EDIT:EDIT_SUCCESS_DESCRIPTION: " + edit.getEDIT_SUCCESS_DESCRIPTION());
 			sb.append("\nMEETING:EDIT:EDIT_FAILED: " + edit.getEDIT_FAILED());
 
+			// MEETING:FAQ
+			var faq = config.getMeeting().getFaq();
+			sb.append("\nMEETING:FAQ:FAQ_BUTTON_LABEL: " + faq.getFAQ_BUTTON_LABEL());
+			sb.append("\nMEETING:FAQ:FAQ_EMBED_TITLE: " + faq.getFAQ_EMBED_TITLE());
+			sb.append("\nMEETING:FAQ:FAQ_MEETING_START_FIELD_HEADER: " + faq.getFAQ_MEETING_START_FIELD_HEADER());
+			sb.append("\nMEETING:FAQ:FAQ_MEETING_START_FIELD_DESCRIPTION: " + faq.getFAQ_MEETING_START_FIELD_DESCRIPTION());
+			sb.append("\nMEETING:FAQ:FAQ_MEETING_EDIT_FIELD_HEADER: " + faq.getFAQ_MEETING_EDIT_FIELD_HEADER());
+			sb.append("\nMEETING:FAQ:FAQ_MEETING_EDIT_FIELD_DESCRIPTION: " + faq.getFAQ_MEETING_EDIT_FIELD_DESCRIPTION());
+			sb.append("\nMEETING:FAQ:FAQ_MEETING_ADMIN_FIELD_HEADER: " + faq.getFAQ_MEETING_ADMIN_FIELD_HEADER());
+			sb.append("\nMEETING:FAQ:FAQ_MEETING_ADMIN_FIELD_DESCRIPTION: " + faq.getFAQ_MEETING_ADMIN_FIELD_DESCRIPTION());
+
 			var string = sb.toString();
 			System.out.println(string);
 			int nullCount = 0;

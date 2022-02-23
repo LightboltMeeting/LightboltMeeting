@@ -1,7 +1,6 @@
 package de.lightbolt.meeting.systems.meeting;
 
 import de.lightbolt.meeting.Bot;
-import de.lightbolt.meeting.annotations.MissingLocale;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
@@ -151,7 +150,7 @@ public class MeetingManager {
 				channel -> {
 					this.updateLogChannelPermissions(channel, meeting.getParticipants());
 					channel.sendMessageEmbeds(buildMeetingEmbed(meeting, createdBy, locale))
-							.setActionRow(Button.secondary("meeting-faq", "FAQ"))
+							.setActionRow(Button.secondary("meeting-faq", locale.getMeeting().getFaq().getFAQ_BUTTON_LABEL()))
 							.queue();
 					DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.updateLogChannel(meeting, channel.getIdLong()));
 				}, e -> log.error("Could not create Log Channel for Meeting: " + meeting, e));
@@ -298,4 +297,13 @@ public class MeetingManager {
 		manager.queue(s -> {}, e -> log.error("Could not update Channel Permissions for Channel: " + channel.getName(), e));
 	}
 
+	public MessageEmbed buildMeetingFAQEmbed() {
+		var faqLocale = meeting.getLocaleConfig().getMeeting().getFaq();
+		return new EmbedBuilder()
+				.setTitle(faqLocale.getFAQ_EMBED_TITLE())
+				.addField(faqLocale.getFAQ_MEETING_START_FIELD_HEADER(), String.format(faqLocale.getFAQ_MEETING_START_FIELD_DESCRIPTION()), false)
+				.addField(faqLocale.getFAQ_MEETING_EDIT_FIELD_HEADER(), faqLocale.getFAQ_MEETING_EDIT_FIELD_DESCRIPTION(), false)
+				.addField(faqLocale.getFAQ_MEETING_ADMIN_FIELD_HEADER(), faqLocale.getFAQ_MEETING_ADMIN_FIELD_DESCRIPTION(), false)
+				.build();
+	}
 }
