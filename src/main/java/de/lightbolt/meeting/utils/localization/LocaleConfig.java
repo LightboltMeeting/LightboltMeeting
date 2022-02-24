@@ -116,14 +116,16 @@ public class LocaleConfig {
 		public static class MeetingEditConfig {
 			private String EDIT_DATE_PLACEHOLDER;
 			private String EDIT_LANGUAGE_PLACEHOLDER;
+			private String EDIT_TIMEZONE_PLACEHOLDER;
 
 			private String EDIT_MODAL_HEADER;
-			private String EDIT_NAME_LABEL;
 			private String EDIT_DESCRIPTION_LABEL;
+			private String EDIT_TIMEZONE_LABEL;
 			private String EDIT_DATE_LABEL;
 			private String EDIT_LANGUAGE_LABEL;
 
 			private String EDIT_INVALID_DATE;
+			private String EDIT_INVALID_TIMEZONE;
 			private String EDIT_INVALID_LANGUAGE;
 
 			private String EDIT_SUCCESS_TITLE;

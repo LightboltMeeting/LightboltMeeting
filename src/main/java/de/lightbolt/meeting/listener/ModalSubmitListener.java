@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Optional;
@@ -74,11 +75,11 @@ public class ModalSubmitListener extends ListenerAdapter {
 		TimeZone timezone = TimeZone.getTimeZone(timezoneString);
 
 		String date = dateOption.getAsString();
-		var dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").withZone(timezone.toZoneId()));
-		if (dueAt.isBefore(LocalDateTime.now()) || dueAt.isAfter(LocalDateTime.now().plusYears(2))) {
+		var dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).atZone(timezone.toZoneId());
+		if (dueAt.isBefore(ChronoZonedDateTime.from(LocalDateTime.now())) || dueAt.isAfter(ChronoZonedDateTime.from(LocalDateTime.now().plusYears(2)))) {
 			return Responses.error(event.getHook(), createLocale.getCREATION_INVALID_DATE());
 		}
-		meeting.setDueAt(Timestamp.valueOf(dueAt));
+		meeting.setDueAt(Timestamp.valueOf(dueAt.toLocalDateTime()));
 
 		String language = languageOption.getAsString();
 		if (!Language.isValidLanguage(language)) {
@@ -112,25 +113,28 @@ public class ModalSubmitListener extends ListenerAdapter {
 				return Responses.error(event.getHook(), String.format(locale.getMeeting().getCommand().getMEETING_NOT_FOUND(), meetingId));
 			}
 			Meeting meeting = meetingOptional.get();
-			var nameOption = event.getValue("meeting-name");
 			var descriptionOption = event.getValue("meeting-description");
+			var timezoneOption = event.getValue("meeting-timezone");
 			var dateOption = event.getValue("meeting-date");
 			var languageOption = event.getValue("meeting-language");
-			if (nameOption == null || descriptionOption == null || dateOption == null || languageOption == null) {
+			if (descriptionOption == null || dateOption == null || languageOption == null) {
 				return Responses.error(event.getHook(), locale.getCommand().getMISSING_ARGUMENTS());
 			}
-			String title = nameOption.getAsString();
-			meeting.setTitle(title);
-
 			String description = descriptionOption.getAsString();
 			meeting.setDescription(description);
 
+			String timezoneString = timezoneOption == null ? "UTC" : timezoneOption.getAsString();
+			if (!Arrays.asList(TimeZone.getAvailableIDs()).contains(timezoneString))  {
+				return Responses.error(event.getHook(), String.format(editLocale.getEDIT_INVALID_TIMEZONE(), timezoneString, TIMEZONE_LIST));
+			}
+			TimeZone timezone = TimeZone.getTimeZone(timezoneString);
+
 			String date = dateOption.getAsString();
-			var dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-			if (dueAt.isBefore(LocalDateTime.now()) || dueAt.isAfter(LocalDateTime.now().plusYears(2))) {
+			var dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).atZone(timezone.toZoneId());
+			if (dueAt.isBefore(ChronoZonedDateTime.from(LocalDateTime.now())) || dueAt.isAfter(ChronoZonedDateTime.from(LocalDateTime.now().plusYears(2)))) {
 				return Responses.error(event.getHook(), editLocale.getEDIT_INVALID_DATE());
 			}
-			meeting.setDueAt(Timestamp.valueOf(dueAt));
+			meeting.setDueAt(Timestamp.valueOf(dueAt.toLocalDateTime()));
 
 			String language = languageOption.getAsString();
 			if (!Language.isValidLanguage(language)) {
@@ -142,7 +146,6 @@ public class ModalSubmitListener extends ListenerAdapter {
 			meeting.setLanguage(language);
 
 			repo.updateLanguage(meeting, language);
-			repo.updateName(meeting, title);
 			repo.updateDescription(meeting, description);
 			repo.updateDate(meeting, date);
 

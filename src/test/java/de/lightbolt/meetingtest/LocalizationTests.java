@@ -87,13 +87,15 @@ public class LocalizationTests {
 			// MEETING:EDIT
 			var edit = config.getMeeting().getEdit();
 			sb.append("\nMEETING:EDIT:EDIT_DATE_PLACEHOLDER: " + edit.getEDIT_DATE_PLACEHOLDER());
+			sb.append("\nMEETING:EDIT:EDIT_TIMEZONE_PLACEHOLDER: " + edit.getEDIT_TIMEZONE_PLACEHOLDER());
 			sb.append("\nMEETING:EDIT:EDIT_LANGUAGE_PLACEHOLDER: " + edit.getEDIT_LANGUAGE_PLACEHOLDER());
 			sb.append("\nMEETING:EDIT:EDIT_MODAL_HEADER: " + edit.getEDIT_MODAL_HEADER());
-			sb.append("\nMEETING:EDIT:EDIT_NAME_LABEL: " + edit.getEDIT_NAME_LABEL());
 			sb.append("\nMEETING:EDIT:EDIT_DESCRIPTION_LABEL: " + edit.getEDIT_DESCRIPTION_LABEL());
+			sb.append("\nMEETING:EDIT:EDIT_TIMEZONE_LABEL: " + edit.getEDIT_TIMEZONE_LABEL());
 			sb.append("\nMEETING:EDIT:EDIT_DATE_LABEL: " + edit.getEDIT_DATE_LABEL());
 			sb.append("\nMEETING:EDIT:EDIT_LANGUAGE_LABEL: " + edit.getEDIT_LANGUAGE_LABEL());
 			sb.append("\nMEETING:EDIT:EDIT_INVALID_DATE: " + edit.getEDIT_INVALID_DATE());
+			sb.append("\nMEETING:EDIT:EDIT_INVALID_TIMEZONE: " + edit.getEDIT_INVALID_TIMEZONE());
 			sb.append("\nMEETING:EDIT:EDIT_INVALID_LANGUAGE: " + edit.getEDIT_INVALID_LANGUAGE());
 			sb.append("\nMEETING:EDIT:EDIT_SUCCESS_TITLE: " + edit.getEDIT_SUCCESS_TITLE());
 			sb.append("\nMEETING:EDIT:EDIT_SUCCESS_DESCRIPTION: " + edit.getEDIT_SUCCESS_DESCRIPTION());

@@ -6,6 +6,7 @@ import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.MeetingSubcommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
+import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -46,12 +47,6 @@ public class EditMeetingSubcommand extends MeetingSubcommand {
 
 	private ModalCallbackAction buildEditModal(SlashCommandInteractionEvent event, Meeting meeting, LocaleConfig locale) {
 		var editLocale = locale.getMeeting().getEdit();
-		TextInput meetingName = TextInput.create("meeting-name", editLocale.getEDIT_NAME_LABEL(), TextInputStyle.SHORT)
-				.setValue(meeting.getTitle())
-				.setRequired(true)
-				.setMaxLength(64)
-				.build();
-
 		TextInput meetingDescription = TextInput.create("meeting-description", editLocale.getEDIT_DESCRIPTION_LABEL(), TextInputStyle.PARAGRAPH)
 				.setValue(meeting.getDescription())
 				.setRequired(true)
@@ -65,6 +60,12 @@ public class EditMeetingSubcommand extends MeetingSubcommand {
 				.setMaxLength(16)
 				.build();
 
+		TextInput meetingTimezone = TextInput.create("meeting-timezone", editLocale.getEDIT_TIMEZONE_LABEL(), TextInputStyle.SHORT)
+				.setValue(Language.valueOf(meeting.getLanguage()).getTimezone())
+				.setPlaceholder(editLocale.getEDIT_TIMEZONE_PLACEHOLDER())
+				.setRequired(false)
+				.build();
+
 		TextInput meetingLanguage = TextInput.create("meeting-language", editLocale.getEDIT_LANGUAGE_LABEL(), TextInputStyle.SHORT)
 				.setValue(meeting.getLanguage())
 				.setPlaceholder(locale.getMeeting().getEdit().getEDIT_LANGUAGE_PLACEHOLDER())
@@ -72,8 +73,8 @@ public class EditMeetingSubcommand extends MeetingSubcommand {
 				.setMaxLength(2)
 				.build();
 
-		Modal modal = Modal.create("meeting-edit:" + meeting.getId(), editLocale.getEDIT_MODAL_HEADER())
-				.addActionRows(ActionRow.of(meetingName), ActionRow.of(meetingDescription), ActionRow.of(meetingDate), ActionRow.of(meetingLanguage))
+		Modal modal = Modal.create("meeting-edit:" + meeting.getId(), String.format(editLocale.getEDIT_MODAL_HEADER(), meeting.getTitle()))
+				.addActionRows(ActionRow.of(meetingDescription), ActionRow.of(meetingDate), ActionRow.of(meetingTimezone), ActionRow.of(meetingLanguage))
 				.build();
 		return event.replyModal(modal);
 	}
