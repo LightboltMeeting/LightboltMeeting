@@ -50,7 +50,7 @@ public class CreateMeetingSubcommand extends MeetingSubcommand {
 				.build();
 
 		TextInput meetingDate = TextInput.create("meeting-date", createLocale.getCREATION_DATE_LABEL(), TextInputStyle.SHORT)
-				.setValue(LocalDateTime.now().plusMinutes(10).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+				.setValue(LocalDateTime.now().plusDays(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
 				.setPlaceholder(createLocale.getCREATION_DATE_PLACEHOLDER())
 				.setRequired(true)
 				.setMaxLength(17)

@@ -76,7 +76,8 @@ public class ModalSubmitListener extends ListenerAdapter {
 
 		String date = dateOption.getAsString();
 		var dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).atZone(timezone.toZoneId());
-		if (dueAt.isBefore(ChronoZonedDateTime.from(LocalDateTime.now())) || dueAt.isAfter(ChronoZonedDateTime.from(LocalDateTime.now().plusYears(2)))) {
+		var zonedDateTimeNow = LocalDateTime.now().atZone(timezone.toZoneId());
+		if (dueAt.isBefore(zonedDateTimeNow) || dueAt.isAfter(zonedDateTimeNow.plusYears(2))) {
 			return Responses.error(event.getHook(), createLocale.getCREATION_INVALID_DATE());
 		}
 		meeting.setDueAt(Timestamp.valueOf(dueAt.toLocalDateTime()));
@@ -131,7 +132,8 @@ public class ModalSubmitListener extends ListenerAdapter {
 
 			String date = dateOption.getAsString();
 			var dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).atZone(timezone.toZoneId());
-			if (dueAt.isBefore(ChronoZonedDateTime.from(LocalDateTime.now())) || dueAt.isAfter(ChronoZonedDateTime.from(LocalDateTime.now().plusYears(2)))) {
+			var zonedDateTimeNow = LocalDateTime.now().atZone(timezone.toZoneId());
+			if (dueAt.isBefore(zonedDateTimeNow) || dueAt.isAfter(zonedDateTimeNow.plusYears(2))) {
 				return Responses.error(event.getHook(), editLocale.getEDIT_INVALID_DATE());
 			}
 			meeting.setDueAt(Timestamp.valueOf(dueAt.toLocalDateTime()));
