@@ -4,6 +4,7 @@ import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
+import de.lightbolt.meeting.systems.meeting.MeetingStatus;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import de.lightbolt.meeting.utils.localization.Language;
@@ -20,7 +21,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Optional;
@@ -60,7 +60,7 @@ public class ModalSubmitListener extends ListenerAdapter {
 		meeting.setParticipants(new long[]{event.getUser().getIdLong()});
 		meeting.setAdmins(new long[]{event.getUser().getIdLong()});
 		meeting.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-		meeting.setActive(true);
+		meeting.setStatus(MeetingStatus.SCHEDULED);
 
 		String title = nameOption.getAsString();
 		meeting.setTitle(title);
@@ -153,7 +153,7 @@ public class ModalSubmitListener extends ListenerAdapter {
 
 			MeetingConfig config = Bot.config.get(event.getGuild()).getMeeting();
 			MeetingManager manager = new MeetingManager(event.getJDA(), meeting);
-			manager.updateMeeting(event.getUser(), LocalizationUtils.getLocale(meeting.getLanguage()), config);
+			manager.updateMeeting(event.getUser(), LocalizationUtils.getLocale(meeting.getLanguage()));
 			Bot.meetingStateManager.updateMeetingSchedule(repo.findById(meetingId).get());
 			return Responses.success(event.getHook(), editLocale.getEDIT_SUCCESS_TITLE(), editLocale.getEDIT_SUCCESS_DESCRIPTION());
 		} catch (SQLException exception) {

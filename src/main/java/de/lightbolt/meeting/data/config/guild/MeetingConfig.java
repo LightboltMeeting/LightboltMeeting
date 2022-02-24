@@ -15,7 +15,10 @@ import java.util.List;
 public class MeetingConfig extends GuildConfigItem {
 	private String meetingCategoryTemplate = "%s";
 	private String meetingLogTemplate = "meeting-%s-log";
-	private String meetingVoiceTemplate = "\uD83D\uDCC5 %s";
+	private String meetingVoiceTemplate = "%s %s";
+	private String meetingPlannedEmoji = "\uD83D\uDCC5";
+	private String meetingStartingSoonEmoji = "\uD83D\uDFE1";
+	private String meetingOngoingEmoji = "\uD83D\uDFE2";
 
 	private int maxMeetingsPerUser = 2;
 	private List<Integer> meetingReminders = List.of(10, 60, 360, 1440);

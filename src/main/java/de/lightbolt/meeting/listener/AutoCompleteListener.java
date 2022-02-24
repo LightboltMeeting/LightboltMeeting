@@ -1,6 +1,7 @@
 package de.lightbolt.meeting.listener;
 
 import de.lightbolt.meeting.Bot;
+import de.lightbolt.meeting.systems.meeting.MeetingStatus;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import lombok.extern.slf4j.Slf4j;
@@ -72,10 +73,10 @@ public class AutoCompleteListener extends ListenerAdapter {
 	}
 
 	private List<Meeting> getOngoingUserMeetings(CommandAutoCompleteInteractionEvent event) {
-		return getUserAndAdminMeetings(event).stream().filter(Meeting::isOngoing).collect(Collectors.toList());
+		return getUserAndAdminMeetings(event).stream().filter(p -> p.getStatus() == MeetingStatus.ONGOING).collect(Collectors.toList());
 	}
 
 	private List<Meeting> getScheduledUserMeetings(CommandAutoCompleteInteractionEvent event) {
-		return getUserAndAdminMeetings(event).stream().filter(m -> !m.isOngoing()).collect(Collectors.toList());
+		return getUserAndAdminMeetings(event).stream().filter(p -> p.getStatus() == MeetingStatus.SCHEDULED).collect(Collectors.toList());
 	}
 }

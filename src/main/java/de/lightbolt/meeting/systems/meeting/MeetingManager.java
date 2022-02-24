@@ -1,11 +1,11 @@
 package de.lightbolt.meeting.systems.meeting;
 
 import de.lightbolt.meeting.Bot;
+import de.lightbolt.meeting.annotations.MissingLocale;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
-import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import lombok.RequiredArgsConstructor;
@@ -96,12 +96,17 @@ public class MeetingManager {
 		this.startMeeting();
 	}
 
+	@MissingLocale
 	public void startMeeting() {
 		var text = this.getLogChannel();
 		var logLocale = meeting.getLocaleConfig().getMeeting().getLog();
-		text.sendMessageFormat(logLocale.getLOG_MEETING_STARTED(), Arrays.stream(meeting.getParticipants()).mapToObj(m -> String.format("<@%s>", m)).collect(Collectors.joining(", ")))
+		var config = Bot.config.get(getJDA().getGuildById(meeting.getGuildId())).getMeeting();
+		text.sendMessageFormat(logLocale.getLOG_MEETING_STARTED(), Arrays.stream(meeting.getParticipants()).mapToObj(m -> String.format("<@%s>", m)).collect(Collectors.joining(", "))).queue();
+		this.getVoiceChannel()
+				.getManager()
+				.setName(String.format(config.getMeetingVoiceTemplate(), config.getMeetingOngoingEmoji(), "Ongoing Meeting"))
 				.queue();
-		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.markOngoing(meeting.getId()));
+		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.setStatus(meeting.getId(), MeetingStatus.ONGOING));
 		this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants(), true);
 	}
 
@@ -110,7 +115,7 @@ public class MeetingManager {
 		this.getVoiceChannel().delete().queue();
 		this.getCategory().delete().queue();
 		Bot.meetingStateManager.cancelMeetingSchedule(meeting);
-		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.markInactive(meeting.getId()));
+		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.setStatus(meeting.getId(), MeetingStatus.INACTIVE));
 	}
 
 	public void discardMeeting() {
@@ -118,7 +123,7 @@ public class MeetingManager {
 		this.getVoiceChannel().delete().queue();
 		this.getCategory().delete().queue();
 		Bot.meetingStateManager.cancelMeetingSchedule(meeting);
-		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.markInactive(meeting.getId()));
+		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.setStatus(meeting.getId(), MeetingStatus.INACTIVE));
 	}
 
 	/**
@@ -140,7 +145,7 @@ public class MeetingManager {
 	 * @return The meetings log channel as a {@link TextChannel}.
 	 */
 	public Category getCategory() {
-		return jda.getGuildById(meeting.getGuildId()).getCategoryById(meeting.getCategoryId());
+		return getJDA().getGuildById(meeting.getGuildId()).getCategoryById(meeting.getCategoryId());
 	}
 
 	/**
@@ -167,7 +172,7 @@ public class MeetingManager {
 	 * @return The meetings log channel as a {@link TextChannel}.
 	 */
 	public TextChannel getLogChannel() {
-		return jda.getGuildById(meeting.getGuildId()).getTextChannelById(meeting.getLogChannelId());
+		return getJDA().getGuildById(meeting.getGuildId()).getTextChannelById(meeting.getLogChannelId());
 	}
 
 	/**
@@ -176,7 +181,7 @@ public class MeetingManager {
 	 * @param category  The Meeting Category that's specified in the config file.
 	 */
 	public void createVoiceChannel(@NotNull Category category, MeetingConfig config) {
-		category.createVoiceChannel(String.format(config.getMeetingVoiceTemplate(), meeting.getDueAtFormatted(), meeting.getTitle())).queue(
+		category.createVoiceChannel(String.format(config.getMeetingVoiceTemplate(), config.getMeetingPlannedEmoji(), meeting.getDueAtFormatted())).queue(
 				channel -> {
 					this.updateVoiceChannelPermissions(channel, meeting.getParticipants());
 					DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.updateVoiceChannel(meeting, channel.getIdLong()));
@@ -189,7 +194,7 @@ public class MeetingManager {
 	 * @return The meetings voice channel as a {@link VoiceChannel}.
 	 */
 	public VoiceChannel getVoiceChannel() {
-		return jda.getGuildById(meeting.getGuildId()).getVoiceChannelById(meeting.getVoiceChannelId());
+		return getJDA().getGuildById(meeting.getGuildId()).getVoiceChannelById(meeting.getVoiceChannelId());
 	}
 
 	/**
@@ -198,15 +203,12 @@ public class MeetingManager {
 	 * @param updatedBy The user that initiated this process.
 	 * @param locale    The user's locale.
 	 */
-	public void updateMeeting(User updatedBy, LocaleConfig locale, MeetingConfig config) {
-		this.getCategory().getManager().setName(String.format(config.getMeetingCategoryTemplate(), meeting.getTitle())).queue();
-		jda.retrieveUserById(meeting.getCreatedBy()).queue(
-				user -> {
-					this.getLogChannel()
-							.sendMessageFormat(locale.getMeeting().getLog().getLOG_MEETING_UPDATED(), updatedBy.getAsMention())
-							.setEmbeds(buildMeetingEmbed(meeting, user, LocalizationUtils.getLocale(meeting.getLanguage())))
-							.queue();
-				}
+	public void updateMeeting(User updatedBy, LocaleConfig locale) {
+		getJDA().retrieveUserById(meeting.getCreatedBy()).queue(
+				user -> this.getLogChannel()
+						.sendMessageFormat(locale.getMeeting().getLog().getLOG_MEETING_UPDATED(), updatedBy.getAsMention())
+						.setEmbeds(buildMeetingEmbed(meeting, user, LocalizationUtils.getLocale(meeting.getLanguage())))
+						.queue()
 		);
 	}
 
@@ -289,7 +291,7 @@ public class MeetingManager {
 	}
 
 	private void updateVoiceChannelPermissions(@NotNull VoiceChannel channel, long[] participants) {
-		this.updateVoiceChannelPermissions(channel, participants, meeting.isOngoing());
+		this.updateVoiceChannelPermissions(channel, participants, meeting.getStatus() == MeetingStatus.ONGOING);
 	}
 
 	private void updateVoiceChannelPermissions(@NotNull VoiceChannel channel, long[] participants, boolean ongoing) {
@@ -310,5 +312,9 @@ public class MeetingManager {
 				.addField(faqLocale.getFAQ_MEETING_EDIT_FIELD_HEADER(), faqLocale.getFAQ_MEETING_EDIT_FIELD_DESCRIPTION(), false)
 				.addField(faqLocale.getFAQ_MEETING_ADMIN_FIELD_HEADER(), faqLocale.getFAQ_MEETING_ADMIN_FIELD_DESCRIPTION(), false)
 				.build();
+	}
+
+	public JDA getJDA() {
+		return this.jda;
 	}
 }

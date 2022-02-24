@@ -4,6 +4,7 @@ import de.lightbolt.meeting.annotations.MissingLocale;
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
+import de.lightbolt.meeting.systems.meeting.MeetingStatus;
 import de.lightbolt.meeting.systems.meeting.MeetingSubcommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
@@ -37,7 +38,7 @@ public class DiscardMeetingSubcommand extends MeetingSubcommand {
 		}
 		MeetingManager manager = new MeetingManager(event.getJDA(), meeting);
 		var com = locale.getMeeting().getCommand();
-		if (meeting.isOngoing()) {
+		if (meeting.getStatus() == MeetingStatus.ONGOING) {
 			return Responses.error(event, com.getMEETING_DISCARD_FAILED_DESCRIPTION());
 		}
 		manager.discardMeeting();

@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class MeetingReminderJob implements Job {
+	private final int STARTING_SOON_THRESHOLD = 30;
+
 	@Override
 	public void execute(JobExecutionContext context) {
 		String[] jobDetail = context.getJobDetail().getKey().getName().split("-");
@@ -29,18 +31,26 @@ public class MeetingReminderJob implements Job {
 			}
 			Meeting meeting = meetingOptional.get();
 			MeetingManager manager = new MeetingManager(Bot.jda, meeting);
+			int reminder = Integer.parseInt(jobDetail[2]);
 			manager.getLogChannel()
 					.sendMessageFormat(Arrays.stream(meeting.getParticipants()).mapToObj(l -> String.format("<@%s>", l)).collect(Collectors.joining(", ")))
-					.setEmbeds(buildReminderEmbed(meeting.getLocaleConfig().getMeeting().getLog(), jobDetail[2]))
+					.setEmbeds(buildReminderEmbed(meeting.getLocaleConfig().getMeeting().getLog(), reminder))
 					.queue();
+			if (reminder < STARTING_SOON_THRESHOLD) {
+				var config = Bot.config.get(manager.getJDA().getGuildById(meeting.getGuildId())).getMeeting();
+				manager.getVoiceChannel()
+						.getManager()
+						.setName(String.format(config.getMeetingCategoryTemplate(), config.getMeetingStartingSoonEmoji(), meeting.getTitle()))
+						.queue();
+			}
 		});
 	}
 
-	private MessageEmbed buildReminderEmbed(LocaleConfig.MeetingConfig.MeetingLogConfig logLocale, String reminder) {
+	private MessageEmbed buildReminderEmbed(LocaleConfig.MeetingConfig.MeetingLogConfig logLocale, int reminder) {
 		String reminderTimeUnit;
-		if (Integer.parseInt(reminder) > 60) {
+		if (reminder > 60) {
 			reminderTimeUnit = logLocale.getLOG_TIMEUNIT_HOURS();
-			reminder = String.valueOf((Integer.parseInt(reminder) / 60));
+			reminder = reminder / 60;
 		} else {
 			reminderTimeUnit = logLocale.getLOG_TIMEUNIT_MINUTES();
 		}
