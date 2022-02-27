@@ -42,7 +42,7 @@ public class MeetingReminderJob implements Job {
 				var config = Bot.config.get(manager.getJDA().getGuildById(meeting.getGuildId())).getMeeting();
 				manager.getVoiceChannel()
 						.getManager()
-						.setName(String.format(config.getMeetingCategoryTemplate(), config.getMeetingStartingSoonEmoji(), "Meeting starting soon!"))
+						.setName(String.format(config.getMeetingVoiceTemplate(), config.getMeetingStartingSoonEmoji(), "Meeting starting soon!"))
 						.queue();
 			}
 		});
