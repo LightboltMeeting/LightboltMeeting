@@ -59,7 +59,7 @@ public class MeetingManager {
 		for (var guild : jda.getGuilds()) {
 			var config = Bot.config.get(guild).getMeeting();
 			DbHelper.doDaoAction(MeetingRepository::new, dao -> {
-				List<Meeting> activeMeetings = dao.getActive();
+				List<Meeting> activeMeetings = dao.getActive().stream().filter(p -> p.getGuildId() == guild.getIdLong()).toList();
 				for (Meeting m : activeMeetings) {
 					MeetingManager manager = new MeetingManager(jda, m);
 					Category category = guild.getCategoryById(m.getCategoryId());
@@ -96,6 +96,7 @@ public class MeetingManager {
 		this.startMeeting();
 	}
 
+	// FIXME: 27.02.2022 Voice Channel Name defaults back to the Planned State, even though the Meeting is started.
 	@MissingLocale
 	public void startMeeting() {
 		var text = this.getLogChannel();
@@ -105,9 +106,8 @@ public class MeetingManager {
 		this.getVoiceChannel()
 				.getManager()
 				.setName(String.format(config.getMeetingVoiceTemplate(), config.getMeetingOngoingEmoji(), "Ongoing Meeting"))
-				.queue();
+				.queue(s -> this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants(), true));
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.setStatus(meeting.getId(), MeetingStatus.ONGOING));
-		this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants(), true);
 	}
 
 	public void endMeeting() {

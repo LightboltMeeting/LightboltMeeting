@@ -21,7 +21,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.TimeZone;
@@ -75,7 +77,12 @@ public class ModalSubmitListener extends ListenerAdapter {
 		TimeZone timezone = TimeZone.getTimeZone(timezoneString);
 
 		String date = dateOption.getAsString();
-		var dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).atZone(timezone.toZoneId());
+		ZonedDateTime dueAt;
+		try {
+			dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).atZone(timezone.toZoneId());
+		} catch (DateTimeParseException e) {
+			return Responses.error(event.getHook(), createLocale.getCREATION_INVALID_DATE());
+		}
 		var zonedDateTimeNow = LocalDateTime.now().atZone(timezone.toZoneId());
 		if (dueAt.isBefore(zonedDateTimeNow) || dueAt.isAfter(zonedDateTimeNow.plusYears(2))) {
 			return Responses.error(event.getHook(), createLocale.getCREATION_INVALID_DATE());
@@ -131,7 +138,12 @@ public class ModalSubmitListener extends ListenerAdapter {
 			TimeZone timezone = TimeZone.getTimeZone(timezoneString);
 
 			String date = dateOption.getAsString();
-			var dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).atZone(timezone.toZoneId());
+			ZonedDateTime dueAt;
+			try {
+				dueAt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).atZone(timezone.toZoneId());
+			} catch (DateTimeParseException e) {
+				return Responses.error(event.getHook(), editLocale.getEDIT_INVALID_DATE());
+			}
 			var zonedDateTimeNow = LocalDateTime.now().atZone(timezone.toZoneId());
 			if (dueAt.isBefore(zonedDateTimeNow) || dueAt.isAfter(zonedDateTimeNow.plusYears(2))) {
 				return Responses.error(event.getHook(), editLocale.getEDIT_INVALID_DATE());

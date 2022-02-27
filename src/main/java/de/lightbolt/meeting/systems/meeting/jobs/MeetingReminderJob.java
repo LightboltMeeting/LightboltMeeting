@@ -1,6 +1,7 @@
 package de.lightbolt.meeting.systems.meeting.jobs;
 
 import de.lightbolt.meeting.Bot;
+import de.lightbolt.meeting.annotations.MissingLocale;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class MeetingReminderJob implements Job {
 	private final int STARTING_SOON_THRESHOLD = 30;
 
+	@MissingLocale
 	@Override
 	public void execute(JobExecutionContext context) {
 		String[] jobDetail = context.getJobDetail().getKey().getName().split("-");
@@ -40,7 +42,7 @@ public class MeetingReminderJob implements Job {
 				var config = Bot.config.get(manager.getJDA().getGuildById(meeting.getGuildId())).getMeeting();
 				manager.getVoiceChannel()
 						.getManager()
-						.setName(String.format(config.getMeetingCategoryTemplate(), config.getMeetingStartingSoonEmoji(), meeting.getTitle()))
+						.setName(String.format(config.getMeetingCategoryTemplate(), config.getMeetingStartingSoonEmoji(), "Meeting starting soon!"))
 						.queue();
 			}
 		});
