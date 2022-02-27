@@ -3,6 +3,9 @@
     "MISSING_ARGUMENTS": "Missing required Arguments. Please try again."
   },
   "meeting": {
+    "MEETING_STATUS_STARTING_SOON": "Meeting starting soon!",
+    "MEETING_STATUS_ONGOING": "Ongoing Meeting!",
+
     "MEETING_EMBED_FOOTER": "This meeting will start at: ",
     "MEETING_NO_PERMISSION": "You're not permitted to edit this meeting.",
     "creation": {

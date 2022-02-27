@@ -18,6 +18,9 @@ public class LocaleConfig {
 
 	@Data
 	public static class MeetingConfig {
+		private String MEETING_STATUS_STARTING_SOON;
+		private String MEETING_STATUS_ONGOING;
+
 		private String MEETING_EMBED_FOOTER;
 		private String MEETING_NO_PERMISSION;
 

@@ -3,6 +3,9 @@
     "MISSING_ARGUMENTS": "Es fehlen erforderliche Parameter. Bitte versuche es erneut."
   },
   "meeting": {
+    "MEETING_STATUS_STARTING_SOON": "Meeting started bald!",
+    "MEETING_STATUS_ONGOING": "Meeting läuft!",
+
     "MEETING_EMBED_FOOTER": "Dieses Meeting startet am: ",
     "MEETING_NO_PERMISSION": "Du hast keine Berechtigung um dieses Meeting zu bearbeiten.",
     "creation": {

@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 public class MeetingReminderJob implements Job {
 	private final int STARTING_SOON_THRESHOLD = 30;
 
-	@MissingLocale
 	@Override
 	public void execute(JobExecutionContext context) {
 		String[] jobDetail = context.getJobDetail().getKey().getName().split("-");
@@ -42,7 +41,7 @@ public class MeetingReminderJob implements Job {
 				var config = Bot.config.get(manager.getJDA().getGuildById(meeting.getGuildId())).getMeeting();
 				manager.getVoiceChannel()
 						.getManager()
-						.setName(String.format(config.getMeetingVoiceTemplate(), config.getMeetingStartingSoonEmoji(), "Meeting starting soon!"))
+						.setName(String.format(config.getMeetingVoiceTemplate(), config.getMeetingStartingSoonEmoji(), meeting.getLocaleConfig().getMeeting().getMEETING_STATUS_STARTING_SOON()))
 						.queue();
 			}
 		});

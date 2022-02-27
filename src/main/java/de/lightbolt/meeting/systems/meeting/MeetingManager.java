@@ -96,17 +96,16 @@ public class MeetingManager {
 		this.startMeeting();
 	}
 
-	// FIXME: 27.02.2022 Voice Channel Name defaults back to the Planned State, even though the Meeting is started.
-	@MissingLocale
 	public void startMeeting() {
 		var text = this.getLogChannel();
-		var logLocale = meeting.getLocaleConfig().getMeeting().getLog();
+		var locale = meeting.getLocaleConfig().getMeeting();
 		var config = Bot.config.get(getJDA().getGuildById(meeting.getGuildId())).getMeeting();
-		text.sendMessageFormat(logLocale.getLOG_MEETING_STARTED(), Arrays.stream(meeting.getParticipants()).mapToObj(m -> String.format("<@%s>", m)).collect(Collectors.joining(", "))).queue();
+		text.sendMessageFormat(locale.getLog().getLOG_MEETING_STARTED(), Arrays.stream(meeting.getParticipants()).mapToObj(m -> String.format("<@%s>", m)).collect(Collectors.joining(", "))).queue();
+		this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants(), true);
 		this.getVoiceChannel()
 				.getManager()
-				.setName(String.format(config.getMeetingVoiceTemplate(), config.getMeetingOngoingEmoji(), "Ongoing Meeting"))
-				.queue(s -> this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants(), true));
+				.setName(String.format(config.getMeetingVoiceTemplate(), config.getMeetingOngoingEmoji(), locale.getMEETING_STATUS_ONGOING()))
+				.queue();
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.setStatus(meeting.getId(), MeetingStatus.ONGOING));
 	}
 

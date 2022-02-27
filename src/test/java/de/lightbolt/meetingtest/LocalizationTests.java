@@ -18,6 +18,9 @@ public class LocalizationTests {
 			sb.append("\nCOMMAND:MISSING_ARGUMENTS: " + config.getCommand().getMISSING_ARGUMENTS());
 
 			// MEETING
+			sb.append("\nMEETING:MEETING_STATUS_ONGOING: " + config.getMeeting().getMEETING_STATUS_ONGOING());
+			sb.append("\nMEETING:MEETING_STATUS_STARTING_SOON: " + config.getMeeting().getMEETING_STATUS_STARTING_SOON());
+
 			sb.append("\nMEETING:MEETING_EMBED_FOOTER: " + config.getMeeting().getMEETING_EMBED_FOOTER());
 			sb.append("\nMEETING:MEETING_NO_PERMISSION: " + config.getMeeting().getMEETING_NO_PERMISSION());
 
