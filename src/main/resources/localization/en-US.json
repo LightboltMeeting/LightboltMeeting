@@ -1,6 +1,7 @@
 {
   "command": {
-    "MISSING_ARGUMENTS": "Missing required Arguments. Please try again."
+    "MISSING_ARGUMENTS": "Missing required Arguments. Please try again.",
+    "UNKNOWN_INTERACTION": "Unknown Interaction. Please try again."
   },
   "meeting": {
     "MEETING_STATUS_STARTING_SOON": "Meeting starting soon!",
@@ -116,7 +117,10 @@
       "FAQ_MEETING_EDIT_FIELD_DESCRIPTION": "The Meeting Owner and all Meeting Administrators are able to always edit the Meeting using `/meeting edit`.",
 
       "FAQ_MEETING_ADMIN_FIELD_HEADER": "What is a Meeting Administrator?",
-      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administrators can be added via the `/meeting add-admin` command by the Meeting's Owner and are able to manually add or remove participants, edit the Meeting, or just start/end it manually."
+      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administrators can be added via the `/meeting add-admin` command by the Meeting's Owner and are able to manually add or remove participants, edit the Meeting, or just start/end it manually.",
+
+      "FAQ_EMBED_ADMINS": "Admins",
+      "FAQ_EMBED_PARTICIPANTS": "Participants"
     }
   }
 }

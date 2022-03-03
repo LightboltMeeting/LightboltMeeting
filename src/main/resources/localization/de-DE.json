@@ -1,6 +1,7 @@
 {
   "command": {
-    "MISSING_ARGUMENTS": "Es fehlen erforderliche Parameter. Bitte versuche es erneut."
+    "MISSING_ARGUMENTS": "Es fehlen erforderliche Parameter. Bitte versuche es erneut.",
+    "UNKNOWN_INTERACTION": "Unbekannte Interaktion. Bitte versuche es erneut."
   },
   "meeting": {
     "MEETING_STATUS_STARTING_SOON": "Meeting started bald!",
@@ -116,7 +117,10 @@
       "FAQ_MEETING_EDIT_FIELD_DESCRIPTION": "Der Ersteller und alle Administratoren des Meetings können das Meeting mit `/meeting edit` bearbeiten.",
 
       "FAQ_MEETING_ADMIN_FIELD_HEADER": "Was ist ein Meeting Administrator?",
-      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administratoren können mit dem `/meeting add-admin` Befehl von dem Ersteller des Meetings hinzugefügt werden und sind dazu berechtigt Teilnehmer hinzuzufügen/zu entfernen, das Meeting zu editieren, oder es manuell zu starten/zu beenden."
+      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administratoren können mit dem `/meeting add-admin` Befehl von dem Ersteller des Meetings hinzugefügt werden und sind dazu berechtigt Teilnehmer hinzuzufügen/zu entfernen, das Meeting zu editieren, oder es manuell zu starten/zu beenden.",
+
+      "FAQ_EMBED_ADMINS": "Administratoren",
+      "FAQ_EMBED_PARTICIPANTS": "Teilnehmer"
     }
   }
 }

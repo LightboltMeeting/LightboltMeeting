@@ -16,6 +16,7 @@ public class LocalizationTests {
 			var config = LocalizationUtils.getLocale(language);
 			// COMMAND
 			sb.append("\nCOMMAND:MISSING_ARGUMENTS: " + config.getCommand().getMISSING_ARGUMENTS());
+			sb.append("\nCOMMAND:UNKNOWN_INTERACTION: " + config.getCommand().getUNKNOWN_INTERACTION());
 
 			// MEETING
 			sb.append("\nMEETING:MEETING_STATUS_ONGOING: " + config.getMeeting().getMEETING_STATUS_ONGOING());
@@ -114,6 +115,8 @@ public class LocalizationTests {
 			sb.append("\nMEETING:FAQ:FAQ_MEETING_EDIT_FIELD_DESCRIPTION: " + faq.getFAQ_MEETING_EDIT_FIELD_DESCRIPTION());
 			sb.append("\nMEETING:FAQ:FAQ_MEETING_ADMIN_FIELD_HEADER: " + faq.getFAQ_MEETING_ADMIN_FIELD_HEADER());
 			sb.append("\nMEETING:FAQ:FAQ_MEETING_ADMIN_FIELD_DESCRIPTION: " + faq.getFAQ_MEETING_ADMIN_FIELD_DESCRIPTION());
+			sb.append("\nMEETING:FAQ:FAQ_EMBED_ADMINS: " + faq.getFAQ_EMBED_ADMINS());
+			sb.append("\nMEETING:FAQ:FAQ_EMBED_PARTICIPANTS: " + faq.getFAQ_EMBED_PARTICIPANTS());
 
 			var string = sb.toString();
 			System.out.println(string);

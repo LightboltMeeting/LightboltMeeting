@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -35,16 +34,15 @@ public class ModalSubmitListener extends ListenerAdapter {
 
 	public static final String TIMEZONE_LIST = "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones";
 
-	@MissingLocale
 	@Override
 	public void onModalInteraction(@NotNull ModalInteractionEvent event) {
 		String[] id = event.getInteraction().getModalId().split(":");
 		event.deferReply(true).queue();
-		var locale = LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale()));
+		LocaleConfig locale = LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale()));
 		switch (id[0]) {
 			case "meeting-create" -> handleMeetingCreation(event, locale);
 			case "meeting-edit" -> handleMeetingEdit(event, Integer.parseInt(id[1]), locale);
-			default -> Responses.error(event.getHook(), "").queue();
+			default -> Responses.error(event.getHook(), locale.getCommand().getUNKNOWN_INTERACTION()).queue();
 		}
 	}
 
@@ -185,7 +183,7 @@ public class ModalSubmitListener extends ListenerAdapter {
 			// Update
 			dao.update(meeting.getId(), meeting);
 			MeetingManager manager = new MeetingManager(event.getJDA(), meeting);
-			manager.updateMeeting(event.getUser(), LocalizationUtils.getLocale(meeting.getLanguage()));
+			manager.updateMeeting(event.getUser(), Bot.config.get(event.getGuild()).getMeeting(), LocalizationUtils.getLocale(meeting.getLanguage()));
 			Bot.meetingStateManager.updateMeetingSchedule(meeting);
 			Responses.success(event.getHook(), editLocale.getEDIT_SUCCESS_TITLE(), editLocale.getEDIT_SUCCESS_DESCRIPTION()).queue();
 		});

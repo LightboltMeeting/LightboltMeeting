@@ -14,6 +14,7 @@ public class LocaleConfig {
 	@Data
 	public static class CommandConfig {
 		private String MISSING_ARGUMENTS;
+		private String UNKNOWN_INTERACTION;
 	}
 
 	@Data
@@ -152,6 +153,9 @@ public class LocaleConfig {
 
 			private String FAQ_MEETING_ADMIN_FIELD_HEADER;
 			private String FAQ_MEETING_ADMIN_FIELD_DESCRIPTION;
+
+			private String FAQ_EMBED_ADMINS;
+			private String FAQ_EMBED_PARTICIPANTS;
 		}
 	}
 }

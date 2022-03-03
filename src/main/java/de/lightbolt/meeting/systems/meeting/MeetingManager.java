@@ -199,13 +199,20 @@ public class MeetingManager {
 	 * @param updatedBy The user that initiated this process.
 	 * @param locale    The user's locale.
 	 */
-	public void updateMeeting(User updatedBy, LocaleConfig locale) {
+	public void updateMeeting(User updatedBy, MeetingConfig config, LocaleConfig locale) {
 		this.getJDA().retrieveUserById(meeting.getCreatedBy()).queue(
 				user -> this.getLogChannel()
 						.sendMessageFormat(locale.getMeeting().getLog().getLOG_MEETING_UPDATED(), updatedBy.getAsMention())
 						.setEmbeds(buildMeetingEmbed(meeting, user, LocalizationUtils.getLocale(meeting.getLanguage())))
+						.setActionRow(Button.secondary("meeting-faq", locale.getMeeting().getFaq().getFAQ_BUTTON_LABEL()))
 						.queue()
 		);
+		VoiceChannel voice = this.getVoiceChannel();
+		if (!voice.getName().equals(String.format(config.getMeetingVoiceTemplate(), config.getMeetingPlannedEmoji(), meeting.getDueAtFormatted()))) {
+			voice.getManager()
+					.setName(String.format(config.getMeetingVoiceTemplate(), config.getMeetingPlannedEmoji(), meeting.getDueAtFormatted()))
+					.queue();
+		}
 	}
 
 	/**
@@ -304,16 +311,15 @@ public class MeetingManager {
 		manager.queue(s -> {}, e -> log.error("Could not update Channel Permissions for Channel: " + channel.getName(), e));
 	}
 
-	@MissingLocale
 	public MessageEmbed buildMeetingFAQEmbed() {
-		var faqLocale = meeting.getLocaleConfig().getMeeting().getFaq();
+		var locale = meeting.getLocaleConfig().getMeeting().getFaq();
 		return new EmbedBuilder()
-				.setTitle(faqLocale.getFAQ_EMBED_TITLE())
-				.addField(faqLocale.getFAQ_MEETING_START_FIELD_HEADER(), String.format(faqLocale.getFAQ_MEETING_START_FIELD_DESCRIPTION(), meeting.getDueAt().toInstant().atZone(meeting.getTimeZone().toZoneId()).toEpochSecond()), false)
-				.addField(faqLocale.getFAQ_MEETING_EDIT_FIELD_HEADER(), faqLocale.getFAQ_MEETING_EDIT_FIELD_DESCRIPTION(), false)
-				.addField(faqLocale.getFAQ_MEETING_ADMIN_FIELD_HEADER(), faqLocale.getFAQ_MEETING_ADMIN_FIELD_DESCRIPTION(), false)
-				.addField("Admins", Arrays.stream(meeting.getAdmins()).mapToObj(u -> String.format("<@%s>", u)).collect(Collectors.joining(", ")), false)
-				.addField("Participants", Arrays.stream(meeting.getParticipants()).mapToObj(u -> String.format("<@%s>", u)).collect(Collectors.joining(", ")), false)
+				.setTitle(locale.getFAQ_EMBED_TITLE())
+				.addField(locale.getFAQ_MEETING_START_FIELD_HEADER(), String.format(locale.getFAQ_MEETING_START_FIELD_DESCRIPTION(), meeting.getDueAt().toInstant().atZone(meeting.getTimeZone().toZoneId()).toEpochSecond()), false)
+				.addField(locale.getFAQ_MEETING_EDIT_FIELD_HEADER(), locale.getFAQ_MEETING_EDIT_FIELD_DESCRIPTION(), false)
+				.addField(locale.getFAQ_MEETING_ADMIN_FIELD_HEADER(), locale.getFAQ_MEETING_ADMIN_FIELD_DESCRIPTION(), false)
+				.addField(locale.getFAQ_EMBED_ADMINS(), Arrays.stream(meeting.getAdmins()).mapToObj(u -> String.format("<@%s>", u)).collect(Collectors.joining(", ")), false)
+				.addField(locale.getFAQ_EMBED_PARTICIPANTS(), Arrays.stream(meeting.getParticipants()).mapToObj(u -> String.format("<@%s>", u)).collect(Collectors.joining(", ")), false)
 				.build();
 	}
 
