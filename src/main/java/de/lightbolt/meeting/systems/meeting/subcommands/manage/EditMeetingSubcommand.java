@@ -6,6 +6,7 @@ import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.MeetingSubcommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
+import de.lightbolt.meeting.utils.Constants;
 import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -33,7 +34,7 @@ public class EditMeetingSubcommand extends MeetingSubcommand {
 			return Responses.error(event, locale.getCommand().getMISSING_ARGUMENTS());
 		}
 		int id = (int) idOption.getAsLong();
-		Optional<Meeting> meetingOptional = repo.findById(id);
+		Optional<Meeting> meetingOptional = repo.getById(id);
 		if (meetingOptional.isEmpty()) {
 			return Responses.error(event, String.format(locale.getMeeting().getCommand().getMEETING_NOT_FOUND(), id));
 		}
@@ -54,14 +55,14 @@ public class EditMeetingSubcommand extends MeetingSubcommand {
 				.build();
 
 		TextInput meetingDate = TextInput.create("meeting-date", editLocale.getEDIT_DATE_LABEL(), TextInputStyle.SHORT)
-				.setValue(meeting.getDueAt().toLocalDateTime().plusHours(12).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+				.setValue(meeting.getDueAtFormatted())
 				.setPlaceholder(locale.getMeeting().getEdit().getEDIT_DATE_PLACEHOLDER())
 				.setRequired(true)
 				.setMaxLength(16)
 				.build();
 
 		TextInput meetingTimezone = TextInput.create("meeting-timezone", editLocale.getEDIT_TIMEZONE_LABEL(), TextInputStyle.SHORT)
-				.setValue(Language.valueOf(meeting.getLanguage()).getTimezone())
+				.setValue(meeting.getTimeZoneRaw())
 				.setPlaceholder(editLocale.getEDIT_TIMEZONE_PLACEHOLDER())
 				.setRequired(false)
 				.build();

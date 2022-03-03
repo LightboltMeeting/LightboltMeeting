@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +20,7 @@ public class MeetingRepository {
 	private final Connection con;
 
 	public Meeting insert(Meeting meeting) throws SQLException {
-		var s = con.prepareStatement("INSERT INTO meetings (guild_id, created_by, participants, admins, created_at, due_at, title, description, language, category_id, log_channel_id, voice_channel_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		var s = con.prepareStatement("INSERT INTO meetings (guild_id, created_by, participants, admins, created_at, due_at, timezone, title, description, language, category_id, log_channel_id, voice_channel_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 				Statement.RETURN_GENERATED_KEYS
 		);
 		s.setLong(1, meeting.getGuildId());
@@ -31,13 +29,14 @@ public class MeetingRepository {
 		s.setArray(4, con.createArrayOf("BIGINT", Arrays.stream(meeting.getAdmins()).mapToObj(o -> (Object) o).toArray()));
 		s.setTimestamp(5, meeting.getCreatedAt());
 		s.setTimestamp(6, meeting.getDueAt());
-		s.setString(7, meeting.getTitle());
-		s.setString(8, meeting.getDescription());
-		s.setString(9, meeting.getLanguage());
-		s.setLong(10, meeting.getCategoryId());
-		s.setLong(11, meeting.getLogChannelId());
-		s.setLong(12, meeting.getVoiceChannelId());
-		s.setString(13, "SCHEDULED");
+		s.setString(7, meeting.getTimeZoneRaw());
+		s.setString(8, meeting.getTitle());
+		s.setString(9, meeting.getDescription());
+		s.setString(10, meeting.getLanguage());
+		s.setLong(11, meeting.getCategoryId());
+		s.setLong(12, meeting.getLogChannelId());
+		s.setLong(13, meeting.getVoiceChannelId());
+		s.setString(14, "SCHEDULED");
 		int rows = s.executeUpdate();
 		if (rows == 0) throw new SQLException("Meeting was not inserted.");
 		ResultSet rs = s.getGeneratedKeys();
@@ -56,16 +55,7 @@ public class MeetingRepository {
 		}
 	}
 
-	public boolean setStatus(int id, MeetingStatus status) throws SQLException {
-		try (var s = con.prepareStatement("UPDATE meetings SET status = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
-			s.setString(1, status.name());
-			s.setInt(2, id);
-			int rows = s.executeUpdate();
-			return rows != 0;
-		}
-	}
-
-	public Optional<Meeting> findById(int id) throws SQLException {
+	public Optional<Meeting> getById(int id) throws SQLException {
 		Meeting meeting = null;
 		try (var s = con.prepareStatement("SELECT * FROM meetings WHERE id = ? AND status != 'INACTIVE'", Statement.RETURN_GENERATED_KEYS)) {
 			s.setInt(1, id);
@@ -103,102 +93,27 @@ public class MeetingRepository {
 		}
 	}
 
-	public Meeting updateParticipants(Meeting old, long[] participants) throws SQLException {
-		var s = con.prepareStatement("UPDATE meetings SET participants = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS);
-		s.setArray(1, con.createArrayOf("BIGINT", Arrays.stream(participants).mapToObj(o -> (Object) o).toArray()));
-		s.setInt(2, old.getId());
+	public void update(int id, Meeting update) throws SQLException {
+		var s = con.prepareStatement("UPDATE meetings " +
+						"SET guild_id = ?, created_by = ?, participants = ?, admins = ?, created_at = ?, due_at = ?, timezone = ?, title = ?, description = ?, language = ?, category_id = ?, log_channel_id = ?, voice_channel_id = ?, status = ?" +
+						"WHERE id = ?", Statement.RETURN_GENERATED_KEYS);
+		s.setLong(1, update.getGuildId());
+		s.setLong(2, update.getCreatedBy());
+		s.setArray(3, con.createArrayOf("BIGINT", Arrays.stream(update.getParticipants()).mapToObj(o -> (Object) o).toArray()));
+		s.setArray(4, con.createArrayOf("BIGINT", Arrays.stream(update.getAdmins()).mapToObj(o -> (Object) o).toArray()));
+		s.setTimestamp(5, update.getCreatedAt());
+		s.setTimestamp(6, update.getDueAt());
+		s.setString(7, update.getTimeZoneRaw());
+		s.setString(8, update.getTitle());
+		s.setString(9, update.getDescription());
+		s.setString(10, update.getLanguage());
+		s.setLong(11, update.getCategoryId());
+		s.setLong(12, update.getLogChannelId());
+		s.setLong(13, update.getVoiceChannelId());
+		s.setString(14, update.getStatusRaw());
+		s.setInt(15, id);
 		int rows = s.executeUpdate();
-		if (rows == 0) throw new SQLException("Could not update Meeting participants. Meeting: " + old);
-		old.setParticipants(participants);
-		return old;
-	}
-
-	public Meeting updateAdmins(Meeting old, long[] admins) throws SQLException {
-		var s = con.prepareStatement("UPDATE meetings SET admins = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS);
-		s.setArray(1, con.createArrayOf("BIGINT", Arrays.stream(admins).mapToObj(o -> (Object) o).toArray()));
-		s.setInt(2, old.getId());
-		int rows = s.executeUpdate();
-		if (rows == 0) throw new SQLException("Could not update Meeting admins. Meeting: " + old);
-		old.setParticipants(admins);
-		return old;
-	}
-
-	public void updateCategory(Meeting old, long categoryId) {
-		try (var s = con.prepareStatement("UPDATE meetings SET category_id = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
-			s.setLong(1, categoryId);
-			s.setInt(2, old.getId());
-			int rows = s.executeUpdate();
-			if (rows == 0) throw new SQLException("Could not update Meeting Log Channel. Meeting: " + old);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void updateLogChannel(Meeting old, long logChannelId) {
-		try (var s = con.prepareStatement("UPDATE meetings SET log_channel_id = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
-			s.setLong(1, logChannelId);
-			s.setInt(2, old.getId());
-			int rows = s.executeUpdate();
-			if (rows == 0) throw new SQLException("Could not update Meeting Log Channel. Meeting: " + old);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void updateVoiceChannel(Meeting old, long voiceChannelId) {
-		try (var s = con.prepareStatement("UPDATE meetings SET voice_channel_id = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
-			s.setLong(1, voiceChannelId);
-			s.setInt(2, old.getId());
-			int rows = s.executeUpdate();
-			if (rows == 0) throw new SQLException("Could not update Meeting Voice Channel. Meeting: " + old);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void updateName(Meeting old, String name) {
-		try (PreparedStatement s = con.prepareStatement("UPDATE meetings SET title = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
-			s.setString(1, name);
-			s.setInt(2, old.getId());
-			int rows = s.executeUpdate();
-			if (rows == 0) throw new SQLException("Could not update Meeting Title. Meeting: " + old);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void updateDescription(Meeting old, String description) {
-		try (PreparedStatement s = con.prepareStatement("UPDATE meetings SET description = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
-			s.setString(1, description);
-			s.setInt(2, old.getId());
-			int rows = s.executeUpdate();
-			if (rows == 0) throw new SQLException("Could not update Meeting Description. Meeting: " + old);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void updateDate(Meeting old, String dueAtString) {
-		Timestamp dueAt = Timestamp.valueOf(LocalDateTime.parse(dueAtString, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
-		try (PreparedStatement s = con.prepareStatement("UPDATE meetings SET due_at = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
-			s.setTimestamp(1, dueAt);
-			s.setInt(2, old.getId());
-			int rows = s.executeUpdate();
-			if (rows == 0) throw new SQLException("Could not update Meeting Date. Meeting: " + old);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void updateLanguage(Meeting old, String language) {
-		try (PreparedStatement s = con.prepareStatement("UPDATE meetings SET language = ? WHERE id = ?", Statement.RETURN_GENERATED_KEYS)) {
-			s.setString(1, language);
-			s.setInt(2, old.getId());
-			int rows = s.executeUpdate();
-			if (rows == 0) throw new SQLException("Could not update Meeting Language. Meeting: " + old);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		if (rows == 0) throw new SQLException("Could not update Meeting participants. Meeting: " + update);
 	}
 
 	private Meeting read(ResultSet rs) throws SQLException {
@@ -210,6 +125,7 @@ public class MeetingRepository {
 		meeting.setAdmins(this.convertArrayToLongArray(rs.getArray("admins")));
 		meeting.setCreatedAt(rs.getTimestamp("created_at"));
 		meeting.setDueAt(rs.getTimestamp("due_at"));
+		meeting.setTimeZoneRaw(rs.getString("timezone"));
 		meeting.setTitle(rs.getString("title"));
 		meeting.setDescription(rs.getString("description"));
 		meeting.setLanguage(rs.getString("language"));

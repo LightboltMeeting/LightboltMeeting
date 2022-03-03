@@ -12,7 +12,7 @@
       "CREATION_TOO_MANY_MEETINGS_DESCRIPTION": "Du kannst kein weiteres Meeting erstellen. Um ein neues Meeting zu erstellen musst du zuerst eins löschen.",
       "CREATION_NOT_PERMITTED_DESCRIPTION": "Du bist nicht berechtigt ein neues Meeting zu erstellen.",
 
-      "CREATION_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Beispiel: 13/09/2019 13:05)",
+      "CREATION_DATE_PLACEHOLDER": "dd.MM.yyyy HH:mm (Beispiel: 13.09.2019 13:05)",
       "CREATION_LANGUAGE_PLACEHOLDER": "Entweder \"DE\" für Deutsch oder \"EN\" für Englisch",
       "CREATION_TIMEZONE_PLACEHOLDER": "z.B. Europe/Berlin oder CET",
 
@@ -86,7 +86,7 @@
       "LOG_MEETING_STARTED": "Das Meeting wurde gestartet! %s\nUm das Meeting zu beenden muss entweder der Ersteller des Meetings oder ein Administrator den `/meeting end` Befehl ausführen."
     },
     "edit": {
-      "EDIT_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Beispiel: 13/09/2019 13:05)",
+      "EDIT_DATE_PLACEHOLDER": "dd.MM.yyyy HH:mm (Beispiel: 13.09.2019 13:05)",
       "EDIT_LANGUAGE_PLACEHOLDER": "Entweder \"DE\" für Deutsch oder \"EN\" für Englisch",
       "EDIT_TIMEZONE_PLACEHOLDER": "z.B. Europe/Berlin oder CET",
 
@@ -105,9 +105,9 @@
       "EDIT_FAILED": "Ein Fehler ist beim editieren des Meetings aufgetreten. Bitte versuche es erneut."
     },
     "faq": {
-      "FAQ_BUTTON_LABEL": "Meeting FAQ",
+      "FAQ_BUTTON_LABEL": "Meeting Info",
 
-      "FAQ_EMBED_TITLE": "Meeting FAQ (Frequently Asked Questions)",
+      "FAQ_EMBED_TITLE": "Meeting Info",
 
       "FAQ_MEETING_START_FIELD_HEADER": "Wann startet das Meeting?",
       "FAQ_MEETING_START_FIELD_DESCRIPTION": "Das Meeting startet genau um <t:%s:R>.",

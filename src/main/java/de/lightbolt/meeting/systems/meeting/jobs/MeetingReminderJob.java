@@ -1,7 +1,6 @@
 package de.lightbolt.meeting.systems.meeting.jobs;
 
 import de.lightbolt.meeting.Bot;
-import de.lightbolt.meeting.annotations.MissingLocale;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
@@ -25,7 +24,7 @@ public class MeetingReminderJob implements Job {
 	public void execute(JobExecutionContext context) {
 		String[] jobDetail = context.getJobDetail().getKey().getName().split("-");
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
-			Optional<Meeting> meetingOptional = dao.findById(Integer.parseInt(jobDetail[0]));
+			Optional<Meeting> meetingOptional = dao.getById(Integer.parseInt(jobDetail[0]));
 			if (meetingOptional.isEmpty()) {
 				log.warn("Meeting doesn't exist, cannot execute reminder job.");
 				return;

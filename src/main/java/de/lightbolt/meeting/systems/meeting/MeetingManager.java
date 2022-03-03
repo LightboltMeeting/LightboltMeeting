@@ -106,7 +106,8 @@ public class MeetingManager {
 				.getManager()
 				.setName(String.format(config.getMeetingVoiceTemplate(), config.getMeetingOngoingEmoji(), locale.getMEETING_STATUS_ONGOING()))
 				.queue();
-		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.setStatus(meeting.getId(), MeetingStatus.ONGOING));
+		meeting.setStatus(MeetingStatus.ONGOING);
+		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.update(meeting.getId(), meeting));
 	}
 
 	public void endMeeting() {
@@ -114,15 +115,8 @@ public class MeetingManager {
 		this.getVoiceChannel().delete().queue();
 		this.getCategory().delete().queue();
 		Bot.meetingStateManager.cancelMeetingSchedule(meeting);
-		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.setStatus(meeting.getId(), MeetingStatus.INACTIVE));
-	}
-
-	public void discardMeeting() {
-		this.getLogChannel().delete().queue();
-		this.getVoiceChannel().delete().queue();
-		this.getCategory().delete().queue();
-		Bot.meetingStateManager.cancelMeetingSchedule(meeting);
-		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.setStatus(meeting.getId(), MeetingStatus.INACTIVE));
+		meeting.setStatus(MeetingStatus.INACTIVE);
+		DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.update(meeting.getId(), meeting));
 	}
 
 	/**
@@ -133,7 +127,8 @@ public class MeetingManager {
 				category -> {
 					this.createLogChannel(category, createdBy, locale, config);
 					this.createVoiceChannel(category, config);
-					DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.updateCategory(meeting, category.getIdLong()));
+					meeting.setCategoryId(category.getIdLong());
+					DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.update(meeting.getId(), meeting));
 				}
 		);
 	}
@@ -161,7 +156,8 @@ public class MeetingManager {
 					channel.sendMessageEmbeds(buildMeetingEmbed(meeting, createdBy, locale))
 							.setActionRow(Button.secondary("meeting-faq", locale.getMeeting().getFaq().getFAQ_BUTTON_LABEL()))
 							.queue();
-					DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.updateLogChannel(meeting, channel.getIdLong()));
+					meeting.setLogChannelId(channel.getIdLong());
+					DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.update(meeting.getId(), meeting));
 				}, e -> log.error("Could not create Log Channel for Meeting: " + meeting, e));
 	}
 
@@ -183,7 +179,8 @@ public class MeetingManager {
 		category.createVoiceChannel(String.format(config.getMeetingVoiceTemplate(), config.getMeetingPlannedEmoji(), meeting.getDueAtFormatted())).queue(
 				channel -> {
 					this.updateVoiceChannelPermissions(channel, meeting.getParticipants());
-					DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.updateVoiceChannel(meeting, channel.getIdLong()));
+					meeting.setVoiceChannelId(channel.getIdLong());
+					DbHelper.doDaoAction(MeetingRepository::new, dao -> dao.update(meeting.getId(), meeting));
 				}, e -> log.error("Could not create Voice Channel for Meeting: " + meeting, e));
 	}
 
@@ -203,7 +200,7 @@ public class MeetingManager {
 	 * @param locale    The user's locale.
 	 */
 	public void updateMeeting(User updatedBy, LocaleConfig locale) {
-		getJDA().retrieveUserById(meeting.getCreatedBy()).queue(
+		this.getJDA().retrieveUserById(meeting.getCreatedBy()).queue(
 				user -> this.getLogChannel()
 						.sendMessageFormat(locale.getMeeting().getLog().getLOG_MEETING_UPDATED(), updatedBy.getAsMention())
 						.setEmbeds(buildMeetingEmbed(meeting, user, LocalizationUtils.getLocale(meeting.getLanguage())))
@@ -214,16 +211,17 @@ public class MeetingManager {
 	/**
 	 * Adds a single participant to the meeting.
 	 *
-	 * @param user The user that should be added as a participant.
+	 * @param users The users that all should be added as a participant.
 	 */
-	public void addParticipant(@NotNull User user) {
+	public void addParticipants(long... users) {
 		TextChannel text = this.getLogChannel();
-		long[] newParticipants = ArrayUtils.add(meeting.getParticipants(), user.getIdLong());
+		long[] newParticipants = ArrayUtils.addAll(meeting.getParticipants(), users);
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
-			var updated = dao.updateParticipants(meeting, newParticipants);
-			text.sendMessageFormat(meeting.getLocaleConfig().getMeeting().getLog().getLOG_PARTICIPANT_ADDED(), user.getAsMention()).queue();
-			this.updateLogChannelPermissions(text, updated.getParticipants());
-			this.updateVoiceChannelPermissions(this.getVoiceChannel(), updated.getParticipants());
+			meeting.setParticipants(newParticipants);
+			dao.update(meeting.getId(), meeting);
+			text.sendMessageFormat(meeting.getLocaleConfig().getMeeting().getLog().getLOG_PARTICIPANT_ADDED(), Arrays.stream(users).mapToObj(u -> String.format("<@%s>", u)).collect(Collectors.joining(", "))).queue();
+			this.updateLogChannelPermissions(text, newParticipants);
+			this.updateVoiceChannelPermissions(this.getVoiceChannel(), newParticipants);
 		});
 	}
 
@@ -239,7 +237,8 @@ public class MeetingManager {
 		text.sendMessageFormat(meetingLocale.getLOG_PARTICIPANT_REMOVED(), user.getAsMention()).queue();
 		var newParticipants = ArrayUtils.removeElement(meeting.getParticipants(), user.getIdLong());
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
-			dao.updateParticipants(meeting, newParticipants);
+			meeting.setParticipants(newParticipants);
+			dao.update(meeting.getId(), meeting);
 			text.getManager().putMemberPermissionOverride(user.getIdLong(), 0, Permission.ALL_PERMISSIONS).queue();
 			voice.getManager().putMemberPermissionOverride(user.getIdLong(), 0, Permission.ALL_PERMISSIONS).queue();
 			text.sendMessageFormat(meetingLocale.getLOG_ADMIN_REMOVED(), user.getAsMention()).queue();
@@ -255,10 +254,11 @@ public class MeetingManager {
 		TextChannel text = this.getLogChannel();
 		long[] newAdmins = ArrayUtils.add(meeting.getAdmins(), user.getIdLong());
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
-			var updated = dao.updateAdmins(meeting, newAdmins);
+			meeting.setAdmins(newAdmins);
+			dao.update(meeting.getId(), meeting);
 			text.sendMessageFormat(meeting.getLocaleConfig().getMeeting().getLog().getLOG_ADMIN_ADDED(), user.getAsMention()).queue();
-			this.updateLogChannelPermissions(text, updated.getParticipants());
-			this.updateVoiceChannelPermissions(this.getVoiceChannel(), updated.getParticipants());
+			this.updateLogChannelPermissions(text, meeting.getParticipants());
+			this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants());
 		});
 	}
 
@@ -272,17 +272,18 @@ public class MeetingManager {
 		var text = this.getLogChannel();
 		var newAdmins = ArrayUtils.removeElement(meeting.getAdmins(), user.getIdLong());
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
-			var updated = dao.updateAdmins(meeting, newAdmins);
+			meeting.setAdmins(newAdmins);
+			dao.update(meeting.getId(), meeting);
 			text.sendMessageFormat(meetingLocale.getLOG_ADMIN_REMOVED(), user.getAsMention()).queue();
-			this.updateLogChannelPermissions(text, updated.getParticipants());
-			this.updateVoiceChannelPermissions(this.getVoiceChannel(), updated.getParticipants());
+			this.updateLogChannelPermissions(text, meeting.getParticipants());
+			this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants());
 		});
 	}
 
-	private void updateLogChannelPermissions(@NotNull TextChannel channel, long[] userId) {
+	private void updateLogChannelPermissions(@NotNull TextChannel channel, long[] participants) {
 		var manager = channel.getManager();
 		manager.putRolePermissionOverride(channel.getGuild().getIdLong(), 0, Permission.ALL_PERMISSIONS);
-		for (long id : userId) {
+		for (long id : participants) {
 			manager.putMemberPermissionOverride(id,
 					Permission.getPermissions(Permission.ALL_TEXT_PERMISSIONS + Permission.getRaw(Permission.VIEW_CHANNEL)), Collections.emptySet());
 		}
@@ -303,13 +304,16 @@ public class MeetingManager {
 		manager.queue(s -> {}, e -> log.error("Could not update Channel Permissions for Channel: " + channel.getName(), e));
 	}
 
+	@MissingLocale
 	public MessageEmbed buildMeetingFAQEmbed() {
 		var faqLocale = meeting.getLocaleConfig().getMeeting().getFaq();
 		return new EmbedBuilder()
 				.setTitle(faqLocale.getFAQ_EMBED_TITLE())
-				.addField(faqLocale.getFAQ_MEETING_START_FIELD_HEADER(), String.format(faqLocale.getFAQ_MEETING_START_FIELD_DESCRIPTION(), meeting.getDueAt().toLocalDateTime().toEpochSecond(ZoneOffset.UTC)), false)
+				.addField(faqLocale.getFAQ_MEETING_START_FIELD_HEADER(), String.format(faqLocale.getFAQ_MEETING_START_FIELD_DESCRIPTION(), meeting.getDueAt().toInstant().atZone(meeting.getTimeZone().toZoneId()).toEpochSecond()), false)
 				.addField(faqLocale.getFAQ_MEETING_EDIT_FIELD_HEADER(), faqLocale.getFAQ_MEETING_EDIT_FIELD_DESCRIPTION(), false)
 				.addField(faqLocale.getFAQ_MEETING_ADMIN_FIELD_HEADER(), faqLocale.getFAQ_MEETING_ADMIN_FIELD_DESCRIPTION(), false)
+				.addField("Admins", Arrays.stream(meeting.getAdmins()).mapToObj(u -> String.format("<@%s>", u)).collect(Collectors.joining(", ")), false)
+				.addField("Participants", Arrays.stream(meeting.getParticipants()).mapToObj(u -> String.format("<@%s>", u)).collect(Collectors.joining(", ")), false)
 				.build();
 	}
 

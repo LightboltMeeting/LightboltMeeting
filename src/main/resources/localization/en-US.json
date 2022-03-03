@@ -12,7 +12,7 @@
       "CREATION_TOO_MANY_MEETINGS_DESCRIPTION": "You cannot create another Meeting. You have to delete a Meeting in order to create a new one.",
       "CREATION_NOT_PERMITTED_DESCRIPTION": "You're not permitted to create a new Meeting.",
 
-      "CREATION_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Example: 13/09/2019 13:05)",
+      "CREATION_DATE_PLACEHOLDER": "dd.MM.yyyy HH:mm (Example: 13.09.2019 13:05)",
       "CREATION_LANGUAGE_PLACEHOLDER": "\"DE\" for german or \"EN\" for english",
       "CREATION_TIMEZONE_PLACEHOLDER": "e.g. Europe/London or UTC",
 
@@ -86,7 +86,7 @@
       "LOG_MEETING_STARTED": "The Meeting has been started! %s\nTo end the Meeting, either the Owner or an Administrator have to execute the `/meeting end` command"
     },
     "edit": {
-      "EDIT_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Example: 13/09/2019 13:05)",
+      "EDIT_DATE_PLACEHOLDER": "dd.MM.yyyy HH:mm (Example: 13.09.2019 13:05)",
       "EDIT_LANGUAGE_PLACEHOLDER": "\"DE\" for german or \"EN\" for english",
       "EDIT_TIMEZONE_PLACEHOLDER": "e.g. Europe/London or UTC",
 
@@ -105,9 +105,9 @@
       "EDIT_FAILED": "There was an error while editing the Meeting. Please try again."
     },
     "faq": {
-      "FAQ_BUTTON_LABEL": "Meeting FAQ",
+      "FAQ_BUTTON_LABEL": "Meeting Info",
 
-      "FAQ_EMBED_TITLE": "Meeting FAQ (Frequently Asked Questions)",
+      "FAQ_EMBED_TITLE": "Meeting Info",
 
       "FAQ_MEETING_START_FIELD_HEADER": "When does this Meeting start?",
       "FAQ_MEETING_START_FIELD_DESCRIPTION": "This Meeting will start at exactly <t:%s:R>.",

@@ -5,11 +5,7 @@ import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
-import de.lightbolt.meeting.utils.localization.LocaleConfig;
-import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
@@ -21,7 +17,7 @@ public class MeetingStartJob implements Job {
 	public void execute(JobExecutionContext context) {
 		String[] jobDetail = context.getJobDetail().getKey().getName().split("-");
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
-			Optional<Meeting> meetingOptional = dao.findById(Integer.parseInt(jobDetail[0]));
+			Optional<Meeting> meetingOptional = dao.getById(Integer.parseInt(jobDetail[0]));
 			if (meetingOptional.isEmpty()) {
 				log.warn("Meeting doesn't exist, cannot execute start job.");
 				return;

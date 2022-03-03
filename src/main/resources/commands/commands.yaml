@@ -61,9 +61,49 @@
           required: true
           autocomplete: true
           type: INTEGER
-        - name: user
+        - name: user-1
           description: The user you want to add.
           required: true
+          autocomplete: false
+          type: USER
+        - name: user-2
+          description: The user you want to add.
+          required: false
+          autocomplete: false
+          type: USER
+        - name: user-3
+          description: The user you want to add.
+          required: false
+          autocomplete: false
+          type: USER
+        - name: user-4
+          description: The user you want to add.
+          required: false
+          autocomplete: false
+          type: USER
+        - name: user-5
+          description: The user you want to add.
+          required: false
+          autocomplete: false
+          type: USER
+        - name: user-6
+          description: The user you want to add.
+          required: false
+          autocomplete: false
+          type: USER
+        - name: user-7
+          description: The user you want to add.
+          required: false
+          autocomplete: false
+          type: USER
+        - name: user-8
+          description: The user you want to add.
+          required: false
+          autocomplete: false
+          type: USER
+        - name: user-9
+          description: The user you want to add.
+          required: false
           autocomplete: false
           type: USER
 

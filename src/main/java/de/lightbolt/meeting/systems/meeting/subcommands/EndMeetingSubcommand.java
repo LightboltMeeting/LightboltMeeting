@@ -1,6 +1,5 @@
 package de.lightbolt.meeting.systems.meeting.subcommands;
 
-import de.lightbolt.meeting.annotations.MissingLocale;
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
@@ -24,7 +23,7 @@ public class EndMeetingSubcommand extends MeetingSubcommand {
 			return Responses.error(event, locale.getCommand().getMISSING_ARGUMENTS());
 		}
 		int id = (int) idOption.getAsLong();
-		Optional<Meeting> meetingOptional = repo.findById(id);
+		Optional<Meeting> meetingOptional = repo.getById(id);
 		if (meetingOptional.isEmpty()) {
 			return Responses.error(event, String.format(locale.getMeeting().getCommand().getMEETING_NOT_FOUND(), id));
 		}

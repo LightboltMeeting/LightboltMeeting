@@ -11,6 +11,8 @@ public class Constants {
 	 */
 	public static final String TEXT_WHITE = "\u001B[37m";
 
+	public static final String DATETIME_FORMAT = "dd.MM.yyyy HH:mm";
+
 	private Constants() {
 	}
 }

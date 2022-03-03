@@ -7,6 +7,7 @@ import de.lightbolt.meeting.systems.meeting.jobs.MeetingReminderJob;
 import de.lightbolt.meeting.systems.meeting.jobs.MeetingStartJob;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Guild;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -26,7 +27,6 @@ public class MeetingStateManager {
 			scheduler = new StdSchedulerFactory().getScheduler();
 			scheduler.start();
 			this.activeMeetings = new MeetingRepository(Bot.dataSource.getConnection()).getActive();
-
 			for (Meeting meeting : activeMeetings) {
 				scheduleMeeting(meeting);
 			}
@@ -37,8 +37,12 @@ public class MeetingStateManager {
 	}
 
 	public void scheduleMeeting(Meeting meeting) {
-		MeetingConfig meetingConfig = Bot.config.get(Bot.jda.getGuildById(meeting.getGuildId())).getMeeting();
-
+		Guild guild = Bot.jda.getGuildById(meeting.getGuildId());
+		if (guild == null) {
+			log.error("Unknown Guild of Meeting: " + meeting);
+			return;
+		}
+		MeetingConfig meetingConfig = Bot.config.get(guild).getMeeting();
 		try {
 			//Schedule Job for Meeting Start
 			JobDetail job = newJob(MeetingStartJob.class)

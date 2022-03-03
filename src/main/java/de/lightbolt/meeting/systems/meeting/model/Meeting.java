@@ -6,8 +6,12 @@ import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import lombok.Data;
 
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 
 /**
  * Data class representing a single Meeting.
@@ -21,6 +25,7 @@ public class Meeting {
 	private long[] admins;
 	private Timestamp createdAt;
 	private Timestamp dueAt;
+	private String timeZoneRaw;
 	private String title;
 	private String description;
 	private String language;
@@ -33,9 +38,23 @@ public class Meeting {
 		return LocalizationUtils.getLocale(Language.valueOf(this.language));
 	}
 
-	public String getDueAtFormatted() { return this.dueAt.toLocalDateTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")); }
+	public ZonedDateTime getDueAtWithTimeZone() {
+		return this.dueAt.toInstant().atZone(this.getTimeZone().toZoneId());
+	}
 
-	public MeetingStatus getStatus() { return MeetingStatus.valueOf(this.statusRaw); }
+	public String getDueAtFormatted() {
+		return this.dueAt.toInstant().atZone(this.getTimeZone().toZoneId()).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+	}
 
-	public void setStatus(MeetingStatus status) { this.statusRaw = status.name(); }
+	public MeetingStatus getStatus() {
+		return MeetingStatus.valueOf(this.statusRaw);
+	}
+
+	public void setStatus(MeetingStatus status) {
+		this.statusRaw = status.name();
+	}
+
+	public TimeZone getTimeZone() {
+		return TimeZone.getTimeZone(this.timeZoneRaw);
+	}
 }
