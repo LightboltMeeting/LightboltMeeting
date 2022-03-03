@@ -3,7 +3,6 @@ package de.lightbolt.meeting.data.config.guild;
 import de.lightbolt.meeting.data.config.GuildConfigItem;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.dv8tion.jda.api.entities.Category;
 
 import java.util.List;
 
@@ -13,16 +12,13 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class MeetingConfig extends GuildConfigItem {
-	private long meetingCategoryId;
-	private long ongoingMeetingCategoryId;
+	private String meetingCategoryTemplate = "%s";
+	private String meetingLogTemplate = "meeting-%s-log";
+	private String meetingVoiceTemplate = "%s %s";
+	private String meetingPlannedEmoji = "\uD83D\uDCC5";
+	private String meetingStartingSoonEmoji = "\uD83D\uDFE1";
+	private String meetingOngoingEmoji = "\uD83D\uDFE2";
+
 	private int maxMeetingsPerUser = 2;
 	private List<Integer> meetingReminders = List.of(10, 60, 360, 1440);
-
-	public Category getMeetingCategory() {
-		return this.getGuild().getCategoryById(this.meetingCategoryId);
-	}
-
-	public Category getOngoingMeetingCategory() {
-		return this.getGuild().getCategoryById(this.ongoingMeetingCategoryId);
-	}
 }

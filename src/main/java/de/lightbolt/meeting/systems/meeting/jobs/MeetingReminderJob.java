@@ -18,29 +18,39 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class MeetingReminderJob implements Job {
+	private final int STARTING_SOON_THRESHOLD = 30;
+
 	@Override
 	public void execute(JobExecutionContext context) {
 		String[] jobDetail = context.getJobDetail().getKey().getName().split("-");
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
-			Optional<Meeting> meetingOptional = dao.findById(Integer.parseInt(jobDetail[0]));
+			Optional<Meeting> meetingOptional = dao.getById(Integer.parseInt(jobDetail[0]));
 			if (meetingOptional.isEmpty()) {
 				log.warn("Meeting doesn't exist, cannot execute reminder job.");
 				return;
 			}
 			Meeting meeting = meetingOptional.get();
 			MeetingManager manager = new MeetingManager(Bot.jda, meeting);
+			int reminder = Integer.parseInt(jobDetail[2]);
 			manager.getLogChannel()
 					.sendMessageFormat(Arrays.stream(meeting.getParticipants()).mapToObj(l -> String.format("<@%s>", l)).collect(Collectors.joining(", ")))
-					.setEmbeds(buildReminderEmbed(meeting.getLocaleConfig().getMeeting().getLog(), jobDetail[2]))
+					.setEmbeds(buildReminderEmbed(meeting.getLocaleConfig().getMeeting().getLog(), reminder))
 					.queue();
+			if (reminder < STARTING_SOON_THRESHOLD) {
+				var config = Bot.config.get(manager.getJDA().getGuildById(meeting.getGuildId())).getMeeting();
+				manager.getVoiceChannel()
+						.getManager()
+						.setName(String.format(config.getMeetingVoiceTemplate(), config.getMeetingStartingSoonEmoji(), meeting.getLocaleConfig().getMeeting().getMEETING_STATUS_STARTING_SOON()))
+						.queue();
+			}
 		});
 	}
 
-	private MessageEmbed buildReminderEmbed(LocaleConfig.MeetingConfig.MeetingLogConfig logLocale, String reminder) {
+	private MessageEmbed buildReminderEmbed(LocaleConfig.MeetingConfig.MeetingLogConfig logLocale, int reminder) {
 		String reminderTimeUnit;
-		if (Integer.parseInt(reminder) > 60) {
+		if (reminder > 60) {
 			reminderTimeUnit = logLocale.getLOG_TIMEUNIT_HOURS();
-			reminder = String.valueOf((Integer.parseInt(reminder) / 60));
+			reminder = reminder / 60;
 		} else {
 			reminderTimeUnit = logLocale.getLOG_TIMEUNIT_MINUTES();
 		}

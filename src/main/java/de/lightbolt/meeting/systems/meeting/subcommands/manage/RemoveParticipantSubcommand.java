@@ -30,7 +30,7 @@ public class RemoveParticipantSubcommand extends MeetingSubcommand {
 		var id = (int) idOption.getAsLong();
 		var user = userOption.getAsUser();
 		var com = locale.getMeeting().getCommand();
-		Optional<Meeting> meetingOptional = repo.findById(id);
+		Optional<Meeting> meetingOptional = repo.getById(id);
 		if (meetingOptional.isEmpty()) {
 			return Responses.error(event, String.format(com.getMEETING_NOT_FOUND(), id));
 		}
@@ -42,8 +42,8 @@ public class RemoveParticipantSubcommand extends MeetingSubcommand {
 		var admins = meeting.getAdmins();
 		if (Arrays.stream(participants).anyMatch(x -> x == user.getIdLong())) {
 			if (Arrays.stream(admins).anyMatch(x -> x == user.getIdLong())) {
-				var newAdmins = ArrayUtils.removeElement(admins, user.getIdLong());
-				repo.updateAdmins(meeting, newAdmins);
+				meeting.setAdmins(ArrayUtils.removeElement(admins, user.getIdLong()));
+				repo.update(meeting.getId(), meeting);
 			}
 			new MeetingManager(event.getJDA(), meeting).removeParticipant(user);
 			return Responses.success(event, com.getPARTICIPANTS_REMOVE_SUCCESS_TITLE(),

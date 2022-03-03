@@ -7,11 +7,12 @@ CREATE TABLE meetings
 	admins           ARRAY                 DEFAULT NULL,
 	created_at       TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
 	due_at           TIMESTAMP(0) NOT NULL,
+	timezone         VARCHAR(64)  NOT NULL DEFAULT 'Europe/London',
 	title            VARCHAR(64)  NOT NULL,
 	description      VARCHAR(256) NOT NULL,
 	language         VARCHAR(64)  NOT NULL,
+	category_id      BIGINT       NOT NULL,
 	log_channel_id   BIGINT       NOT NULL,
 	voice_channel_id BIGINT       NOT NULL,
-	active           BOOL         NOT NULL DEFAULT TRUE,
-	ongoing          BOOl         NOT NULL DEFAULT FALSE
+	status           VARCHAR(16)  NOT NULL DEFAULT 'SCHEDULED'
 )

@@ -4,6 +4,7 @@ import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingSubcommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
+import de.lightbolt.meeting.utils.Constants;
 import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import net.dv8tion.jda.api.entities.Member;
@@ -50,7 +51,7 @@ public class CreateMeetingSubcommand extends MeetingSubcommand {
 				.build();
 
 		TextInput meetingDate = TextInput.create("meeting-date", createLocale.getCREATION_DATE_LABEL(), TextInputStyle.SHORT)
-				.setValue(LocalDateTime.now().plusMinutes(10).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+				.setValue(LocalDateTime.now().plusDays(1).format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)))
 				.setPlaceholder(createLocale.getCREATION_DATE_PLACEHOLDER())
 				.setRequired(true)
 				.setMaxLength(17)

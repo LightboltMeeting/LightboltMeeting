@@ -1,15 +1,19 @@
 {
   "command": {
-    "MISSING_ARGUMENTS": "Es fehlen erforderliche Parameter. Bitte versuche es erneut."
+    "MISSING_ARGUMENTS": "Es fehlen erforderliche Parameter. Bitte versuche es erneut.",
+    "UNKNOWN_INTERACTION": "Unbekannte Interaktion. Bitte versuche es erneut."
   },
   "meeting": {
+    "MEETING_STATUS_STARTING_SOON": "Meeting started bald!",
+    "MEETING_STATUS_ONGOING": "Meeting läuft!",
+
     "MEETING_EMBED_FOOTER": "Dieses Meeting startet am: ",
     "MEETING_NO_PERMISSION": "Du hast keine Berechtigung um dieses Meeting zu bearbeiten.",
     "creation": {
       "CREATION_TOO_MANY_MEETINGS_DESCRIPTION": "Du kannst kein weiteres Meeting erstellen. Um ein neues Meeting zu erstellen musst du zuerst eins löschen.",
       "CREATION_NOT_PERMITTED_DESCRIPTION": "Du bist nicht berechtigt ein neues Meeting zu erstellen.",
 
-      "CREATION_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Beispiel: 13/09/2019 13:05)",
+      "CREATION_DATE_PLACEHOLDER": "dd.MM.yyyy HH:mm (Beispiel: 13.09.2019 13:05)",
       "CREATION_LANGUAGE_PLACEHOLDER": "Entweder \"DE\" für Deutsch oder \"EN\" für Englisch",
       "CREATION_TIMEZONE_PLACEHOLDER": "z.B. Europe/Berlin oder CET",
 
@@ -83,16 +87,18 @@
       "LOG_MEETING_STARTED": "Das Meeting wurde gestartet! %s\nUm das Meeting zu beenden muss entweder der Ersteller des Meetings oder ein Administrator den `/meeting end` Befehl ausführen."
     },
     "edit": {
-      "EDIT_DATE_PLACEHOLDER": "dd/MM/YYYY HH:mm (Beispiel: 13/09/2019 13:05)",
+      "EDIT_DATE_PLACEHOLDER": "dd.MM.yyyy HH:mm (Beispiel: 13.09.2019 13:05)",
       "EDIT_LANGUAGE_PLACEHOLDER": "Entweder \"DE\" für Deutsch oder \"EN\" für Englisch",
+      "EDIT_TIMEZONE_PLACEHOLDER": "z.B. Europe/Berlin oder CET",
 
-      "EDIT_MODAL_HEADER": "Meeting editieren",
-      "EDIT_NAME_LABEL": "Name des Meetings",
+      "EDIT_MODAL_HEADER": "%s",
       "EDIT_DESCRIPTION_LABEL": "Beschreibung des Meetings",
+      "EDIT_TIMEZONE_LABEL": "Zeitzone des Meetings",
       "EDIT_DATE_LABEL": "Startdatum des Meetings",
       "EDIT_LANGUAGE_LABEL": "Sprache des Meetings",
 
       "EDIT_INVALID_DATE": "Du hast ein invalided Datum angegeben. Das Datum muss zwischen Jetzt und 2 Jahren in der Zukunft liegen. Bitte versuche es erneut.",
+      "EDIT_INVALID_TIMEZONE": "`%s` ist eine ungültige Zeitzone. Eine Liste mit allen Zeitzonen findest du [hier](%s)",
       "EDIT_INVALID_LANGUAGE": "Du hast eine invalide/nicht unterstütze Sprache angegeben: `%s`\nUnterstütze Sprachen sind: `%s`",
 
       "EDIT_SUCCESS_TITLE": "Meeting editieren",
@@ -100,9 +106,9 @@
       "EDIT_FAILED": "Ein Fehler ist beim editieren des Meetings aufgetreten. Bitte versuche es erneut."
     },
     "faq": {
-      "FAQ_BUTTON_LABEL": "Meeting FAQ",
+      "FAQ_BUTTON_LABEL": "Meeting Info",
 
-      "FAQ_EMBED_TITLE": "Meeting FAQ (Frequently Asked Questions)",
+      "FAQ_EMBED_TITLE": "Meeting Info",
 
       "FAQ_MEETING_START_FIELD_HEADER": "Wann startet das Meeting?",
       "FAQ_MEETING_START_FIELD_DESCRIPTION": "Das Meeting startet genau um <t:%s:R>.",
@@ -111,7 +117,10 @@
       "FAQ_MEETING_EDIT_FIELD_DESCRIPTION": "Der Ersteller und alle Administratoren des Meetings können das Meeting mit `/meeting edit` bearbeiten.",
 
       "FAQ_MEETING_ADMIN_FIELD_HEADER": "Was ist ein Meeting Administrator?",
-      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administratoren können mit dem `/meeting add-admin` Befehl von dem Ersteller des Meetings hinzugefügt werden und sind dazu berechtigt Teilnehmer hinzuzufügen/zu entfernen, das Meeting zu editieren, oder es manuell zu starten/zu beenden."
+      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administratoren können mit dem `/meeting add-admin` Befehl von dem Ersteller des Meetings hinzugefügt werden und sind dazu berechtigt Teilnehmer hinzuzufügen/zu entfernen, das Meeting zu editieren, oder es manuell zu starten/zu beenden.",
+
+      "FAQ_EMBED_ADMINS": "Administratoren",
+      "FAQ_EMBED_PARTICIPANTS": "Teilnehmer"
     }
   }
 }

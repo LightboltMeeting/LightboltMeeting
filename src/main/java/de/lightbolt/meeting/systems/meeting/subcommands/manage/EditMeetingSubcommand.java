@@ -17,7 +17,6 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ModalCallbackAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 /**
@@ -32,7 +31,7 @@ public class EditMeetingSubcommand extends MeetingSubcommand {
 			return Responses.error(event, locale.getCommand().getMISSING_ARGUMENTS());
 		}
 		int id = (int) idOption.getAsLong();
-		Optional<Meeting> meetingOptional = repo.findById(id);
+		Optional<Meeting> meetingOptional = repo.getById(id);
 		if (meetingOptional.isEmpty()) {
 			return Responses.error(event, String.format(locale.getMeeting().getCommand().getMEETING_NOT_FOUND(), id));
 		}
@@ -46,12 +45,6 @@ public class EditMeetingSubcommand extends MeetingSubcommand {
 
 	private ModalCallbackAction buildEditModal(SlashCommandInteractionEvent event, Meeting meeting, LocaleConfig locale) {
 		var editLocale = locale.getMeeting().getEdit();
-		TextInput meetingName = TextInput.create("meeting-name", editLocale.getEDIT_NAME_LABEL(), TextInputStyle.SHORT)
-				.setValue(meeting.getTitle())
-				.setRequired(true)
-				.setMaxLength(64)
-				.build();
-
 		TextInput meetingDescription = TextInput.create("meeting-description", editLocale.getEDIT_DESCRIPTION_LABEL(), TextInputStyle.PARAGRAPH)
 				.setValue(meeting.getDescription())
 				.setRequired(true)
@@ -59,10 +52,16 @@ public class EditMeetingSubcommand extends MeetingSubcommand {
 				.build();
 
 		TextInput meetingDate = TextInput.create("meeting-date", editLocale.getEDIT_DATE_LABEL(), TextInputStyle.SHORT)
-				.setValue(meeting.getDueAt().toLocalDateTime().plusHours(12).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+				.setValue(meeting.getDueAtFormatted())
 				.setPlaceholder(locale.getMeeting().getEdit().getEDIT_DATE_PLACEHOLDER())
 				.setRequired(true)
 				.setMaxLength(16)
+				.build();
+
+		TextInput meetingTimezone = TextInput.create("meeting-timezone", editLocale.getEDIT_TIMEZONE_LABEL(), TextInputStyle.SHORT)
+				.setValue(meeting.getTimeZoneRaw())
+				.setPlaceholder(editLocale.getEDIT_TIMEZONE_PLACEHOLDER())
+				.setRequired(false)
 				.build();
 
 		TextInput meetingLanguage = TextInput.create("meeting-language", editLocale.getEDIT_LANGUAGE_LABEL(), TextInputStyle.SHORT)
@@ -72,8 +71,8 @@ public class EditMeetingSubcommand extends MeetingSubcommand {
 				.setMaxLength(2)
 				.build();
 
-		Modal modal = Modal.create("meeting-edit:" + meeting.getId(), editLocale.getEDIT_MODAL_HEADER())
-				.addActionRows(ActionRow.of(meetingName), ActionRow.of(meetingDescription), ActionRow.of(meetingDate), ActionRow.of(meetingLanguage))
+		Modal modal = Modal.create("meeting-edit:" + meeting.getId(), String.format(editLocale.getEDIT_MODAL_HEADER(), meeting.getTitle()))
+				.addActionRows(ActionRow.of(meetingDescription), ActionRow.of(meetingDate), ActionRow.of(meetingTimezone), ActionRow.of(meetingLanguage))
 				.build();
 		return event.replyModal(modal);
 	}
