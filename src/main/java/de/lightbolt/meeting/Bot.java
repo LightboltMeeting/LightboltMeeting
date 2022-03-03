@@ -5,10 +5,7 @@ import de.lightbolt.meeting.command.InteractionHandler;
 import de.lightbolt.meeting.command.eventwaiter.EventWaiter;
 import de.lightbolt.meeting.data.config.BotConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
-import de.lightbolt.meeting.listener.AutoCompleteListener;
-import de.lightbolt.meeting.listener.ButtonListener;
-import de.lightbolt.meeting.listener.ModalSubmitListener;
-import de.lightbolt.meeting.listener.StartupListener;
+import de.lightbolt.meeting.listener.*;
 import de.lightbolt.meeting.systems.meeting.MeetingStateManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -85,7 +82,8 @@ public class Bot {
 				new StartupListener(),
 				new AutoCompleteListener(),
 				new ModalSubmitListener(),
-				new ButtonListener()
+				new ButtonListener(),
+				new GuildJoinListener()
 		);
 	}
 }
