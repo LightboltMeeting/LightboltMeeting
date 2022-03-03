@@ -14,7 +14,7 @@
       "CREATION_NOT_PERMITTED_DESCRIPTION": "You're not permitted to create a new Meeting.",
 
       "CREATION_DATE_PLACEHOLDER": "dd.MM.yyyy HH:mm (Example: 13.09.2019 13:05)",
-      "CREATION_LANGUAGE_PLACEHOLDER": "\"DE\" for german or \"EN\" for english",
+      "CREATION_LANGUAGE_PLACEHOLDER": "\"DE\" for German or \"EN\" for English",
       "CREATION_TIMEZONE_PLACEHOLDER": "e.g. Europe/London or UTC",
 
       "CREATION_MODAL_HEADER": "Create Meeting",
@@ -24,16 +24,16 @@
       "CREATION_TIMEZONE_LABEL": "Meeting Timezone",
       "CREATION_LANGUAGE_LABEL": "Meeting Language",
 
-      "CREATION_INVALID_DATE": "You've provided an invalid date! The date must be a Timestamp somewhere between now and 2 years in advance. Please try again.",
-      "CREATION_INVALID_TIMEZONE": "`%s` is an invalid timezone. A list with all timezones can be found [here](%s)",
+      "CREATION_INVALID_DATE": "You've provided an invalid date! The date must be somewhere between now and 2 years in advance. Please try again.",
+      "CREATION_INVALID_TIMEZONE": "`%s` is an invalid timezone. A list of timezones can be found [here](%s)",
       "CREATION_INVALID_LANGUAGE": "You've provided an invalid/not supported language: `%s`.\nSupported languages are: `%s`",
 
       "CREATION_SUCCESS_TITLE": "Meeting created",
-      "CREATION_SUCCESS_DESCRIPTION": "All set! Your Meeting's ID is `%s`! I've automatically created a log and voice channel for your meeting. Once the meeting begins, every participant can join the meeting.\nYou can alway edit your meeting using `/meeting edit`!",
+      "CREATION_SUCCESS_DESCRIPTION": "All set! Your Meeting's ID is `%s`! I've automatically created a log and voice channel for your meeting. Once the meeting begins, every participant can join the meeting.\nYou can always edit your meeting using `/manage-meeting edit`!",
       "CREATION_FAILED": "There was an error while creating the Meeting. Please try again."
     },
     "command": {
-      "MEETING_NOT_FOUND": "You don't have a Meeting with ID `%s`. Use `/meeting list` to see your Meeting's IDs.",
+      "MEETING_NOT_FOUND": "You don't have a Meeting with ID `%s`. Use `/meeting list` to list your Meetings",
       "MEETING_PARTICIPANT_ALREADY_ADDED": "%s was already added to this meeting.",
       "MEETING_PARTICIPANT_NOT_FOUND": "%s was not added to the meeting.",
       "MEETING_ADMIN_ALREADY_ADDED": "%s is already an admin.",
@@ -88,7 +88,7 @@
     },
     "edit": {
       "EDIT_DATE_PLACEHOLDER": "dd.MM.yyyy HH:mm (Example: 13.09.2019 13:05)",
-      "EDIT_LANGUAGE_PLACEHOLDER": "\"DE\" for german or \"EN\" for english",
+      "EDIT_LANGUAGE_PLACEHOLDER": "\"DE\" for German or \"EN\" for English",
       "EDIT_TIMEZONE_PLACEHOLDER": "e.g. Europe/London or UTC",
 
       "EDIT_MODAL_HEADER": "%s",
@@ -97,8 +97,8 @@
       "EDIT_DATE_LABEL": "Meeting Start Date",
       "EDIT_LANGUAGE_LABEL": "Meeting Language",
 
-      "EDIT_INVALID_DATE": "You've provided an invalid date! The date must be a Timestamp somewhere between now and 2 years in advance. Please try again.",
-      "EDIT_INVALID_TIMEZONE": "`%s` is an invalid timezone. A list with all timezones can be found [here](%s)",
+      "EDIT_INVALID_DATE": "You've provided an invalid date! The date must be somewhere between now and 2 years in advance. Please try again.",
+      "EDIT_INVALID_TIMEZONE": "`%s` is an invalid timezone. A list of timezones can be found [here](%s)",
       "EDIT_INVALID_LANGUAGE": "You've provided an invalid/not supported language: `%s`.\nSupported languages are: `%s`",
 
       "EDIT_SUCCESS_TITLE": "Edit Meeting",
@@ -114,10 +114,10 @@
       "FAQ_MEETING_START_FIELD_DESCRIPTION": "This Meeting will start at exactly <t:%s:R>.",
 
       "FAQ_MEETING_EDIT_FIELD_HEADER": "How do I change the Meeting's Title/Description/Language/...?",
-      "FAQ_MEETING_EDIT_FIELD_DESCRIPTION": "The Meeting Owner and all Meeting Administrators are able to always edit the Meeting using `/meeting edit`.",
+      "FAQ_MEETING_EDIT_FIELD_DESCRIPTION": "The Meeting Owner and all Meeting Administrators are able to always edit the Meeting using `/manage-meeting edit`.",
 
       "FAQ_MEETING_ADMIN_FIELD_HEADER": "What is a Meeting Administrator?",
-      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administrators can be added via the `/meeting add-admin` command by the Meeting's Owner and are able to manually add or remove participants, edit the Meeting, or just start/end it manually.",
+      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administrators can be added via the `/manage-meeting add-admin` command by the Meeting's Owner and are able to manually add or remove participants, edit the Meeting, or just start/end it manually.",
 
       "FAQ_EMBED_ADMINS": "Admins",
       "FAQ_EMBED_PARTICIPANTS": "Participants"
