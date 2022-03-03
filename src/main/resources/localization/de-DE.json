@@ -24,16 +24,16 @@
       "CREATION_TIMEZONE_LABEL": "Zeitzone des Meetings",
       "CREATION_LANGUAGE_LABEL": "Sprache des Meetings",
 
-      "CREATION_INVALID_DATE": "Du hast ein invalided Datum angegeben. Das Datum muss zwischen Jetzt und 2 Jahren in der Zukunft liegen. Bitte versuche es erneut.",
+      "CREATION_INVALID_DATE": "Du hast ein ungültiges Datum angegeben. Das Datum muss zwischen Jetzt und 2 Jahren in der Zukunft liegen. Bitte versuche es erneut.",
       "CREATION_INVALID_TIMEZONE": "`%s` ist eine ungültige Zeitzone. Eine Liste mit allen Zeitzonen findest du [hier](%s)",
-      "CREATION_INVALID_LANGUAGE": "Du hast eine invalide/nicht unterstütze Sprache angegeben: `%s`\nUnterstütze Sprachen sind: `%s`",
+      "CREATION_INVALID_LANGUAGE": "Du hast eine ungültige/nicht unterstütze Sprache angegeben: `%s`\nUnterstütze Sprachen sind: `%s`",
 
       "CREATION_SUCCESS_TITLE": "Meeting erstellt",
-      "CREATION_SUCCESS_DESCRIPTION": "Alles gespeichert! Die ID deines Meetings lautet `%s`.\nIch habe einen Log- und einen Sprachkanal für dein Meeting erstellt. Sobald das Meeting beginnt können alle Teilnehmer dem Sprachkanal beitreten.\nDu kannst das Meeting jederzeit mithilfe von `/meeting edit` editieren!",
+      "CREATION_SUCCESS_DESCRIPTION": "Alles gespeichert! Die ID deines Meetings lautet `%s`.\nIch habe einen Log- und einen Sprachkanal für dein Meeting erstellt. Sobald das Meeting beginnt können alle Teilnehmer dem Sprachkanal beitreten.\nDu kannst das Meeting jederzeit mithilfe von `/manage-meeting edit` editieren!",
       "CREATION_FAILED": "Ein Fehler ist bei der Erstellung eines Meetings ist aufgetreten. Bitte versuche es erneut."
     },
     "command": {
-      "MEETING_NOT_FOUND": "Du hast kein Meeting mit der ID `%s`. Die ID eines Meetings siehst du bei `/meeting list`",
+      "MEETING_NOT_FOUND": "Du hast kein Meeting mit der ID `%s`. Deine Meetings siehst du mit `/meeting list`",
       "MEETING_PARTICIPANT_ALREADY_ADDED": "%s wurde schon zu diesem Meeting hinzugefügt.",
       "MEETING_PARTICIPANT_NOT_FOUND": "%s ist kein Teilnehmer des Meetings.",
       "MEETING_ADMIN_ALREADY_ADDED": "%s ist bereits ein Admin.",
@@ -97,9 +97,9 @@
       "EDIT_DATE_LABEL": "Startdatum des Meetings",
       "EDIT_LANGUAGE_LABEL": "Sprache des Meetings",
 
-      "EDIT_INVALID_DATE": "Du hast ein invalided Datum angegeben. Das Datum muss zwischen Jetzt und 2 Jahren in der Zukunft liegen. Bitte versuche es erneut.",
+      "EDIT_INVALID_DATE": "Du hast ein ungültiges Datum angegeben. Das Datum muss zwischen Jetzt und 2 Jahren in der Zukunft liegen. Bitte versuche es erneut.",
       "EDIT_INVALID_TIMEZONE": "`%s` ist eine ungültige Zeitzone. Eine Liste mit allen Zeitzonen findest du [hier](%s)",
-      "EDIT_INVALID_LANGUAGE": "Du hast eine invalide/nicht unterstütze Sprache angegeben: `%s`\nUnterstütze Sprachen sind: `%s`",
+      "EDIT_INVALID_LANGUAGE": "Du hast eine ungültige/nicht unterstütze Sprache angegeben: `%s`\nUnterstütze Sprachen sind: `%s`",
 
       "EDIT_SUCCESS_TITLE": "Meeting editieren",
       "EDIT_SUCCESS_DESCRIPTION": "Das angegebene Meeting wurde erfolgreich editiert!",
@@ -114,10 +114,10 @@
       "FAQ_MEETING_START_FIELD_DESCRIPTION": "Das Meeting startet genau um <t:%s:R>.",
 
       "FAQ_MEETING_EDIT_FIELD_HEADER": "Wie ändere ich den Titel/Beschreibung/Sprache/...?",
-      "FAQ_MEETING_EDIT_FIELD_DESCRIPTION": "Der Ersteller und alle Administratoren des Meetings können das Meeting mit `/meeting edit` bearbeiten.",
+      "FAQ_MEETING_EDIT_FIELD_DESCRIPTION": "Der Ersteller und alle Administratoren des Meetings können das Meeting mit `/manage-meeting edit` bearbeiten.",
 
       "FAQ_MEETING_ADMIN_FIELD_HEADER": "Was ist ein Meeting Administrator?",
-      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administratoren können mit dem `/meeting add-admin` Befehl von dem Ersteller des Meetings hinzugefügt werden und sind dazu berechtigt Teilnehmer hinzuzufügen/zu entfernen, das Meeting zu editieren, oder es manuell zu starten/zu beenden.",
+      "FAQ_MEETING_ADMIN_FIELD_DESCRIPTION": "Meeting Administratoren können mit dem `/manage-meeting add-admin` Befehl von dem Ersteller des Meetings hinzugefügt werden und sind dazu berechtigt Teilnehmer hinzuzufügen/zu entfernen, das Meeting zu editieren, oder es manuell zu starten/zu beenden.",
 
       "FAQ_EMBED_ADMINS": "Administratoren",
       "FAQ_EMBED_PARTICIPANTS": "Teilnehmer"
