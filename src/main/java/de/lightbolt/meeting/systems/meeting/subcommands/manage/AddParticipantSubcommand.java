@@ -10,7 +10,6 @@ import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

@@ -1,7 +1,6 @@
 package de.lightbolt.meeting.systems.meeting;
 
 import de.lightbolt.meeting.Bot;
-import de.lightbolt.meeting.annotations.MissingLocale;
 import de.lightbolt.meeting.data.config.guild.MeetingConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
@@ -18,7 +17,6 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

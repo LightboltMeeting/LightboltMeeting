@@ -3,7 +3,6 @@ package de.lightbolt.meeting.data.config.guild;
 import de.lightbolt.meeting.data.config.GuildConfigItem;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.dv8tion.jda.api.entities.Category;
 
 import java.util.List;
 

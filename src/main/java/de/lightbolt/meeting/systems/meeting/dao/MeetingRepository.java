@@ -1,6 +1,5 @@
 package de.lightbolt.meeting.systems.meeting.dao;
 
-import de.lightbolt.meeting.systems.meeting.MeetingStatus;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

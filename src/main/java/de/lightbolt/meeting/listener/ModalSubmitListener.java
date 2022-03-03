@@ -1,7 +1,6 @@
 package de.lightbolt.meeting.listener;
 
 import de.lightbolt.meeting.Bot;
-import de.lightbolt.meeting.annotations.MissingLocale;
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
