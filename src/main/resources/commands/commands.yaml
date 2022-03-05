@@ -149,3 +149,50 @@
           autocomplete: false
           type: USER
   handler: de.lightbolt.meeting.systems.meeting.MeetingManageCommandHandler
+
+    # /db-admin
+- name: db-admin
+  description: Administrative tools for managing the server's database.
+  enabledByDefault: false
+  privileges:
+    - type: ROLE
+      id: moderation.adminRoleId
+  subCommands:
+   # /db-admin export-schema
+    - name: export-schema
+      description: Exports the current database schema to an SQL file.
+      options:
+        - name: include-data
+          description: Should data be included in the export?
+          required: true
+          type: BOOLEAN
+
+   # /db-admin export-table
+    - name: export-table
+      description: Exports the a single database table to an SQL file.
+      options:
+        - name: table
+          description: The database table you want to export
+          required: true
+          type: STRING
+          choices:
+            - name: Meetings
+              value: MEETINGS
+        - name: include-data
+          description: Should data be included in the export?
+          required: true
+          type: BOOLEAN
+
+   # /db-admin migrations-list
+    - name: migrations-list
+      description: Show a list of all database migrations that can be run.
+
+   # /db-admin migrate
+    - name: migrate
+      description: Run a database migration.
+      options:
+        - name: name
+          description: The name of the migration to run.
+          required: true
+          type: STRING
+  handler: de.lightbolt.meeting.data.h2db.commands.DbAdminCommandHandler

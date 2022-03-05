@@ -32,7 +32,7 @@ public class AddParticipantSubcommand extends MeetingSubcommand {
 			return Responses.error(event, locale.getCommand().getMISSING_ARGUMENTS());
 		}
 		List<User> users = new ArrayList<>();
-		for (int i = 1; i < MEMBER_OPTIONS; i++) {
+		for (int i = 1; i < MEMBER_OPTIONS + 1 ; i++) {
 			var userOption = event.getOption("user-" + i);
 			if (userOption == null) continue;
 			users.add(userOption.getAsUser());
