@@ -1,9 +1,0 @@
-{
-  "jdaBotToken": "OTM3Nzk5MTE3NzkzNTU4NTY4.Yfg_fQ.OHDhhOcUMgQXfYdSoqrhphEsP0o",
-  "asyncPoolSize": 4,
-  "ownerId": 690871346380537857,
-  "hikariConfig": {
-    "jdbcUrl": "jdbc:h2:tcp://localhost:9125/./meeting_bot",
-    "maximumPoolSize": 5
-  }
-}
