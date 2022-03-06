@@ -2,6 +2,8 @@ package de.lightbolt.meeting.data.config;
 
 import lombok.Data;
 
+import javax.annotation.Nullable;
+
 /**
  * Contains configuration settings for various systems which the bot uses, such
  * as databases or dependencies that have runtime properties.
@@ -19,6 +21,8 @@ public class SystemsConfig {
 	 */
 	private int asyncPoolSize = 4;
 
+	private long ownerId;
+
 	/**
 	 * Configuration for the Hikari connection pool that's used for the bot's
 	 * SQL data source.
@@ -32,5 +36,18 @@ public class SystemsConfig {
 	public static class HikariConfig {
 		private String jdbcUrl = "jdbc:h2:tcp://localhost:9125/./meeting_bot";
 		private int maximumPoolSize = 5;
+	}
+
+	@Nullable
+	public Object resolve(String propertyName) throws UnknownPropertyException {
+		var result = ReflectionUtils.resolveField(propertyName, this);
+		return result.map(pair -> {
+			try {
+				return pair.first().get(pair.second());
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}).orElse(null);
 	}
 }

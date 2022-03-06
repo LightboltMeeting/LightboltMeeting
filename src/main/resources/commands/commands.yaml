@@ -190,8 +190,8 @@
   description: Administrative tools for managing the server's database.
   enabledByDefault: false
   privileges:
-    - type: ROLE
-      id: moderation.staffRoleId
+    - type: USER
+      id: ownerId
   subCommands:
    # /db-admin export-schema
     - name: export-schema
