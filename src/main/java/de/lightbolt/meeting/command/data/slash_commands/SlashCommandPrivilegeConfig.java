@@ -32,7 +32,7 @@ public class SlashCommandPrivilegeConfig {
 			if (member == null) throw new IllegalArgumentException("Member could not be found for id " + id);
 			return new CommandPrivilege(CommandPrivilege.Type.USER, this.enabled, member.getIdLong());
 		} else if (this.type.equalsIgnoreCase(CommandPrivilege.Type.ROLE.name())) {
-			Long roleId = null;
+			Long roleId;
 			try {
 				roleId = (Long) botConfig.get(guild).resolve(this.id);
 			} catch (UnknownPropertyException e) {
@@ -40,12 +40,12 @@ public class SlashCommandPrivilegeConfig {
 				return CommandPrivilege.enableUser(guild.getOwnerIdLong());
 			}
 			if (roleId == null) {
-				log.error("Missing role id. Owner was set as the enabled user.");
+				log.warn("Missing role id. Owner was set as the enabled user.");
 				return CommandPrivilege.enableUser(guild.getOwnerIdLong());
 			}
 			Role role = guild.getRoleById(roleId);
 			if (role == null) {
-				log.error("Role could not be found. Owner was set as the enabled user.");
+				log.warn("Role could not be found. Owner was set as the enabled user.");
 				return CommandPrivilege.enableUser(guild.getOwnerIdLong());
 			}
 			return new CommandPrivilege(CommandPrivilege.Type.ROLE, this.enabled, role.getIdLong());
