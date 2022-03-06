@@ -3,6 +3,7 @@ package de.lightbolt.meeting.systems.meeting.jobs;
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
+import de.lightbolt.meeting.systems.meeting.MeetingStatus;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,10 @@ public class MeetingStartJob implements Job {
 				return;
 			}
 			Meeting meeting = meetingOptional.get();
-			var manager = new MeetingManager(Bot.jda, meeting);
-			manager.startMeeting();
+			if (meeting.getStatus() != MeetingStatus.ONGOING) {
+				var manager = new MeetingManager(Bot.jda, meeting);
+				manager.startMeeting();
+			}
 		});
 
 	}

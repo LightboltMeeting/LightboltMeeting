@@ -2,6 +2,8 @@ package de.lightbolt.meeting.data.config;
 
 import lombok.Data;
 
+import javax.annotation.Nullable;
+
 /**
  * Contains configuration settings for various systems which the bot uses, such
  * as databases or dependencies that have runtime properties.

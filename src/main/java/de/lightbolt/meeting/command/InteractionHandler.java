@@ -9,7 +9,6 @@ import de.lightbolt.meeting.command.interfaces.IMessageContextCommand;
 import de.lightbolt.meeting.command.interfaces.ISlashCommand;
 import de.lightbolt.meeting.command.interfaces.IUserContextCommand;
 import de.lightbolt.meeting.utils.Constants;
-import de.lightbolt.meeting.utils.GuildUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
@@ -23,8 +22,6 @@ import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -103,16 +100,8 @@ public class InteractionHandler extends ListenerAdapter {
 			case ERROR -> Responses.error(interaction, e.getMessage()).queue();
 		}
 		if (e.getCause() != null) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.getCause().printStackTrace(pw);
-			GuildUtils.getLogChannel(interaction.getGuild()).sendMessageFormat(
-					"An exception occurred when %s issued the **%s** command in %s:\n```%s```\n",
-					interaction.getUser().getAsMention(),
-					interaction.getName(),
-					interaction.getTextChannel().getAsMention(),
-					sw.toString()
-			).queue();
+			e.printStackTrace();
+			log.error("An exception occurred when {} issued the **{}** command", interaction.getUser().getAsMention(), interaction.getName());
 		}
 	}
 

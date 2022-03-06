@@ -1,13 +1,14 @@
 package de.lightbolt.meeting.utils.localization;
 
 import lombok.Data;
-import lombok.Getter;
 
 /**
  * Simple Data class, that represents the bot's localization config.
  */
-@Getter
+@Data
 public class LocaleConfig {
+	private String GUILD_JOIN_MESSAGE;
+
 	private final MeetingConfig meeting = new MeetingConfig();
 	private final CommandConfig command = new CommandConfig();
 
@@ -26,6 +27,10 @@ public class LocaleConfig {
 		private String MEETING_NO_PERMISSION;
 
 		private MeetingCreationConfig creation = new MeetingCreationConfig();
+		private MeetingCommandConfig command = new MeetingCommandConfig();
+		private MeetingLogConfig log = new MeetingLogConfig();
+		private MeetingEditConfig edit = new MeetingEditConfig();
+		private MeetingFAQConfig faq = new MeetingFAQConfig();
 
 		@Data
 		public static class MeetingCreationConfig {
@@ -51,8 +56,6 @@ public class LocaleConfig {
 			private String CREATION_SUCCESS_DESCRIPTION;
 			private String CREATION_FAILED;
 		}
-
-		private MeetingCommandConfig command = new MeetingCommandConfig();
 
 		@Data
 		public static class MeetingCommandConfig {
@@ -89,8 +92,6 @@ public class LocaleConfig {
 			private String MEETING_END_FAILED_DESCRIPTION;
 		}
 
-		private MeetingLogConfig log = new MeetingLogConfig();
-
 		@Data
 		public static class MeetingLogConfig {
 			private String LOG_PARTICIPANT_ADDED;
@@ -114,8 +115,6 @@ public class LocaleConfig {
 			private String LOG_MEETING_STARTED;
 		}
 
-		private MeetingEditConfig edit = new MeetingEditConfig();
-
 		@Data
 		public static class MeetingEditConfig {
 			private String EDIT_DATE_PLACEHOLDER;
@@ -136,8 +135,6 @@ public class LocaleConfig {
 			private String EDIT_SUCCESS_DESCRIPTION;
 			private String EDIT_FAILED;
 		}
-
-		private MeetingFAQConfig faq = new MeetingFAQConfig();
 
 		@Data
 		public static class MeetingFAQConfig {

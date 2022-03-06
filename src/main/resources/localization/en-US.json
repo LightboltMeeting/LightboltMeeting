@@ -1,4 +1,5 @@
 {
+  "GUILD_JOIN_MESSAGE": "",
   "command": {
     "MISSING_ARGUMENTS": "Missing required Arguments. Please try again.",
     "UNKNOWN_INTERACTION": "Unknown Interaction. Please try again."

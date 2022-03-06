@@ -1,4 +1,5 @@
 {
+  "GUILD_JOIN_MESSAGE": "",
   "command": {
     "MISSING_ARGUMENTS": "Es fehlen erforderliche Parameter. Bitte versuche es erneut.",
     "UNKNOWN_INTERACTION": "Unbekannte Interaktion. Bitte versuche es erneut."

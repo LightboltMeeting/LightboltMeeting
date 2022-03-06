@@ -95,7 +95,6 @@ public class ModalSubmitListener extends ListenerAdapter {
 			Responses.error(event.getHook(), createLocale.getCREATION_INVALID_DATE()).queue();
 			return;
 		}
-		System.out.println(Timestamp.from(dueAt.withZoneSameInstant(ZoneOffset.UTC).toInstant()));
 		meeting.setDueAt(Timestamp.from(dueAt.withZoneSameInstant(ZoneOffset.UTC).toInstant()));
 
 		// Language
