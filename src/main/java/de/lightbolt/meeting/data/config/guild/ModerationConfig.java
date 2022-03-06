@@ -12,12 +12,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ModerationConfig extends GuildConfigItem {
-	private long logChannelId;
 	private long staffRoleId;
-
-	public TextChannel getLogChannel() {
-		return this.getGuild().getTextChannelById(this.logChannelId);
-	}
 
 	public Role getStaffRole() {
 		return this.getGuild().getRoleById(this.staffRoleId);
