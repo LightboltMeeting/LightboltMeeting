@@ -24,7 +24,7 @@ public class ListMeetingsSubcommand extends MeetingSubcommand {
 	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, SystemsConfig.MeetingConfig config, MeetingRepository repo) throws SQLException {
 		var meetings = repo.getByUserId(event.getUser().getIdLong());
 		return event.replyFormat(locale.getMeeting().getCommand().getLIST_REPLY_TEXT(), meetings.size())
-				.addEmbeds(buildMeetingListEmbed(event.getUser(), locale, meetings));
+				.addEmbeds(buildMeetingListEmbed(event.getUser(), locale, meetings)).setEphemeral(true);
 	}
 
 	private List<MessageEmbed> buildMeetingListEmbed(User user, LocaleConfig locale, List<Meeting> meetings) {
