@@ -111,7 +111,7 @@ public class ModalSubmitListener extends ListenerAdapter {
 		// Insertion
 		DbHelper.doDaoAction(MeetingRepository::new, dao -> {
 			var inserted = dao.insert(meeting);
-			var config = Bot.config.get(event.getGuild()).getMeeting();
+			var config = Bot.config.getSystems().getMeetingConfig();
 			var manager = new MeetingManager(event.getJDA(), inserted);
 			manager.createMeetingChannels(event.getGuild(), event.getUser(), locale, config);
 			Bot.meetingStateManager.scheduleMeeting(inserted);
@@ -181,7 +181,7 @@ public class ModalSubmitListener extends ListenerAdapter {
 			// Update
 			dao.update(meeting.getId(), meeting);
 			MeetingManager manager = new MeetingManager(event.getJDA(), meeting);
-			manager.updateMeeting(event.getUser(), Bot.config.get(event.getGuild()).getMeeting(), LocalizationUtils.getLocale(meeting.getLanguage()));
+			manager.updateMeeting(event.getUser(), Bot.config.getSystems().getMeetingConfig(), LocalizationUtils.getLocale(meeting.getLanguage()));
 			Bot.meetingStateManager.updateMeetingSchedule(meeting);
 			Responses.success(event.getHook(), editLocale.getEDIT_SUCCESS_TITLE(), editLocale.getEDIT_SUCCESS_DESCRIPTION()).queue();
 		});

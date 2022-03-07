@@ -1,7 +1,7 @@
 package de.lightbolt.meeting.systems.meeting.subcommands.manage;
 
 import de.lightbolt.meeting.command.Responses;
-import de.lightbolt.meeting.data.config.guild.MeetingConfig;
+import de.lightbolt.meeting.data.config.SystemsConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.MeetingSubcommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
@@ -26,7 +26,7 @@ public class AddParticipantSubcommand extends MeetingSubcommand {
 	private final int MEMBER_OPTIONS = 9;
 
 	@Override
-	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
+	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, SystemsConfig.MeetingConfig config, MeetingRepository repo) throws SQLException {
 		var idOption = event.getOption("meeting-id");
 		if (idOption == null) {
 			return Responses.error(event, locale.getCommand().getMISSING_ARGUMENTS());

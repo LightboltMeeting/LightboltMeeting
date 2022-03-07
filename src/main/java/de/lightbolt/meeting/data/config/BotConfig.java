@@ -23,12 +23,6 @@ public class BotConfig {
 	private static final String SYSTEMS_FILE = "systems.json";
 
 	/**
-	 * The map containing guild-specific configuration settings for each guild
-	 * that the bot is active in.
-	 */
-	private final Map<Long, GuildConfig> guilds;
-
-	/**
 	 * Global configuration settings for the bot which are not guild-specific.
 	 */
 	private final SystemsConfig systemsConfig;
@@ -57,7 +51,6 @@ public class BotConfig {
 				log.error("File exists at config directory path {}", dir);
 			}
 		}
-		this.guilds = new ConcurrentHashMap<>();
 		Gson gson = new Gson();
 		Path systemsFile = dir.resolve(SYSTEMS_FILE);
 		if (Files.exists(systemsFile)) {
@@ -77,47 +70,6 @@ public class BotConfig {
 		}
 	}
 
-	/**
-	 * Loads a set of guilds into the configuration at runtime.
-	 *
-	 * @param guilds The list of guilds to load config for.
-	 */
-	public void loadGuilds(List<Guild> guilds) {
-		for (Guild guild : guilds) {
-			var file = dir.resolve(guild.getId() + ".json");
-			var config = GuildConfig.loadOrCreate(guild, file);
-			this.guilds.put(guild.getIdLong(), config);
-			log.info("Loaded guild config for guild {} ({}).", guild.getName(), guild.getId());
-		}
-	}
-
-	/**
-	 * Adds a guild to the bot's configuration at runtime. A new, default
-	 * configuration object is created, so be aware of the presence of null
-	 * values.
-	 *
-	 * @param guild The guild to add configuration for.
-	 */
-	public void addGuild(Guild guild) {
-		var file = dir.resolve(guild.getId() + ".json");
-		this.guilds.put(guild.getIdLong(), GuildConfig.loadOrCreate(guild, file));
-		log.info("Added guild config for guild {} ({}).", guild.getName(), guild.getId());
-	}
-
-	/**
-	 * Gets the configuration for a particular guild.
-	 *
-	 * @param guild The guild to get config for.
-	 * @return The config for the given guild.
-	 */
-	public GuildConfig get(@Nullable Guild guild) {
-		if (guild == null) return null;
-		return this.guilds.computeIfAbsent(
-				guild.getIdLong(),
-				guildId -> new GuildConfig(guild, this.dir.resolve(guild.getId() + ".json"))
-		);
-	}
-
 	public SystemsConfig getSystems() {
 		return this.systemsConfig;
 	}
@@ -133,9 +85,6 @@ public class BotConfig {
 			writer.flush();
 		} catch (IOException e) {
 			log.error("Could not save systems config.", e);
-		}
-		for (GuildConfig config : this.guilds.values()) {
-			config.flush();
 		}
 	}
 }

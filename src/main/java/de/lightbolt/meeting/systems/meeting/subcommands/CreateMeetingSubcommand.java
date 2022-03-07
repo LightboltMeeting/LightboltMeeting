@@ -1,7 +1,7 @@
 package de.lightbolt.meeting.systems.meeting.subcommands;
 
 import de.lightbolt.meeting.command.Responses;
-import de.lightbolt.meeting.data.config.guild.MeetingConfig;
+import de.lightbolt.meeting.data.config.SystemsConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingSubcommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.utils.Constants;
@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class CreateMeetingSubcommand extends MeetingSubcommand {
 	@Override
-	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
+	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, SystemsConfig.MeetingConfig config, MeetingRepository repo) throws SQLException {
 		var meetingLocale = locale.getMeeting().getCreation();
 		if (!canCreateMeetings(event.getMember())) {
 			return Responses.error(event, meetingLocale.getCREATION_NOT_PERMITTED_DESCRIPTION());

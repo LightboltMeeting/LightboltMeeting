@@ -1,7 +1,7 @@
 package de.lightbolt.meeting.systems.meeting;
 
 import de.lightbolt.meeting.Bot;
-import de.lightbolt.meeting.data.config.guild.MeetingConfig;
+import de.lightbolt.meeting.data.config.SystemsConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
@@ -55,7 +55,7 @@ public class MeetingManager {
 	 */
 	public static void checkActiveMeetings(@NotNull JDA jda) {
 		for (var guild : jda.getGuilds()) {
-			var config = Bot.config.get(guild).getMeeting();
+			var config = Bot.config.getSystems().getMeetingConfig();
 			DbHelper.doDaoAction(MeetingRepository::new, dao -> {
 				List<Meeting> activeMeetings = dao.getActive().stream().filter(p -> p.getGuildId() == guild.getIdLong()).toList();
 				for (Meeting m : activeMeetings) {
@@ -97,7 +97,7 @@ public class MeetingManager {
 	public void startMeeting() {
 		var text = this.getLogChannel();
 		var locale = meeting.getLocaleConfig().getMeeting();
-		var config = Bot.config.get(getJDA().getGuildById(meeting.getGuildId())).getMeeting();
+		var config = Bot.config.getSystems().getMeetingConfig();
 		text.sendMessageFormat(locale.getLog().getLOG_MEETING_STARTED(), Arrays.stream(meeting.getParticipants()).mapToObj(m -> String.format("<@%s>", m)).collect(Collectors.joining(", "))).queue();
 		this.updateVoiceChannelPermissions(this.getVoiceChannel(), meeting.getParticipants(), true);
 		this.getVoiceChannel()
@@ -120,7 +120,7 @@ public class MeetingManager {
 	/**
 	 * Creates all Meeting Channels.
 	 */
-	public void createMeetingChannels(Guild guild, User createdBy, LocaleConfig locale, MeetingConfig config) {
+	public void createMeetingChannels(Guild guild, User createdBy, LocaleConfig locale, SystemsConfig.MeetingConfig config) {
 		guild.createCategory(String.format(config.getMeetingCategoryTemplate(), meeting.getTitle())).queue(
 				category -> {
 					this.createLogChannel(category, createdBy, locale, config);
@@ -147,7 +147,7 @@ public class MeetingManager {
 	 * @param createdBy The Meeting's owner.
 	 * @param locale    The Meeting's locale.
 	 */
-	public void createLogChannel(@NotNull Category category, User createdBy, LocaleConfig locale, MeetingConfig config) {
+	public void createLogChannel(@NotNull Category category, User createdBy, LocaleConfig locale, SystemsConfig.MeetingConfig config) {
 		category.createTextChannel(String.format(config.getMeetingLogTemplate(), meeting.getId())).queue(
 				channel -> {
 					this.updateLogChannelPermissions(channel, meeting.getParticipants());
@@ -173,7 +173,7 @@ public class MeetingManager {
 	 *
 	 * @param category  The Meeting Category that's specified in the config file.
 	 */
-	public void createVoiceChannel(@NotNull Category category, MeetingConfig config) {
+	public void createVoiceChannel(@NotNull Category category, SystemsConfig.MeetingConfig config) {
 		category.createVoiceChannel(String.format(config.getMeetingVoiceTemplate(), config.getMeetingPlannedEmoji(), meeting.getDueAtFormatted())).queue(
 				channel -> {
 					this.updateVoiceChannelPermissions(channel, meeting.getParticipants());
@@ -197,7 +197,7 @@ public class MeetingManager {
 	 * @param updatedBy The user that initiated this process.
 	 * @param locale    The user's locale.
 	 */
-	public void updateMeeting(User updatedBy, MeetingConfig config, LocaleConfig locale) {
+	public void updateMeeting(User updatedBy, SystemsConfig.MeetingConfig config, LocaleConfig locale) {
 		this.getJDA().retrieveUserById(meeting.getCreatedBy()).queue(
 				user -> this.getLogChannel()
 						.sendMessageFormat(locale.getMeeting().getLog().getLOG_MEETING_UPDATED(), updatedBy.getAsMention())

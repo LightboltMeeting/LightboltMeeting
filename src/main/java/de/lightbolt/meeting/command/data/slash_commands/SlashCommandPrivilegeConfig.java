@@ -32,22 +32,15 @@ public class SlashCommandPrivilegeConfig {
 			if (member == null) throw new IllegalArgumentException("Member could not be found for id " + id);
 			return new CommandPrivilege(CommandPrivilege.Type.USER, this.enabled, member.getIdLong());
 		} else if (this.type.equalsIgnoreCase(CommandPrivilege.Type.ROLE.name())) {
-			Long roleId;
+			Long roleId = null;
 			try {
-				roleId = (Long) botConfig.get(guild).resolve(this.id);
+				roleId = (Long) botConfig.getSystems().resolve(this.id);
 			} catch (UnknownPropertyException e) {
-				log.error("Unknown property while resolving role id. Owner was set as the enabled user.", e);
-				return CommandPrivilege.enableUser(guild.getOwnerIdLong());
+				log.error("Unknown property while resolving role id.", e);
 			}
-			if (roleId == null) {
-				log.warn("Missing role id. Owner was set as the enabled user.");
-				return CommandPrivilege.enableUser(guild.getOwnerIdLong());
-			}
+			if (roleId == null) throw new IllegalArgumentException("Missing role id.");
 			Role role = guild.getRoleById(roleId);
-			if (role == null) {
-				log.warn("Role could not be found. Owner was set as the enabled user.");
-				return CommandPrivilege.enableUser(guild.getOwnerIdLong());
-			}
+			if (role == null) throw new IllegalArgumentException("Role could not be found. Owner was set as the enabled user.");
 			return new CommandPrivilege(CommandPrivilege.Type.ROLE, this.enabled, role.getIdLong());
 		}
 		throw new IllegalArgumentException("Invalid type.");

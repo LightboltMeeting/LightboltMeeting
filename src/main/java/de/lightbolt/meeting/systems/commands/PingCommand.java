@@ -11,7 +11,7 @@ public class PingCommand implements ISlashCommand {
 	public ReplyCallbackAction handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
 		var e = new EmbedBuilder()
 				.setAuthor(event.getJDA().getGatewayPing() + "ms", null, event.getJDA().getSelfUser().getEffectiveAvatarUrl())
-				.setColor(Bot.config.get(event.getGuild()).getSlashCommand().getDefaultColor())
+				.setColor(Bot.config.getSystems().getSlashCommandConfig().getDefaultColor())
 				.build();
 		return event.replyEmbeds(e);
 	}

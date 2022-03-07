@@ -1,7 +1,7 @@
 package de.lightbolt.meeting.systems.meeting;
 
 import de.lightbolt.meeting.Bot;
-import de.lightbolt.meeting.data.config.guild.MeetingConfig;
+import de.lightbolt.meeting.data.config.SystemsConfig;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.jobs.MeetingReminderJob;
 import de.lightbolt.meeting.systems.meeting.jobs.MeetingStartJob;
@@ -42,7 +42,7 @@ public class MeetingStateManager {
 			log.error("Unknown Guild of Meeting: " + meeting);
 			return;
 		}
-		MeetingConfig meetingConfig = Bot.config.get(guild).getMeeting();
+		SystemsConfig.MeetingConfig meetingConfig = Bot.config.getSystems().getMeetingConfig();
 		try {
 			//Schedule Job for Meeting Start
 			JobDetail job = newJob(MeetingStartJob.class)
@@ -74,7 +74,7 @@ public class MeetingStateManager {
 	}
 
 	public void updateMeetingSchedule(Meeting meeting) {
-		MeetingConfig meetingConfig = Bot.config.get(Bot.jda.getGuildById(meeting.getGuildId())).getMeeting();
+		SystemsConfig.MeetingConfig meetingConfig = Bot.config.getSystems().getMeetingConfig();
 
 		try {
 			//Update Start Trigger
@@ -108,7 +108,7 @@ public class MeetingStateManager {
 	}
 
 	public void cancelMeetingSchedule(Meeting meeting) {
-		MeetingConfig meetingConfig = Bot.config.get(Bot.jda.getGuildById(meeting.getGuildId())).getMeeting();
+		SystemsConfig.MeetingConfig meetingConfig = Bot.config.getSystems().getMeetingConfig();
 		try {
 			scheduler.deleteJob(JobKey.jobKey(meeting.getId() + "-start"));
 			for (Integer reminder : meetingConfig.getMeetingReminders()) {

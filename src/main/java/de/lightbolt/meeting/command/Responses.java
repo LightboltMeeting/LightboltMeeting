@@ -23,27 +23,27 @@ public final class Responses {
 	}
 
 	public static ReplyCallbackAction success(CommandInteraction event, String title, String message) {
-		return reply(event, title, message, Bot.config.get(event.getGuild()).getSlashCommand().getInfoColor(), true);
+		return reply(event, title, message, Bot.config.getSystems().getSlashCommandConfig().getInfoColor(), true);
 	}
 
 	public static WebhookMessageAction<Message> success(InteractionHook hook, String title, String message) {
-		return reply(hook, title, message, Bot.config.get(hook.getInteraction().getGuild()).getSlashCommand().getSuccessColor(), true);
+		return reply(hook, title, message, Bot.config.getSystems().getSlashCommandConfig().getSuccessColor(), true);
 	}
 
 	public static ReplyCallbackAction info(CommandInteraction event, String title, String message) {
-		return reply(event, title, message, Bot.config.get(event.getGuild()).getSlashCommand().getInfoColor(), true);
+		return reply(event, title, message, Bot.config.getSystems().getSlashCommandConfig().getInfoColor(), true);
 	}
 
 	public static WebhookMessageAction<Message> info(InteractionHook hook, String title, String message) {
-		return reply(hook, title, message, Bot.config.get(hook.getInteraction().getGuild()).getSlashCommand().getInfoColor(), true);
+		return reply(hook, title, message, Bot.config.getSystems().getSlashCommandConfig().getInfoColor(), true);
 	}
 
 	public static ReplyCallbackAction error(CommandInteraction event, String message) {
-		return reply(event, "An Error Occurred", message, Bot.config.get(event.getGuild()).getSlashCommand().getErrorColor(), true);
+		return reply(event, "An Error Occurred", message, Bot.config.getSystems().getSlashCommandConfig().getErrorColor(), true);
 	}
 
 	public static WebhookMessageAction<Message> error(InteractionHook hook, String message) {
-		return reply(hook, "An Error Occurred", message, Bot.config.get(hook.getInteraction().getGuild()).getSlashCommand().getErrorColor(), true);
+		return reply(hook, "An Error Occurred", message, Bot.config.getSystems().getSlashCommandConfig().getErrorColor(), true);
 	}
 
 	public static ReplyCallbackAction warning(CommandInteraction event, String message) {
@@ -55,11 +55,11 @@ public final class Responses {
 	}
 
 	public static ReplyCallbackAction warning(CommandInteraction event, String title, String message) {
-		return reply(event, title, message, Bot.config.get(event.getGuild()).getSlashCommand().getWarningColor(), true);
+		return reply(event, title, message, Bot.config.getSystems().getSlashCommandConfig().getWarningColor(), true);
 	}
 
 	public static WebhookMessageAction<Message> warning(InteractionHook hook, String title, String message) {
-		return reply(hook, title, message, Bot.config.get(hook.getInteraction().getGuild()).getSlashCommand().getWarningColor(), true);
+		return reply(hook, title, message, Bot.config.getSystems().getSlashCommandConfig().getWarningColor(), true);
 	}
 
 	/**
