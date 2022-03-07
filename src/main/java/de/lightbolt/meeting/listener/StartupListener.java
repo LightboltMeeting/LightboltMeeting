@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 public class StartupListener extends ListenerAdapter {
 	@Override
 	public void onReady(ReadyEvent event) {
-		Bot.config.loadGuilds(event.getJDA().getGuilds());
 		Bot.config.flush();
 		Bot.meetingStateManager = new MeetingStateManager();
 		for (Guild guild : event.getJDA().getGuilds()) {

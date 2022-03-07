@@ -3,7 +3,7 @@ package de.lightbolt.meeting.systems.meeting;
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.command.ResponseException;
 import de.lightbolt.meeting.command.interfaces.ISlashCommand;
-import de.lightbolt.meeting.data.config.guild.MeetingConfig;
+import de.lightbolt.meeting.data.config.SystemsConfig;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
@@ -24,7 +24,7 @@ public abstract class MeetingSubcommand implements ISlashCommand {
 			var reply = this.handleMeetingCommand(
 					event,
 					LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale())),
-					Bot.config.get(event.getGuild()).getMeeting(),
+					Bot.config.getSystems().getMeetingConfig(),
 					new MeetingRepository(con)
 			);
 			con.commit();
@@ -34,5 +34,5 @@ public abstract class MeetingSubcommand implements ISlashCommand {
 		}
 	}
 
-	protected abstract ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException;
+	protected abstract ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, SystemsConfig.MeetingConfig config, MeetingRepository repo) throws SQLException;
 }

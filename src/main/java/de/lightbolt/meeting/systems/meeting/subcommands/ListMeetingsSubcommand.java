@@ -1,6 +1,6 @@
 package de.lightbolt.meeting.systems.meeting.subcommands;
 
-import de.lightbolt.meeting.data.config.guild.MeetingConfig;
+import de.lightbolt.meeting.data.config.SystemsConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.MeetingSubcommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class ListMeetingsSubcommand extends MeetingSubcommand {
 	@Override
-	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, MeetingConfig config, MeetingRepository repo) throws SQLException {
+	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, SystemsConfig.MeetingConfig config, MeetingRepository repo) throws SQLException {
 		var meetings = repo.getByUserId(event.getUser().getIdLong());
 		return event.replyFormat(locale.getMeeting().getCommand().getLIST_REPLY_TEXT(), meetings.size())
 				.addEmbeds(buildMeetingListEmbed(event.getUser(), locale, meetings));

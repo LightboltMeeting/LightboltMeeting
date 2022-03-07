@@ -34,7 +34,7 @@ public class UptimeCommand implements ISlashCommand {
 	@Override
 	public ReplyCallbackAction handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
 		var e = new EmbedBuilder()
-				.setColor(Bot.config.get(event.getGuild()).getSlashCommand().getDefaultColor())
+				.setColor(Bot.config.getSystems().getSlashCommandConfig().getDefaultColor())
 				.setAuthor(getUptime(), null, event.getJDA().getSelfUser().getEffectiveAvatarUrl());
 		return event.replyEmbeds(e.build());
 	}

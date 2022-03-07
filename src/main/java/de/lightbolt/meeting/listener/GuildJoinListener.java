@@ -13,8 +13,6 @@ import org.jetbrains.annotations.NotNull;
 public class GuildJoinListener extends ListenerAdapter {
 	@Override
 	public void onGuildJoin(@NotNull GuildJoinEvent event) {
-		Bot.config.loadGuilds(event.getJDA().getGuilds());
-		Bot.config.flush();
 		for (Guild guild : event.getJDA().getGuilds()) {
 			Bot.interactionHandler.registerCommands(guild);
 		}

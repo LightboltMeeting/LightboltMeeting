@@ -37,7 +37,7 @@ public class MeetingReminderJob implements Job {
 					.setEmbeds(buildReminderEmbed(meeting.getLocaleConfig().getMeeting().getLog(), reminder))
 					.queue();
 			if (reminder < STARTING_SOON_THRESHOLD) {
-				var config = Bot.config.get(manager.getJDA().getGuildById(meeting.getGuildId())).getMeeting();
+				var config = Bot.config.getSystems().getMeetingConfig();
 				manager.getVoiceChannel()
 						.getManager()
 						.setName(String.format(config.getMeetingVoiceTemplate(), config.getMeetingStartingSoonEmoji(), meeting.getLocaleConfig().getMeeting().getMEETING_STATUS_STARTING_SOON()))
