@@ -149,38 +149,3 @@
           autocomplete: false
           type: USER
   handler: de.lightbolt.meeting.systems.meeting.MeetingManageCommandHandler
-
-# /config
-- name: config
-  description: Manage configuration for this guild.
-  enabledByDefault: false
-  privileges:
-    - type: ROLE
-      id: moderation.staffRoleId
-  subCommands:
-    # /config list
-    - name: list
-      description: Get a list of all configuration properties, and their current values.
-
-    # /config get
-    - name: get
-      description: Get the current value of a configuration property.
-      options:
-        - name: property
-          description: The name of a property.
-          required: true
-          type: STRING
-
-    # /config set
-    - name: set
-      description: Sets the value of a configuration property.
-      options:
-        - name: property
-          description: The name of a property.
-          required: true
-          type: STRING
-        - name: value
-          description: The value to set for the property.
-          required: true
-          type: STRING
-  handler: de.lightbolt.meeting.data.config.commands.ConfigCommandHandler
