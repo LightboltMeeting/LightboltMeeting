@@ -1,4 +1,4 @@
-package de.lightbolt.meeting.command;
+package de.lightbolt.meeting.utils;
 
 import de.lightbolt.meeting.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;

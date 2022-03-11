@@ -1,4 +1,4 @@
-package de.lightbolt.meeting.command;
+package de.lightbolt.meeting.utils;
 
 import lombok.Getter;
 

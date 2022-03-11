@@ -1,16 +1,22 @@
 package de.lightbolt.meeting.systems.commands;
 
+import com.dynxsty.dih4jda.commands.interactions.slash_command.ISlashCommand;
+import com.dynxsty.dih4jda.commands.interactions.slash_command.dao.GlobalSlashCommand;
 import de.lightbolt.meeting.Bot;
-import de.lightbolt.meeting.command.interfaces.ISlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.concurrent.TimeUnit;
 
-public class UptimeCommand implements ISlashCommand {
+public class UptimeCommand extends GlobalSlashCommand implements ISlashCommand {
+
+	public UptimeCommand() {
+		this.setCommandData(Commands.slash("uptime", "Checks the Bot's Uptime."));
+	}
 
 	/**
 	 * Calculates the Uptimes and returns a formatted String.
@@ -32,10 +38,10 @@ public class UptimeCommand implements ISlashCommand {
 	}
 
 	@Override
-	public ReplyCallbackAction handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
+	public void handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
 		var e = new EmbedBuilder()
 				.setColor(Bot.config.getSystems().getSlashCommandConfig().getDefaultColor())
 				.setAuthor(getUptime(), null, event.getJDA().getSelfUser().getEffectiveAvatarUrl());
-		return event.replyEmbeds(e.build());
+		event.replyEmbeds(e.build()).queue();
 	}
 }

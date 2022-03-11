@@ -1,20 +1,24 @@
 package de.lightbolt.meeting.systems.meeting.subcommands;
 
-import de.lightbolt.meeting.command.Responses;
+import com.dynxsty.dih4jda.commands.interactions.slash_command.ISlashCommand;
+import com.dynxsty.dih4jda.commands.interactions.slash_command.dao.Subcommand;
+import de.lightbolt.meeting.Bot;
+import de.lightbolt.meeting.utils.ResponseException;
+import de.lightbolt.meeting.utils.Responses;
 import de.lightbolt.meeting.data.config.SystemsConfig;
-import de.lightbolt.meeting.systems.meeting.MeetingSubcommand;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.utils.Constants;
 import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
+import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.text.Modal;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.requests.restaction.interactions.ModalCallbackAction;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -24,18 +28,31 @@ import java.time.format.DateTimeFormatter;
  * <p>/meeting create</p>
  * Command that allows users to create new Meetings.
  */
-public class CreateMeetingSubcommand extends MeetingSubcommand {
+public class CreateMeetingSubcommand extends Subcommand implements ISlashCommand {
+
+	public CreateMeetingSubcommand() {
+		this.setSubcommandData(new SubcommandData("create", "Create a new Meeting."));
+	}
+
 	@Override
-	protected ReplyCallbackAction handleMeetingCommand(SlashCommandInteractionEvent event, LocaleConfig locale, SystemsConfig.MeetingConfig config, MeetingRepository repo) throws SQLException {
-		var meetingLocale = locale.getMeeting().getCreation();
-		if (!canCreateMeetings(event.getMember())) {
-			return Responses.error(event, meetingLocale.getCREATION_NOT_PERMITTED_DESCRIPTION());
+	public void handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
+		try {
+			LocaleConfig locale = LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale()));
+			var meetingLocale = locale.getMeeting().getCreation();
+			SystemsConfig.MeetingConfig config = Bot.config.getSystems().getMeetingConfig();
+			MeetingRepository repo = new MeetingRepository(Bot.dataSource.getConnection());
+
+			if (!canCreateMeetings(event.getMember())) {
+				Responses.error(event, meetingLocale.getCREATION_NOT_PERMITTED_DESCRIPTION()).queue();
+			}
+			if (repo.getByUserId(event.getUser().getIdLong()).size() > config.getMaxMeetingsPerUser() + 1) {
+				Responses.error(event, meetingLocale.getCREATION_TOO_MANY_MEETINGS_DESCRIPTION()).queue();
+			}
+			this.buildCreateModal(event, locale, Language.fromLocale(event.getUserLocale())).queue();
+		} catch (SQLException e){
+			ResponseException.error("An error occurred while the bot was trying to execute a Meeting subcommand.", e);
 		}
-		if (repo.getByUserId(event.getUser().getIdLong()).size() > config.getMaxMeetingsPerUser() + 1) {
-			return Responses.error(event, meetingLocale.getCREATION_TOO_MANY_MEETINGS_DESCRIPTION());
-		}
-		this.buildCreateModal(event, locale, Language.fromLocale(event.getUserLocale())).queue();
-		return null;
+
 	}
 
 	private ModalCallbackAction buildCreateModal(SlashCommandInteractionEvent event, LocaleConfig locale, Language language) {
