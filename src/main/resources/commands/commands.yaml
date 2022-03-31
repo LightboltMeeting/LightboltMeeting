@@ -6,6 +6,15 @@
   description: Checks the Bot's Uptime.
   handler: de.lightbolt.meeting.systems.commands.UptimeCommand
 
+- name: calendar-test
+  description: Debug Command to test the Button Calendar.
+  options:
+    - name: multi-select
+      description: Whether it should be possible to select multiple days at once.
+      type: BOOLEAN
+      required: false
+  handler: de.lightbolt.meeting.systems.commands.CalendarTest
+
 - name: meeting
   description: Commands that allows users create and list Meetings.
   subCommands:

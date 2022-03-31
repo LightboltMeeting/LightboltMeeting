@@ -1,5 +1,6 @@
 package de.lightbolt.meeting.listener;
 
+import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.command.Responses;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
@@ -17,6 +18,7 @@ public class ButtonListener extends ListenerAdapter {
 		String[] id = event.getComponentId().split(":");
 		LocaleConfig locale = LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale()));
 		switch (id[0]) {
+			case "calendar" -> Bot.calender.handleCalenderInteraction(event.getInteraction(), id).queue();
 			case "meeting-faq" -> handleMeetingFAQ(event);
 			default -> Responses.error(event.getHook(), locale.getCommand().getUNKNOWN_INTERACTION()).queue();
 		}
