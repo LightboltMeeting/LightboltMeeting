@@ -6,7 +6,6 @@ import com.dynxsty.dih4jda.exceptions.DIH4JDAException;
 import com.zaxxer.hikari.HikariDataSource;
 import de.lightbolt.meeting.data.config.BotConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
-import de.lightbolt.meeting.eventwaiter.EventWaiter;
 import de.lightbolt.meeting.listener.*;
 import de.lightbolt.meeting.systems.meeting.MeetingStateManager;
 import net.dv8tion.jda.api.JDA;
@@ -45,10 +44,6 @@ public class Bot {
 	 */
 	public static ScheduledExecutorService asyncPool;
 	/**
-	 * A reference to the bot's {@link EventWaiter}.
-	 */
-	public static EventWaiter waiter;
-	/**
 	 * A reference to the bot's {@link MeetingStateManager}.
 	 */
 	public static MeetingStateManager meetingStateManager;
@@ -58,16 +53,14 @@ public class Bot {
 		config = new BotConfig(Path.of("config"));
 		dataSource = DbHelper.initDataSource(config);
 		asyncPool = Executors.newScheduledThreadPool(config.getSystems().getAsyncPoolSize());
-		waiter = new EventWaiter();
 		jda = JDABuilder.createDefault(config.getSystems().getJdaBotToken())
 				.setStatus(OnlineStatus.DO_NOT_DISTURB)
 				.setChunkingFilter(ChunkingFilter.ALL)
 				.setMemberCachePolicy(MemberCachePolicy.ALL)
 				.enableCache(CacheFlag.ACTIVITY)
 				.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
-				.addEventListeners(waiter)
 				.build();
-		DIH4JDA dih4JDA = DIH4JDABuilder
+		DIH4JDA dih4jda = DIH4JDABuilder
 				.setJDA(jda)
 				.setCommandsPackage("de.lightbolt.meeting.systems")
 				.build();
