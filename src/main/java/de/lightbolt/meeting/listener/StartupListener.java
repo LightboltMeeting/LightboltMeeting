@@ -14,9 +14,6 @@ public class StartupListener extends ListenerAdapter {
 	public void onReady(ReadyEvent event) {
 		Bot.config.flush();
 		Bot.meetingStateManager = new MeetingStateManager();
-		for (Guild guild : event.getJDA().getGuilds()) {
-			Bot.interactionHandler.registerCommands(guild);
-		}
 		Bot.asyncPool.scheduleWithFixedDelay(() -> MeetingManager.checkActiveMeetings(event.getJDA()), 10, 300, TimeUnit.SECONDS);
 	}
 }

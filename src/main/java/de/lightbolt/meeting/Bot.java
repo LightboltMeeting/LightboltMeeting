@@ -1,8 +1,9 @@
 package de.lightbolt.meeting;
 
+import com.dynxsty.dih4jda.DIH4JDA;
+import com.dynxsty.dih4jda.DIH4JDABuilder;
+import com.dynxsty.dih4jda.exceptions.DIH4JDAException;
 import com.zaxxer.hikari.HikariDataSource;
-import de.lightbolt.meeting.command.InteractionHandler;
-import de.lightbolt.meeting.command.eventwaiter.EventWaiter;
 import de.lightbolt.meeting.data.config.BotConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.listener.*;
@@ -32,13 +33,6 @@ public class Bot {
 	 */
 	public static JDA jda;
 	/**
-	 * A reference to the slash command listener that's the main point of
-	 * interaction for users with this bot. It's marked as a publicly accessible
-	 * reference so that {@link InteractionHandler#registerCommands} can
-	 * be called wherever it's needed.
-	 */
-	public static InteractionHandler interactionHandler;
-	/**
 	 * A reference to the data source that provides access to the relational
 	 * database that this bot users for certain parts of the application. Use
 	 * this to obtain a connection and perform transactions.
@@ -50,28 +44,25 @@ public class Bot {
 	 */
 	public static ScheduledExecutorService asyncPool;
 	/**
-	 * A reference to the bot's {@link EventWaiter}.
-	 */
-	public static EventWaiter waiter;
-	/**
 	 * A reference to the bot's {@link MeetingStateManager}.
 	 */
 	public static MeetingStateManager meetingStateManager;
 
-	public static void main(String[] args) throws LoginException {
+	public static void main(String[] args) throws LoginException, DIH4JDAException {
 		TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
 		config = new BotConfig(Path.of("config"));
 		dataSource = DbHelper.initDataSource(config);
-		interactionHandler = new InteractionHandler();
 		asyncPool = Executors.newScheduledThreadPool(config.getSystems().getAsyncPoolSize());
-		waiter = new EventWaiter();
 		jda = JDABuilder.createDefault(config.getSystems().getJdaBotToken())
 				.setStatus(OnlineStatus.DO_NOT_DISTURB)
 				.setChunkingFilter(ChunkingFilter.ALL)
 				.setMemberCachePolicy(MemberCachePolicy.ALL)
 				.enableCache(CacheFlag.ACTIVITY)
 				.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
-				.addEventListeners(interactionHandler, waiter)
+				.build();
+		DIH4JDA dih4jda = DIH4JDABuilder
+				.setJDA(jda)
+				.setCommandsPackage("de.lightbolt.meeting.systems")
 				.build();
 		addEventListener(jda);
 	}
@@ -81,8 +72,7 @@ public class Bot {
 				new StartupListener(),
 				new AutoCompleteListener(),
 				new ModalSubmitListener(),
-				new ButtonListener(),
-				new GuildJoinListener()
+				new ButtonListener()
 		);
 	}
 }

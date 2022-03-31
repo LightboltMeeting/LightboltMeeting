@@ -1,6 +1,6 @@
 package de.lightbolt.meeting.listener;
 
-import de.lightbolt.meeting.command.Responses;
+import de.lightbolt.meeting.utils.Responses;
 import de.lightbolt.meeting.data.h2db.DbHelper;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
