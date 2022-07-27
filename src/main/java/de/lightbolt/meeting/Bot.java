@@ -2,7 +2,9 @@ package de.lightbolt.meeting;
 
 import com.dynxsty.dih4jda.DIH4JDA;
 import com.dynxsty.dih4jda.DIH4JDABuilder;
+import com.dynxsty.dih4jda.DIH4JDALogger;
 import com.dynxsty.dih4jda.exceptions.DIH4JDAException;
+import com.dynxsty.dih4jda.interactions.commands.RegistrationType;
 import com.zaxxer.hikari.HikariDataSource;
 import de.lightbolt.meeting.data.config.BotConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
@@ -66,9 +68,12 @@ public class Bot {
 				.build();
 		DIH4JDA dih4jda = DIH4JDABuilder
 				.setJDA(jda)
+				.setDefaultCommandType(RegistrationType.GLOBAL)
 				.setCommandsPackage("de.lightbolt.meeting.systems")
+				.disableLogging(DIH4JDALogger.Type.SLASH_COMMAND_SKIPPED)
 				.build();
 		addEventListener(jda);
+
 	}
 
 	private static void addEventListener(@NotNull JDA jda) {
@@ -78,5 +83,9 @@ public class Bot {
 				new ModalSubmitListener(),
 				new ButtonListener()
 		);
+	}
+
+	private static void addComponentListeners() {
+
 	}
 }
