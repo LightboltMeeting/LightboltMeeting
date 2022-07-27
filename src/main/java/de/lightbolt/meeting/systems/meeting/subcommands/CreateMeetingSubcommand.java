@@ -1,13 +1,12 @@
 package de.lightbolt.meeting.systems.meeting.subcommands;
 
-import com.dynxsty.dih4jda.commands.interactions.slash_command.ISlashCommand;
-import com.dynxsty.dih4jda.commands.interactions.slash_command.dao.Subcommand;
+import com.dynxsty.dih4jda.interactions.commands.SlashCommand;
 import de.lightbolt.meeting.Bot;
-import de.lightbolt.meeting.utils.ResponseException;
-import de.lightbolt.meeting.utils.Responses;
 import de.lightbolt.meeting.data.config.SystemsConfig;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.utils.Constants;
+import de.lightbolt.meeting.utils.ResponseException;
+import de.lightbolt.meeting.utils.Responses;
 import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import de.lightbolt.meeting.utils.localization.LocalizationUtils;
@@ -19,6 +18,7 @@ import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.requests.restaction.interactions.ModalCallbackAction;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -28,14 +28,14 @@ import java.time.format.DateTimeFormatter;
  * <p>/meeting create</p>
  * Command that allows users to create new Meetings.
  */
-public class CreateMeetingSubcommand extends Subcommand implements ISlashCommand {
+public class CreateMeetingSubcommand extends SlashCommand.Subcommand {
 
 	public CreateMeetingSubcommand() {
-		this.setSubcommandData(new SubcommandData("create", "Create a new Meeting."));
+		setSubcommandData(new SubcommandData("create", "Create a new Meeting."));
 	}
 
 	@Override
-	public void handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
+	public void execute(@NotNull SlashCommandInteractionEvent event) {
 		try {
 			LocaleConfig locale = LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale()));
 			var meetingLocale = locale.getMeeting().getCreation();

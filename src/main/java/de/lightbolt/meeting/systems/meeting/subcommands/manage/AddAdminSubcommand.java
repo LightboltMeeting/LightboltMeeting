@@ -1,19 +1,20 @@
 package de.lightbolt.meeting.systems.meeting.subcommands.manage;
 
-import com.dynxsty.dih4jda.commands.interactions.slash_command.ISlashCommand;
-import com.dynxsty.dih4jda.commands.interactions.slash_command.dao.Subcommand;
+
+import com.dynxsty.dih4jda.interactions.commands.SlashCommand;
 import de.lightbolt.meeting.Bot;
-import de.lightbolt.meeting.utils.ResponseException;
-import de.lightbolt.meeting.utils.Responses;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
+import de.lightbolt.meeting.utils.ResponseException;
+import de.lightbolt.meeting.utils.Responses;
 import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -23,16 +24,16 @@ import java.util.Optional;
  * <p>/meeting manage add-admin</p>
  * Command that allows the Meeting Owner to add Administrators to their meeting.
  */
-public class AddAdminSubcommand extends Subcommand implements ISlashCommand {
+public class AddAdminSubcommand extends SlashCommand.Subcommand {
 
 	public AddAdminSubcommand() {
-		this.setSubcommandData(new SubcommandData("add-admin", "Add admins to your Meeting.")
+		setSubcommandData(new SubcommandData("add-admin", "Add admins to your Meeting.")
 				.addOption(OptionType.INTEGER, "meeting-id", "The Meeting's ID.", true, true)
 				.addOption(OptionType.USER, "user", "The User you want to add.", true, false));
 	}
 
 	@Override
-	public void handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
+	public void execute(@NotNull SlashCommandInteractionEvent event) {
 		try {
 			LocaleConfig locale = LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale()));
 			MeetingRepository repo = new MeetingRepository(Bot.dataSource.getConnection());

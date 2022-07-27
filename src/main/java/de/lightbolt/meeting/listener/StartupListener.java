@@ -3,7 +3,6 @@ package de.lightbolt.meeting.listener;
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.MeetingStateManager;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 

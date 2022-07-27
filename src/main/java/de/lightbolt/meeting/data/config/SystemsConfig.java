@@ -4,7 +4,6 @@ import de.lightbolt.meeting.utils.Resolvable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 

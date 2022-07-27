@@ -1,22 +1,20 @@
 package de.lightbolt.meeting.systems.meeting.subcommands.manage;
 
-import com.dynxsty.dih4jda.commands.interactions.slash_command.ISlashCommand;
-import com.dynxsty.dih4jda.commands.interactions.slash_command.dao.Subcommand;
+import com.dynxsty.dih4jda.interactions.commands.SlashCommand;
 import de.lightbolt.meeting.Bot;
-import de.lightbolt.meeting.utils.ResponseException;
-import de.lightbolt.meeting.utils.Responses;
-import de.lightbolt.meeting.data.config.SystemsConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
+import de.lightbolt.meeting.utils.ResponseException;
+import de.lightbolt.meeting.utils.Responses;
 import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import de.lightbolt.meeting.utils.localization.LocalizationUtils;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -26,16 +24,16 @@ import java.util.Optional;
  * <p>/meeting manage remove-participant</p>
  * Command that allows Meeting Administrators to remove participants from their meeting.
  */
-public class RemoveParticipantSubcommand extends Subcommand implements ISlashCommand {
+public class RemoveParticipantSubcommand extends SlashCommand.Subcommand {
 
 	public RemoveParticipantSubcommand() {
-		this.setSubcommandData(new SubcommandData("remove-participant", "Remove participants.")
+		setSubcommandData(new SubcommandData("remove-participant", "Remove participants.")
 				.addOption(OptionType.INTEGER, "meeting-id", "The Meeting's ID.", true, true)
 				.addOption(OptionType.USER, "user", "The User you want to remove.", true, false));
 	}
 
 	@Override
-	public void handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
+	public void execute(@NotNull SlashCommandInteractionEvent event) {
 		try {
 			LocaleConfig locale = LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale()));
 			MeetingRepository repo = new MeetingRepository(Bot.dataSource.getConnection());

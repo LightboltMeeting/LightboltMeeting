@@ -6,7 +6,10 @@ import com.dynxsty.dih4jda.exceptions.DIH4JDAException;
 import com.zaxxer.hikari.HikariDataSource;
 import de.lightbolt.meeting.data.config.BotConfig;
 import de.lightbolt.meeting.data.h2db.DbHelper;
-import de.lightbolt.meeting.listener.*;
+import de.lightbolt.meeting.listener.AutoCompleteListener;
+import de.lightbolt.meeting.listener.ButtonListener;
+import de.lightbolt.meeting.listener.ModalSubmitListener;
+import de.lightbolt.meeting.listener.StartupListener;
 import de.lightbolt.meeting.systems.meeting.MeetingStateManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -15,6 +18,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
 import java.nio.file.Path;
@@ -67,7 +71,7 @@ public class Bot {
 		addEventListener(jda);
 	}
 
-	private static void addEventListener(JDA jda) {
+	private static void addEventListener(@NotNull JDA jda) {
 		jda.addEventListener(
 				new StartupListener(),
 				new AutoCompleteListener(),

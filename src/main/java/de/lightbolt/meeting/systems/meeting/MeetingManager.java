@@ -55,7 +55,7 @@ public class MeetingManager {
 	 */
 	public static void checkActiveMeetings(@NotNull JDA jda) {
 		for (var guild : jda.getGuilds()) {
-			var config = Bot.config.getSystems().getMeetingConfig();
+			SystemsConfig.MeetingConfig config = Bot.config.getSystems().getMeetingConfig();
 			DbHelper.doDaoAction(MeetingRepository::new, dao -> {
 				List<Meeting> activeMeetings = dao.getActive().stream().filter(p -> p.getGuildId() == guild.getIdLong()).toList();
 				for (Meeting m : activeMeetings) {

@@ -1,7 +1,6 @@
 package de.lightbolt.meeting.systems.meeting.subcommands;
 
-import com.dynxsty.dih4jda.commands.interactions.slash_command.ISlashCommand;
-import com.dynxsty.dih4jda.commands.interactions.slash_command.dao.Subcommand;
+import com.dynxsty.dih4jda.interactions.commands.SlashCommand;
 import de.lightbolt.meeting.Bot;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
@@ -14,7 +13,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,14 +23,14 @@ import java.util.List;
  * <p>/meeting list</p>
  * Command that allows every user to list their active Meetings.
  */
-public class ListMeetingsSubcommand extends Subcommand implements ISlashCommand {
+public class ListMeetingsSubcommand extends SlashCommand.Subcommand {
 
 	public ListMeetingsSubcommand() {
-		this.setSubcommandData(new SubcommandData("list", "List all your Meeting."));
+		setSubcommandData(new SubcommandData("list", "List all your Meeting."));
 	}
 
 	@Override
-	public void handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
+	public void execute(@NotNull SlashCommandInteractionEvent event) {
 		try {
 			LocaleConfig locale = LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale()));
 			MeetingRepository repo = new MeetingRepository(Bot.dataSource.getConnection());

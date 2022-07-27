@@ -1,15 +1,13 @@
 package de.lightbolt.meeting.systems.meeting.subcommands;
 
-import com.dynxsty.dih4jda.commands.interactions.slash_command.ISlashCommand;
-import com.dynxsty.dih4jda.commands.interactions.slash_command.dao.Subcommand;
+import com.dynxsty.dih4jda.interactions.commands.SlashCommand;
 import de.lightbolt.meeting.Bot;
-import de.lightbolt.meeting.utils.ResponseException;
-import de.lightbolt.meeting.utils.Responses;
-import de.lightbolt.meeting.data.config.SystemsConfig;
 import de.lightbolt.meeting.systems.meeting.MeetingManager;
 import de.lightbolt.meeting.systems.meeting.MeetingStatus;
 import de.lightbolt.meeting.systems.meeting.dao.MeetingRepository;
 import de.lightbolt.meeting.systems.meeting.model.Meeting;
+import de.lightbolt.meeting.utils.ResponseException;
+import de.lightbolt.meeting.utils.Responses;
 import de.lightbolt.meeting.utils.localization.Language;
 import de.lightbolt.meeting.utils.localization.LocaleConfig;
 import de.lightbolt.meeting.utils.localization.LocalizationUtils;
@@ -17,20 +15,20 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class EndMeetingSubcommand extends Subcommand implements ISlashCommand {
+public class EndMeetingSubcommand extends SlashCommand.Subcommand {
 
 	public EndMeetingSubcommand() {
-		this.setSubcommandData(new SubcommandData("end", "End a meeting manually.")
+		setSubcommandData(new SubcommandData("end", "End a meeting manually.")
 				.addOption(OptionType.INTEGER, "meeting-id", "The Meeting's ID.", true, true));
 	}
 
 	@Override
-	public void handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
+	public void execute (@NotNull SlashCommandInteractionEvent event) {
 		try {
 			LocaleConfig locale = LocalizationUtils.getLocale(Language.fromLocale(event.getUserLocale()));
 			MeetingRepository repo = new MeetingRepository(Bot.dataSource.getConnection());
@@ -58,6 +56,5 @@ public class EndMeetingSubcommand extends Subcommand implements ISlashCommand {
 		} catch(SQLException e) {
 			ResponseException.error("An error occurred while the bot was trying to execute a Meeting subcommand.", e);
 		}
-
 	}
 }

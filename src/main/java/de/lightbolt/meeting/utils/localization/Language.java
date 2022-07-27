@@ -1,10 +1,11 @@
 package de.lightbolt.meeting.utils.localization;
 
 import lombok.Getter;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 /**
  * Enum class, that represents all available and supported languages.
@@ -24,8 +25,9 @@ public enum Language {
 		this.timezone = timezone;
 	}
 
-	public static Language fromLocale(Locale locale) {
-		return switch (locale.getLanguage()) {
+	@Contract(pure = true)
+	public static Language fromLocale(@NotNull DiscordLocale locale) {
+		return switch (locale.getLocale()) {
 			case "de" -> Language.DE;
 			case "en" -> Language.EN;
 			default -> Language.DE;

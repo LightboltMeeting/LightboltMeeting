@@ -75,7 +75,6 @@ public class MeetingStateManager {
 
 	public void updateMeetingSchedule(Meeting meeting) {
 		SystemsConfig.MeetingConfig meetingConfig = Bot.config.getSystems().getMeetingConfig();
-
 		try {
 			//Update Start Trigger
 			Date runTime = new Date(meeting.getDueAt().getTime());
@@ -111,7 +110,7 @@ public class MeetingStateManager {
 		SystemsConfig.MeetingConfig meetingConfig = Bot.config.getSystems().getMeetingConfig();
 		try {
 			scheduler.deleteJob(JobKey.jobKey(meeting.getId() + "-start"));
-			for (Integer reminder : meetingConfig.getMeetingReminders()) {
+			for (int reminder : meetingConfig.getMeetingReminders()) {
 				if (scheduler.getTrigger(TriggerKey.triggerKey(meeting.getId() + "-remindertrigger-" + reminder)) != null){
 					scheduler.deleteJob(JobKey.jobKey(meeting.getId() + "-reminder-" + reminder));
 				}

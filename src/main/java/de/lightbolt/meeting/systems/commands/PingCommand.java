@@ -1,25 +1,25 @@
 package de.lightbolt.meeting.systems.commands;
 
-import com.dynxsty.dih4jda.commands.interactions.slash_command.ISlashCommand;
-import com.dynxsty.dih4jda.commands.interactions.slash_command.dao.GlobalSlashCommand;
+import com.dynxsty.dih4jda.interactions.commands.SlashCommand;
 import de.lightbolt.meeting.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import org.jetbrains.annotations.NotNull;
 
-public class PingCommand extends GlobalSlashCommand implements ISlashCommand {
+public class PingCommand extends SlashCommand {
 
 	public PingCommand() {
-		this.setCommandData(Commands.slash("ping", "Checks the Bot's Gateway Ping."));
+		setSlashCommandData(Commands.slash("ping", "Checks the bot's Gateway Ping."));
 	}
 
 	@Override
-	public void handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
-		var e = new EmbedBuilder()
+	public void execute(@NotNull SlashCommandInteractionEvent event) {
+		MessageEmbed embed = new EmbedBuilder()
 				.setAuthor(event.getJDA().getGatewayPing() + "ms", null, event.getJDA().getSelfUser().getEffectiveAvatarUrl())
 				.setColor(Bot.config.getSystems().getSlashCommandConfig().getDefaultColor())
 				.build();
-		event.replyEmbeds(e).queue();
+		event.replyEmbeds(embed).queue();
 	}
 }
